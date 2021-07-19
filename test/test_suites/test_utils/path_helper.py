@@ -5,7 +5,7 @@ import unittest
 class PathHelper():
 
     def getPathToAosModules(self) -> Path:
-        return Path("../../../../modules").resolve()
+        return Path("/home/schorschi/hiwi/AMiRo-OS/modules/").resolve()
 
     def listAosModules(self) -> list[Path]:
         aos_modules = []

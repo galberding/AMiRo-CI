@@ -1,7 +1,7 @@
-from .pathHelper import PathHelper
+from .path_helper import PathHelper
 import unittest
 
-
+# @unittest.SkipTest
 class TestPathHelper(unittest.TestCase):
     def setUp(self) -> None:
         self.helper = PathHelper()

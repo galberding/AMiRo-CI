@@ -2,9 +2,9 @@ from typing import Callable, Optional
 import unittest
 from pathlib import Path
 import re
-from ..testUtils.pathHelper import PathHelper
+from ..test_utils.path_helper import PathHelper
 
-# @unittest.skip("Ignore exploration tests!")
+@unittest.SkipTest
 class TestExploreRegexes(unittest.TestCase):
 
     def setUp(self):
@@ -47,7 +47,7 @@ class TestExploreRegexes(unittest.TestCase):
             else:
                 print(f"---> {r[2]}")
 
-    @unittest.SkipTest
+    # @unittest.SkipTest("")
     def test_search_for_basic_defines(self):
         regex: re.Pattern = re.compile(
             r'''^\#if\s                                # Match beginning #if
@@ -65,7 +65,7 @@ class TestExploreRegexes(unittest.TestCase):
         for r in res:
             print(f"--> {r}")
 
-    @unittest.SkipTest
+    # @unittest.SkipTest
     def test_search_module_named_group_regex(self):
         """ Search for #if defined(FLAG)|(FLAG==true) with named groups
         """
