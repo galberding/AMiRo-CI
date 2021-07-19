@@ -13,7 +13,7 @@ class TestSearcher(unittest.TestCase):
         # self.skipTest("Not used right now")
         self.helper = PathHelper()
         self.search = Searcher()
-        self.modulePath = self.helper.selectAosModule()
+        self.modulePath = self.helper.select_aos_module()
     # @unittest.
     def test_search_for_basic_defines(self):
         # Search pattern:

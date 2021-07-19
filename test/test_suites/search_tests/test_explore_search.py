@@ -10,7 +10,7 @@ class TestExploreRegexes(unittest.TestCase):
     def setUp(self):
         self.helper = PathHelper()
         self.module_path = self.helper.getPathToAosModules()
-        self.aos_module = self.helper.selectAosModule()
+        self.aos_module = self.helper.select_aos_module()
 
     def get_content(self, path: Path) -> tuple[bool, str]:
         if path.is_file():

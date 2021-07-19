@@ -14,7 +14,7 @@ class PathHelper():
                 aos_modules.append(path_obj)
         return aos_modules
 
-    def selectAosModule(self, module_name="NUCLEO-L476RG") -> Path:
+    def select_aos_module(self, module_name="NUCLEO-L476RG") -> Path:
         moduleSearch = [i for i in self.listAosModules() if i.name == module_name]
         if len(moduleSearch) == 0:
             raise Exception("Module does not exist")

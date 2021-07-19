@@ -11,7 +11,7 @@ class TestAosModuleCreation(unittest.TestCase):
         self.searcher = Searcher()
         self.helper = PathHelper()
         self.factory = AOSModuleFactory()
-        self.module_path = self.helper.selectAosModule(module_name="NUCLEO-L476RG")
+        self.module_path = self.helper.select_aos_module(module_name="NUCLEO-L476RG")
 
     def test_nucleo_creation_with_factory(self):
         aos_module = self.factory.buildModule(self.module_path)
