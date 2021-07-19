@@ -12,5 +12,4 @@ class MakefileSearch:
         with makefile.open() as make:
             content = make.read()
             res =  regex.findall(content)
-            print(res)
-        return []
+            return res

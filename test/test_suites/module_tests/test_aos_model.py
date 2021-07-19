@@ -1,4 +1,4 @@
-from test.test_suites.test_utils.path_helper import PathHelper
+from ..test_utils.path_helper import PathHelper
 import unittest
 
 from amirotest.model.aos_model import Argument, Flag
@@ -22,3 +22,4 @@ class TestAosModel(unittest.TestCase):
         self.assertEqual(set(flag.args),set(args))
 
     def test_create_module(self):
+        pass
