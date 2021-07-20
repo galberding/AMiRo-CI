@@ -9,6 +9,7 @@ class TestAosModel(unittest.TestCase):
     def setUp(self) -> None:
         self.searcher = MakefileSearch()
         self.helper = PathHelper()
+        self.aos_module = self.helper.get_nucleo_module()
         self.module_name = "NUCLEO-L476RG"
         self.search_results = [
             ('USE_OPT', '-O2 -fstack-usage -Wl,--print-memory-usage'), # Has option for preprocessor (-Wl,)
@@ -25,6 +26,7 @@ class TestAosModel(unittest.TestCase):
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16') # Needs to be substituted
         ]
 
+
     def test_create_arguments(self):
         arg = Argument("-WALL")
         self.assertEqual(arg.name, "-WALL")
@@ -36,16 +38,19 @@ class TestAosModel(unittest.TestCase):
         arg_string = " ".join([wall, dtest])
         args = [Argument(wall), Argument(dtest)]
         flag = Flag(name, arg_string)
-        print(flag)
         self.assertEqual(flag.name, name)
         self.assertEqual(set(flag.args),set(args))
 
     def test_create_module(self):
-        aos_module = Module(self.module_name)
-        self.assertEqual(aos_module.name, self.module_name)
+        self.assertEqual(self.aos_module.name, self.module_name)
+
+    def test_module_get_makefile(self):
+        makefile = self.aos_module.get_makefile()
+        self.assertTrue(makefile.exists())
 
     def test_module_build_flags(self):
-        aos_module = Module(self.module_name)
-        aos_module.create_flags(self.search_results)
-        self.assertEqual(len(aos_module.flags), len(self.search_results))
-        print(aos_module.flags)
+        self.aos_module.create_flags(self.search_results)
+        self.assertEqual(len(self.aos_module.flags), len(self.search_results))
+
+    # def test_search_global_arguments(self):
+        # results = self.searcher.search_global_arguments()
