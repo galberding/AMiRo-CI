@@ -9,7 +9,7 @@ class TestAosModel(unittest.TestCase):
     def setUp(self) -> None:
         self.searcher = MakefileSearch()
         self.helper = PathHelper()
-        self.aos_module = self.helper.get_nucleo_module()
+        self.aos_module = self.helper.get_aos_module()
         self.module_name = "NUCLEO-L476RG"
         self.search_results = [
             ('USE_OPT', '-O2 -fstack-usage -Wl,--print-memory-usage'), # Has option for preprocessor (-Wl,)
