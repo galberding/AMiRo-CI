@@ -75,3 +75,28 @@ class TestAosModel(unittest.TestCase):
         ]
         self.aos_module.create_flags(search_results)
         self.assertFalse(self.aos_module.is_resolved())
+
+    def test_get_substitution_flag_from_argument(self):
+        unresolved_flag = Flag(
+            'USE_FPU_OPT',
+            '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
+        sub_flags = unresolved_flag.get_sbustitution_flags()
+        self.assertEqual(len(sub_flags), 1)
+        self.assertEqual(sub_flags[0], 'USE_FPU')
+
+    def test_get_substitution_flag_from_argument_no_sub_flag(self):
+        unresolved_flag = Flag(
+            'USE_FPU_OPT',
+            '-mfloat-abi=no -mfpu=fpv4-sp-d16')
+        sub_flags = unresolved_flag.get_sbustitution_flags()
+        self.assertEqual(sub_flags, list())
+
+    def test_get_substitution_flag_from_argument_multiple_sub_flag(self):
+        unresolved_flag = Flag(
+            'USE_FPU_OPT',
+            '-mfloat-abi=$(USE_FPU) -mfpu=$(USE_MPU_TYPE)')
+        sub_flags = unresolved_flag.get_sbustitution_flags()
+        self.assertEqual(sub_flags, ['USE_FPU', 'USE_MPU_TYPE'])
+
+    # Module search substitution FLAG
+    # Flag substitute value

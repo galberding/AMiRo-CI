@@ -28,6 +28,7 @@ class Module:
         return self.path.joinpath("Makefile")
 
     def is_resolved(self) -> bool:
+        """Check if all flags are resolved."""
         if not self.flags:
             return True
 
@@ -52,10 +53,17 @@ class Flag:
         self.substitution_flag_regex = re.compile(r'.*\$\((?P<flag>.*)\).*')
 
     def is_resolved(self) -> bool:
+        return len(self.get_sbustitution_flags()) == 0
+
+    def get_sbustitution_flags(self):
+        """Returns all substitution flags that are found in the arguments."""
+        flags = []
         for arg in self.args:
-            if self.substitution_flag_regex.match(arg.name):
-                return False
-        return True
+            res = self.substitution_flag_regex.match(arg.name)
+            if res:
+                flags.append(res.group('flag'))
+        return flags
+
 
     def __str__(self) -> str:
         return f'{self.name}: {self.args}'
