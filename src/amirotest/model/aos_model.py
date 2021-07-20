@@ -16,7 +16,7 @@ class Module:
     def __post_init__(self):
         # In case a flag depends on an other flag the regex is used to detect
         # such a pattern: -flag=$(OTHER_FLAG)
-        self.inferece_regex = re.compile(r'.*\$\((?P<flag>.*)\).*')
+
         self.name = self.path.name
         self.flags = []
 
@@ -27,6 +27,15 @@ class Module:
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")
 
+    def is_resolved(self) -> bool:
+        if not self.flags:
+            return True
+
+        for flag in self.flags:
+            if not flag.is_resolved():
+                return False
+        return True
+
     def __str__(self) -> str:
         return f'{self.name}: {self.flags}'
     __repr__ = __str__
@@ -36,9 +45,17 @@ class Module:
 class Flag:
     name: str
     argument_str: str
+
     def __post_init__(self):
         splitted_args = self.argument_str.split(" ")
         self.args = [Argument(arg) for arg in splitted_args]
+        self.substitution_flag_regex = re.compile(r'.*\$\((?P<flag>.*)\).*')
+
+    def is_resolved(self) -> bool:
+        for arg in self.args:
+            if self.substitution_flag_regex.match(arg.name):
+                return False
+        return True
 
     def __str__(self) -> str:
         return f'{self.name}: {self.args}'

@@ -41,6 +41,11 @@ class TestAosModel(unittest.TestCase):
         self.assertEqual(flag.name, name)
         self.assertEqual(set(flag.args),set(args))
 
+    def test_flag_has_unresolved_arguments(self):
+        # example: -mfloat-abi=$(USE_FPU)
+        unresolved_flag = Flag('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
+        self.assertFalse(unresolved_flag.is_resolved())
+
     def test_create_module(self):
         self.assertEqual(self.aos_module.name, self.module_name)
 
@@ -52,5 +57,21 @@ class TestAosModel(unittest.TestCase):
         self.aos_module.create_flags(self.search_results)
         self.assertEqual(len(self.aos_module.flags), len(self.search_results))
 
-    # def test_search_global_arguments(self):
-        # results = self.searcher.search_global_arguments()
+    def test_module_has_no_flags_is_resolved(self):
+        self.assertTrue(self.aos_module.is_resolved())
+
+    def test_module_has_flags_is_resolved(self):
+        search_results = [
+            ('USE_FPU', 'softfp'),
+            ('USE_FPU_OPT', '-mfpu=fpv4-sp-d16')
+        ]
+        self.aos_module.create_flags(search_results)
+        self.assertTrue(self.aos_module.is_resolved())
+
+    def test_module_has_flags_is_unresolved(self):
+        search_results = [
+            ('USE_FPU', 'softfp'),
+            ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16') # Needs to be substituted
+        ]
+        self.aos_module.create_flags(search_results)
+        self.assertFalse(self.aos_module.is_resolved())
