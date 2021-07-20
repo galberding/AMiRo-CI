@@ -53,9 +53,9 @@ class Flag:
         self.substitution_flag_regex = re.compile(r'.*\$\((?P<flag>.*)\).*')
 
     def is_resolved(self) -> bool:
-        return len(self.get_sbustitution_flags()) == 0
+        return len(self.get_substitution_flags()) == 0
 
-    def get_sbustitution_flags(self):
+    def get_substitution_flags(self) -> list[str]:
         """Returns all substitution flags that are found in the arguments."""
         flags = []
         for arg in self.args:
