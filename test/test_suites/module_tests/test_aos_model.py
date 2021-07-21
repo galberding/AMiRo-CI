@@ -39,6 +39,7 @@ class TestAosModel(unittest.TestCase):
         args = [Argument(wall), Argument(dtest)]
         flag = Flag(name, arg_string)
         self.assertEqual(flag.name, name)
+        self.assertEqual(flag.argument_str, arg_string)
         self.assertEqual(set(flag.args),set(args))
 
     def test_flag_has_unresolved_arguments(self):
