@@ -1,7 +1,7 @@
 from ..test_utils.path_helper import PathHelper
 import unittest
 
-from amirotest.model.aos_model import Argument, Flag, FlagNotFoundException, Module
+from amirotest.model.aos_model import Argument, Flag, FlagNotFoundException, AOSModule
 from amirotest.tools.makefile_search import MakefileSearch
 
 

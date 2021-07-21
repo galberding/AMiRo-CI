@@ -1,7 +1,7 @@
 from pathlib import Path
 import unittest
 
-from amirotest.model.aos_model import Module
+from amirotest.model.aos_model import AOSModule
 
 
 class PathHelper():
@@ -25,6 +25,6 @@ class PathHelper():
             raise Exception("Module does not exist")
         return moduleSearch[0]
 
-    def get_aos_module(self, module_name="NUCLEO-L476RG") -> Module:
+    def get_aos_module(self, module_name="NUCLEO-L476RG") -> AOSModule:
         nucleo_path = self.get_aos_module_path(module_name=module_name)
-        return Module(nucleo_path)
+        return AOSModule(nucleo_path)

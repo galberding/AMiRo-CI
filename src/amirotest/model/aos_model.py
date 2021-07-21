@@ -9,7 +9,7 @@ class FlagNotFoundException(Exception):
 
 
 @dataclass
-class Module:
+class AOSModule:
     # name: str
     path: Path
     name: str = field(init=False)
