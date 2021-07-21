@@ -54,14 +54,14 @@ class TestAosModel(unittest.TestCase):
         makefile = self.aos_module.get_makefile()
         self.assertTrue(makefile.exists())
 
-    def test_module_build_flags(self):
+    def test_module_create_flags(self):
         self.aos_module.create_flags(self.search_results)
         self.assertEqual(len(self.aos_module.flags), len(self.search_results))
 
-    def test_module_has_no_flags_is_resolved(self):
+    def test_module_with_no_flags_is_resolved(self):
         self.assertTrue(self.aos_module.is_resolved())
 
-    def test_module_has_flags_is_resolved(self):
+    def test_module_with_flags_is_resolved(self):
         search_results = [
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfpu=fpv4-sp-d16')
@@ -69,7 +69,7 @@ class TestAosModel(unittest.TestCase):
         self.aos_module.create_flags(search_results)
         self.assertTrue(self.aos_module.is_resolved())
 
-    def test_module_has_flags_is_unresolved(self):
+    def test_module_with_flags_is_unresolved(self):
         search_results = [
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
@@ -77,33 +77,30 @@ class TestAosModel(unittest.TestCase):
         self.aos_module.create_flags(search_results)
         self.assertFalse(self.aos_module.is_resolved())
 
-    def test_get_substitution_flag_from_argument(self):
+    def test_get_substitution_flag_name_from_argument(self):
         unresolved_flag = Flag(
             'USE_FPU_OPT',
             '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
-        sub_flags = unresolved_flag.get_substitution_flags()
-        self.assertEqual(len(sub_flags), 1)
-        self.assertEqual(sub_flags[0], 'USE_FPU')
+        sub_flag_names = unresolved_flag.get_substitution_flag_names()
+        self.assertEqual(len(sub_flag_names), 1)
+        self.assertEqual(sub_flag_names[0], 'USE_FPU')
 
-    def test_get_substitution_flag_from_argument_no_sub_flag(self):
+    def test_no_substitution_flag_in_resolved_argument(self):
         resolved_flag = Flag(
             'USE_FPU_OPT',
             '-mfloat-abi=no -mfpu=fpv4-sp-d16')
         self.assertTrue(resolved_flag.is_resolved())
-
-        # Accessing substitution flags from resolved arguments
-        # results in an empty list
-        sub_flags = resolved_flag.get_substitution_flags()
-        self.assertEqual(sub_flags, list())
+        sub_flag_names = resolved_flag.get_substitution_flag_names()
+        self.assertEqual(sub_flag_names, list())
 
     def test_get_substitution_flag_from_argument_multiple_sub_flag(self):
         unresolved_flag = Flag(
             'USE_FPU_OPT',
             '-mfloat-abi=$(USE_FPU) -mfpu=$(USE_MPU_TYPE)')
-        sub_flags = unresolved_flag.get_substitution_flags()
-        self.assertEqual(sub_flags, ['USE_FPU', 'USE_MPU_TYPE'])
+        sub_flag_names = unresolved_flag.get_substitution_flag_names()
+        self.assertEqual(sub_flag_names, ['USE_FPU', 'USE_MPU_TYPE'])
 
-    def test_model_substitute_unresolved_flag(self):
+    def test_module_substitute_unresolved_flag(self):
         self.aos_module.create_flags(self.search_results)
         u_flags = self.aos_module.get_unresolved_flags()
         self.assertEqual(len(u_flags), 1)
@@ -111,19 +108,19 @@ class TestAosModel(unittest.TestCase):
         self.assertEqual(u_flags[0].name, "USE_FPU_OPT")
 
 
-    def test_model_search_flag(self):
+    def test_module_find_flag_by_name(self):
         self.aos_module.create_flags(self.search_results)
         flag = self.aos_module.find_flag_by_name('USE_FPU')
         self.assertEqual(flag.name, "USE_FPU")
         self.assertEqual(flag.argument_str, "softfp")
 
-    def test_module_search_flag_not_found_exception(self):
+    def test_module_find_flag_by_name_not_found_exception(self):
         self.assertRaises(
             FlagNotFoundException,
             self.aos_module.find_flag_by_name,
             'USE_FPU')
 
-    def test_resolve_unresolved_flag(self):
+    def test_flag_resolve_unresolved_flag(self):
         unresolved_flag = Flag(
             'USE_FPU_OPT',
             '-mfloat-abi=$(USE_FPU)')
@@ -136,7 +133,7 @@ class TestAosModel(unittest.TestCase):
             '-mfloat-abi=fpu_value'
         )
 
-    def test_resolve_module(self):
+    def test_module_resolve_module(self):
         self.aos_module.create_flags(self.search_results)
         self.assertFalse(self.aos_module.is_resolved())
         self.aos_module.resolve()

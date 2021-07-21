@@ -72,7 +72,7 @@ class Module:
         sub_flag_names = []
         u_flags = self.get_unresolved_flags()
         for u_flag in u_flags:
-            sub_flag_names += u_flag.get_substitution_flags()
+            sub_flag_names += u_flag.get_substitution_flag_names()
         sub_flags = self.find_flags_by_names(sub_flag_names)
         return sub_flags
 
@@ -103,9 +103,9 @@ class Flag:
         self.args = [Argument(arg) for arg in splitted_args]
 
     def is_resolved(self) -> bool:
-        return len(self.get_substitution_flags()) == 0
+        return len(self.get_substitution_flag_names()) == 0
 
-    def get_substitution_flags(self) -> list[str]:
+    def get_substitution_flag_names(self) -> list[str]:
         """Returns all substitution flags that are found in the arguments."""
         flags = []
         for arg in self.args:
