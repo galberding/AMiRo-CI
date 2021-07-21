@@ -94,7 +94,30 @@ class TestAosModel(unittest.TestCase):
             "-mfloat-abi=softfp"
         )
 
-    # Multiple substitutuins
-    # Flag not found during resolution
-    # Resolve same flag multiple times
-    # notify if resolution does not work
+    def test_module_resolve_multiple_flags(self):
+        self.search_results.append(("USE_FANCY_EXCEPTIONS_STACK", "-stack-usage=$(USE_EXCEPTIONS_STACKSIZE)"))
+        self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(RAND_SEED)"))
+        self.search_results.append(("RAND_SEED", "42"))
+        self.aos_module.create_flags(self.search_results)
+        self.aos_module.resolve()
+        self.assertTrue(self.aos_module.is_resolved())
+        exc_flag = self.aos_module.find_flag_by_name("USE_FANCY_EXCEPTIONS_STACK")
+        rval_flag = self.aos_module.find_flag_by_name("USE_RANDOM_VALUE")
+        self.assertEqual(exc_flag.args[0].name, "-stack-usage=0x400")
+        self.assertEqual(rval_flag.args[0].name, "-set-seed=42")
+
+    def test_module_cannot_resolve_all_flags(self):
+        # TODO: not sure yet what's the best approach
+        # therefore raise exception if resolution fails
+        self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(USE_UNKNOWN_FLAG)"))
+        self.aos_module.create_flags(self.search_results)
+        self.assertRaises(FlagNotFoundException, self.aos_module.resolve)
+
+    def test_module_resolve_multiple_args_with_same_sub_flag(self):
+        self.search_results.append(("USE_THIS_SUB", "42"))
+        self.search_results.append(("USE_CASE1", "-case1=$(USE_THIS_SUB)"))
+        self.search_results.append(("USE_CASE2", "-case2=$(USE_THIS_SUB)"))
+        self.search_results.append(("USE_CASE3", "-case3=$(USE_THIS_SUB)"))
+        self.aos_module.create_flags(self.search_results)
+        self.aos_module.resolve()
+        self.assertTrue(self.aos_module.is_resolved())
