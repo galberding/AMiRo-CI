@@ -145,4 +145,7 @@ class TestAosModel(unittest.TestCase):
             "-mfloat-abi=softfp"
         )
 
-    # Flag substitute value
+    # Multiple substitutuins
+    # Flag not found during resolution
+    # Resolve same flag multiple times
+    # notify if resolution does not work

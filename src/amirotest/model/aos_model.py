@@ -19,12 +19,17 @@ class Module:
         self.name = self.path.name
         self.flags = []
 
-    def create_flags(self, search_results: list[tuple[str, str]]):
-        for flag_name, flag_args in search_results:
-            self.flags.append(Flag(flag_name, flag_args))
-
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")
+
+    def create_flags(self, search_results: list[tuple[str, str]]):
+        """Create flags from given search results.
+        Example:
+        > create_flags([('USE_COPT', '-std=c99 -fshort-enums')])
+        Refer to the tests to get a deeper understanding.
+        """
+        for flag_name, flag_args in search_results:
+            self.flags.append(Flag(flag_name, flag_args))
 
     def is_resolved(self) -> bool:
         """Check if all flags are resolved."""
@@ -37,23 +42,39 @@ class Module:
         return True
 
     def resolve(self):
+        """Try to resolve all containing flags.
+        All substitution flags needs to be provided
+        in order to fully resolve all flags.
+        """
+        if self.is_resolved():
+            return
+
         u_flags = self.get_unresolved_flags()
-        sub_flag_names = []
+        sub_flags = self.get_substitution_flags()
         # get substitution flags
-        for u_flag in u_flags:
-            sub_flag_names += u_flag.get_substitution_flags()
-        sub_flags = self.find_flags_by_names(sub_flag_names)
+
         for u_flag in u_flags:
             for s_flag in sub_flags:
                 u_flag.resolve(s_flag)
 
     def get_unresolved_flags(self) -> list['Flag']:
+        """Get all flags with unresolved arguments"""
         u_flags = []
         for flag in self.flags:
             if not flag.is_resolved():
                 u_flags.append(flag)
-                # pass
         return u_flags
+
+    def get_substitution_flags(self) -> list['Flag']:
+        """Get Flag contained in unresolved arguments.
+        Also referred to as substitution flag because their
+        content is substituted into the argument"""
+        sub_flag_names = []
+        u_flags = self.get_unresolved_flags()
+        for u_flag in u_flags:
+            sub_flag_names += u_flag.get_substitution_flags()
+        sub_flags = self.find_flags_by_names(sub_flag_names)
+        return sub_flags
 
     def find_flags_by_names(self, flag_names: list[str]) -> list['Flag']:
         flags = []
