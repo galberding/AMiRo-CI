@@ -28,7 +28,7 @@ NUCLEO-L476RG:
 ```
 
 ## General Architecture
-
+![Architecture](https://gitlab.ub.uni-bielefeld.de/alberding/amiroci/-/blob/master/assets/architecture.png)
 <!-- ## Search Module -->
 <!-- ## Configuration Module -->
 <!-- ## AutoCompile Module -->
