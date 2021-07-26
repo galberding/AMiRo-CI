@@ -1,4 +1,4 @@
-from ..test_utils.module_creation_helper import AosModuleManager
+from ..test_utils.module_creation_helper import AosModuleHelper
 from ..test_utils.path_helper import PathHelper
 import unittest
 
@@ -10,7 +10,7 @@ class TestAosModel(unittest.TestCase):
     def setUp(self) -> None:
         self.searcher = MakefileSearch()
         self.helper = PathHelper()
-        self.module_helper = AosModuleManager()
+        self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
         self.module_name = "NUCLEO-L476RG"
         self.search_results = [

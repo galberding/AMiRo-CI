@@ -1,12 +1,9 @@
-
-
-from pathlib import Path
 from amirotest.model.aos_model import AOSModule
 from amirotest.tools.makefile_search import MakefileSearch
 from ..test_utils.path_helper import PathHelper
 
 
-class AosModuleManager:
+class AosModuleHelper:
     def __init__(self) -> None:
         self.helper = PathHelper()
         self.searcher = MakefileSearch()
@@ -26,7 +23,6 @@ class AosModuleManager:
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16') # Needs to be substituted
         ]
         self.nucleo_flag_count = len(self.nucleo_search_results)
-
 
     def get_nucleo_with_flags(self) -> AOSModule:
         module = self.get_aos_module()
