@@ -1,5 +1,5 @@
 from pathlib import Path
-from ..test_utils.module_creation_helper import AosModuleMockData
+from ..test_utils.module_creation_helper import AosModuleManager
 from ..test_utils.path_helper import PathHelper
 import unittest
 
@@ -11,12 +11,12 @@ class TestMakefileSearch(unittest.TestCase):
 
     def setUp(self):
         # self.helper = PathHelper()
-        self.module_helper = AosModuleMockData()
+        self.module_helper = AosModuleManager()
         self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileSearch()
 
     def test_makefile_search_global_flags(self):
-        flags = self.searcher.search_global_arguments(
+        flags = self.searcher.search_global_default_configuration(
             self.aos_module.get_makefile())
         self.assertGreater(len(flags), 0)
 

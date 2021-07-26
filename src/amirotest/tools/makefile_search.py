@@ -23,7 +23,7 @@ class MakefileSearch:
             endif                                            # endif
             """, self.regex_options)
 
-    def search_global_arguments(self, makefile: Path) -> list[tuple[str, str]]:
+    def search_global_default_configuration(self, makefile: Path) -> list[tuple[str, str]]:
         return self._search_file_with_regex(makefile, self.global_flag_regex)
 
     def search_user_flags(self, makefile: Path) -> list[tuple[str, str]]:

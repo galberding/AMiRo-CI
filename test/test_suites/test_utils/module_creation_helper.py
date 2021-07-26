@@ -2,12 +2,15 @@
 
 from pathlib import Path
 from amirotest.model.aos_model import AOSModule
+from amirotest.tools.makefile_search import MakefileSearch
 from ..test_utils.path_helper import PathHelper
 
 
-class AosModuleMockData:
+class AosModuleManager:
     def __init__(self) -> None:
         self.helper = PathHelper()
+        self.searcher = MakefileSearch()
+
         self.nucleo_search_results = [
             ('USE_OPT', '-O2 -fstack-usage -Wl,--print-memory-usage'), # Has option for preprocessor (-Wl,)
             ('USE_COPT', '-std=c99 -fshort-enums'),
@@ -24,18 +27,16 @@ class AosModuleMockData:
         ]
         self.nucleo_flag_count = len(self.nucleo_search_results)
 
+
     def get_nucleo_with_flags(self) -> AOSModule:
         module = self.get_aos_module()
         module.create_flags(self.nucleo_search_results)
         return module
 
+    def get_global_results_for(self, module_name) -> list[tuple[str, str]]:
+        return self.searcher.search_global_default_configuration(
+            self.get_aos_module(module_name=module_name).get_makefile())
+
     def get_aos_module(self, module_name="NUCLEO-L476RG") -> AOSModule:
         nucleo_path = self.helper.get_aos_module_path(module_name=module_name)
         return AOSModule(nucleo_path)
-
-    def list_aos_modules(self) -> list[Path]:
-        aos_modules = []
-        for path_obj in self.helper.get_aos_module_dir().glob("*"):
-            if path_obj.is_dir():
-                aos_modules.append(path_obj)
-        return aos_modules
