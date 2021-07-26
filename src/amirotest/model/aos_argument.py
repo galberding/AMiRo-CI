@@ -2,6 +2,9 @@ from dataclasses import dataclass
 import re
 from typing import Optional
 
+class MalformatedUserArgument(Exception):
+    pass
+
 @dataclass(unsafe_hash=True)
 class AosArgument:
     name: str
@@ -32,7 +35,20 @@ class AosArgument:
         res = self.substitution_flag_regex.search(self.name)
         return res.group('flag') if res else None
 
-
     def __str__(self) -> str:
         return f'{self.name}'
     __repr__ = __str__
+
+
+class UserArgument(AosArgument):
+    def __init__(self, name):
+        self.user_flag_substitution_regex = re.compile(r"-D(?P<flag1>[\dA-Z_]*)(=\$\((?P<flag2>.*)\)|$)")
+        res = self.user_flag_substitution_regex.search(name)
+        if not res.group("flag1"):
+            raise MalformatedUserArgument(f"Cannot process user argument: {name}")
+        if not res.group("flag2"):
+            name = self.append_substitution_to_arg(name, res.group("flag1"))
+        super().__init__(name)
+
+    def append_substitution_to_arg(self, arg, sub_flag) -> str:
+        return f"{arg}=$({sub_flag})"

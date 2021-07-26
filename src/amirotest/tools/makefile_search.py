@@ -18,8 +18,8 @@ class MakefileSearch:
 
         self.user_flag_regex = re.compile(
             r"""
-            ^ifneq\s*\(\$\((?P<user_flag>.*)\),\).*\n          # ifneq ($(USER_FLAG),)
-            \s*override\s*UDEFS\s*\+=\s*(?P<arguments>.*)\n  # override UDEFS += ARGS
+            ^ifneq.*\n          # ifneq ($(USER_FLAG),)
+            \s*override\s*(?P<flag>[\dA-Z_]*)\s*\+=\s*(?P<user_arg>.*)\n  # override UDEFS += ARGS
             endif                                            # endif
             """, self.regex_options)
 

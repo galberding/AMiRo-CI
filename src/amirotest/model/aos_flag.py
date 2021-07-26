@@ -1,8 +1,11 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from amirotest.model.aos_argument import AosArgument
+from amirotest.model.aos_argument import AosArgument, UserArgument
 
+
+class WrongArgumentCount(Exception):
+    pass
 
 @dataclass
 class AosFlag():
@@ -18,8 +21,11 @@ class AosFlag():
 
     def get_substitution_flag_names(self) -> list[str]:
         """Returns all substitution flags that are found in the arguments."""
+        return self._get_substitution_flag_names(self.args)
+
+    def _get_substitution_flag_names(self, args: list[AosArgument]) -> list[str]:
         flags = []
-        for arg in self.args:
+        for arg in args:
             if not arg.is_resolved():
                 flags.append(arg.get_substitution_flag())
         return flags
@@ -37,10 +43,17 @@ class AosFlag():
         return f'{self.name}: {self.args}'
     __repr__ = __str__
 
-@dataclass
+
 class GlobalFlag(AosFlag):
     pass
 
-@dataclass
+
 class UserFlag(AosFlag):
     pass
+    def __init__(self, flag_name, arg_str):
+        """Add substitution flag to argument"""
+        flag_args = arg_str.split(" ")
+        if len(flag_args) != 1:
+            raise WrongArgumentCount(f"Cannot process {len(flag_args)} arguments!\nGiven arguments:{flag_args}")
+        u_arg = UserArgument(arg_str)
+        super().__init__(flag_name, u_arg.name)

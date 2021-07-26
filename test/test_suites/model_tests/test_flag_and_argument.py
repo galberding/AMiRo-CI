@@ -1,6 +1,7 @@
 import unittest
 
 from amirotest.model import AosArgument, AosFlag
+from amirotest.model.aos_flag import GlobalFlag, UserFlag
 
 class TestArgumentModel(unittest.TestCase):
     def test_create_arguments(self):
@@ -53,3 +54,25 @@ class TestArgumentModel(unittest.TestCase):
             unresolved_flag.args[0].name,
             '-mfloat-abi=fpu_value'
         )
+
+    def test_create_global_flag(self):
+        u_flag = GlobalFlag("UDEFS", "-DBOARD_TOF_CONNECTED")
+        self.assertEqual(len(u_flag.args), 1)
+        self.assertEqual(
+            u_flag.args[0].name,
+            "-DBOARD_TOF_CONNECTED")
+
+    def test_create_user_flag_sub_argument(self):
+
+        u_flag = UserFlag("UDEFS", "-DBOARD_TOF_CONNECTED")
+        self.assertEqual(len(u_flag.args), 1)
+        self.assertEqual(
+            u_flag.args[0].name,
+            "-DBOARD_TOF_CONNECTED=$(BOARD_TOF_CONNECTED)")
+
+    def test_create_user_flag_sub_argument_already_exists(self):
+        u_flag = UserFlag("UDEFS", "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
+        self.assertEqual(len(u_flag.args), 1)
+        self.assertEqual(
+            u_flag.args[0].name,
+            "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")

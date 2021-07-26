@@ -22,8 +22,9 @@ class TestMakefileSearch(unittest.TestCase):
 
     def test_search_user_flags_in_nucleo(self):
         results = self.searcher.search_user_options(self.aos_module.get_makefile())
+        print(results)
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][0], 'BOARD_MPU6050_CONNECTED')
+        self.assertEqual(results[0][0], 'UDEFS')
         self.assertEqual(results[0][1], '-DBOARD_MPU6050_CONNECTED')
 
     def test_search_user_flag_default_argument_non_existent(self):

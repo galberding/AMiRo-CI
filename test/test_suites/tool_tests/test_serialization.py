@@ -21,6 +21,7 @@ class TestModuleDumping(unittest.TestCase):
         dumper.dump(self.nucleo_module, self.path_helper.get_default_config_yml_path())
         with self.path_helper.get_default_config_yml_path().open() as f:
             module = yml_load(f, Loader=Loader)
+            print(module)
             self.assertIn("NUCLEO-L476RG", module)
 
     def tearDown(self) -> None:
