@@ -24,5 +24,5 @@ class TestModuleDumping(unittest.TestCase):
             self.assertIn("NUCLEO-L476RG", module)
 
     def tearDown(self) -> None:
-        self.path_helper.clear_test_env()
+        # self.path_helper.clear_test_env()
         pass

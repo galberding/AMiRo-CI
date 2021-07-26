@@ -15,14 +15,16 @@ class TestMakefileSearch(unittest.TestCase):
         self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileSearch()
 
-    def test_makefile_search_global_flags(self):
-        flags = self.searcher.search_global_default_configuration(
+    def test_makefile_search_global_options(self):
+        flags = self.searcher.search_global_options(
             self.aos_module.get_makefile())
         self.assertGreater(len(flags), 0)
 
     def test_search_user_flags_in_nucleo(self):
-        results = self.searcher.search_user_flags(self.aos_module.get_makefile())
+        results = self.searcher.search_user_options(self.aos_module.get_makefile())
         self.assertEqual(len(results), 1)
+        self.assertEqual(results[0][0], 'BOARD_MPU6050_CONNECTED')
+        self.assertEqual(results[0][1], '-DBOARD_MPU6050_CONNECTED')
 
     def test_search_user_flag_default_argument_non_existent(self):
         # Default module (NUCLEO-L476RG) has no default argument for its flag

@@ -24,7 +24,7 @@ class AosDumper(ABC):
 class YamlDumper(AosDumper):
     def dump(self, module: AOSModule, conf_path: Path):
         # current_conf = asdict(module)
-        module.resolve()
+        # module.resolve()
         current_conf = module.to_dict()
 
         # Update old conf if it exists with new module

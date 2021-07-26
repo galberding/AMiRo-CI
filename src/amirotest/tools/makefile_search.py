@@ -18,15 +18,15 @@ class MakefileSearch:
 
         self.user_flag_regex = re.compile(
             r"""
-            ^ifneq\s*\(\$\((?P<user_flag>.*),\).*\n          # ifneq ($(USER_FLAG),)
+            ^ifneq\s*\(\$\((?P<user_flag>.*)\),\).*\n          # ifneq ($(USER_FLAG),)
             \s*override\s*UDEFS\s*\+=\s*(?P<arguments>.*)\n  # override UDEFS += ARGS
             endif                                            # endif
             """, self.regex_options)
 
-    def search_global_default_configuration(self, makefile: Path) -> list[tuple[str, str]]:
+    def search_global_options(self, makefile: Path) -> list[tuple[str, str]]:
         return self._search_file_with_regex(makefile, self.global_flag_regex)
 
-    def search_user_flags(self, makefile: Path) -> list[tuple[str, str]]:
+    def search_user_options(self, makefile: Path) -> list[tuple[str, str]]:
         return self._search_file_with_regex(makefile, self.user_flag_regex)
 
     def search_user_default_argument(self, makefile: Path, argument_name: str)-> Optional[str]:
