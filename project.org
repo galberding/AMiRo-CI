@@ -19,9 +19,13 @@
 
 
 * Makefile analyzer
-** Extract all types of compiler flags
-** Extract compile flags content
+** Extract compiler flags
+*** TODO Global Options
+*** TODO User options
 ** Create configuration database
+*** How could default values and custom values look like?
+*** Build config from aos module
+*** Build modules from config
 ** Generate compile/make commands
 
 * Configuration Tester

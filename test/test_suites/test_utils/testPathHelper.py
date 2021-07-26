@@ -21,11 +21,11 @@ class TestPathHelper(unittest.TestCase):
         ]
 
     def test_check_if_all_modules_are_listed(self):
-        aos_modules = self.helper.listAosModules()
+        aos_modules = self.helper.list_aos_module_paths()
         for module_name in aos_modules:
             self.assertIn(module_name.name, self.module_names)
 
     def test_check_if_right_modules_are_found(self):
-        aos_modules = [i.name for i in self.helper.listAosModules()]
+        aos_modules = [i.name for i in self.helper.list_aos_module_paths()]
         for module_name in self.module_names:
             self.assertIn(module_name, aos_modules)

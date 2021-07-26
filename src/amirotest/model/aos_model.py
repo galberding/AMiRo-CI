@@ -6,8 +6,6 @@ from typing import Optional
 class FlagNotFoundException(Exception):
     pass
 
-
-
 @dataclass
 class AOSModule:
     # name: str

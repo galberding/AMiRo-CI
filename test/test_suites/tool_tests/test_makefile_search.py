@@ -1,4 +1,5 @@
 from pathlib import Path
+from ..test_utils.module_creation_helper import AosModuleMockData
 from ..test_utils.path_helper import PathHelper
 import unittest
 
@@ -9,8 +10,9 @@ from amirotest.tools.makefile_search import MakefileSearch
 class TestMakefileSearch(unittest.TestCase):
 
     def setUp(self):
-        self.helper = PathHelper()
-        self.aos_module = self.helper.get_aos_module()
+        # self.helper = PathHelper()
+        self.module_helper = AosModuleMockData()
+        self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileSearch()
 
     def test_makefile_search_global_flags(self):
@@ -29,6 +31,6 @@ class TestMakefileSearch(unittest.TestCase):
 
     def test_search_user_flag_multiple_default_flags(self):
         # Powermanagement hast a default value for its sensor ring
-        pm_module = self.helper.get_aos_module(module_name="PowerManagement_1-2")
+        pm_module = self.module_helper.get_aos_module(module_name="PowerManagement_1-2")
         results = self.searcher.search_user_default_argument(pm_module.get_makefile(), 'BOARD_SENSORRING')
         self.assertEqual(results, 'BOARD_PROXIMITYSENSOR')
