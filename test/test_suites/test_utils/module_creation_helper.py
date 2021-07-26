@@ -33,7 +33,7 @@ class AosModuleMockData:
         nucleo_path = self.helper.get_aos_module_path(module_name=module_name)
         return AOSModule(nucleo_path)
 
-    def listAosModules(self) -> list[Path]:
+    def list_aos_modules(self) -> list[Path]:
         aos_modules = []
         for path_obj in self.helper.get_aos_module_dir().glob("*"):
             if path_obj.is_dir():
