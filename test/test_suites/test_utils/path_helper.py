@@ -7,6 +7,12 @@ class PathHelper():
         self.default_test_env = Path("/tmp/aos_test_env/")
         self.default_config_yml_path = self.default_test_env.joinpath("default_conf.yml")
 
+    def create_test_env(self):
+        self.default_test_env.mkdir(parents=True, exist_ok=True)
+
+    def clear_test_env(self):
+        self.default_config_yml_path.unlink(missing_ok=True)
+
     def get_aos_module_dir(self) -> Path:
         return self.aos_path.joinpath("modules")
 

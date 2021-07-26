@@ -86,6 +86,20 @@ class AOSModule:
                 return flag
         raise FlagNotFoundException(f"Cannot find {flag_name}!")
 
+    def dict_factory(self):
+        return {self.name: 42}
+
+    def to_dict(self) -> dict:
+        conf = {}
+        conf[self.name] = {}
+        # conf[self.name]["path"] = self.path
+
+        conf[self.name]["flags"] = {}
+        for flag in self.flags:
+            conf[self.name]["flags"][flag.name] = [arg.name for arg in flag.args]
+        return conf
+
+
     def __str__(self) -> str:
         return f'{self.name}: {self.flags}'
     __repr__ = __str__
