@@ -13,4 +13,5 @@ class TestReplacementConfigCreation(unittest.TestCase):
         pass
     # Check if default config exists
     # load default config
-    #
+    # dump defaults to replace config
+    # how should they be build??

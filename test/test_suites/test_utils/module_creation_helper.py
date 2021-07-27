@@ -1,4 +1,4 @@
-from amirotest.model.aos_model import AOSModule
+from amirotest.model import AOSModule
 from amirotest.tools.makefile_search import MakefileSearch
 from ..test_utils.path_helper import PathHelper
 
