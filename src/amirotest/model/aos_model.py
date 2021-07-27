@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Type, Union
+from typing import Type
 
-from amirotest.model.aos_flag import GlobalFlag, UserFlag, AosFlag
+from amirotest.model import GlobalOption, UserOption, AosOption
 
 
-class FlagNotFoundException(Exception):
+class OptionNotFoundException(Exception):
     pass
 
 
@@ -13,7 +13,7 @@ class FlagNotFoundException(Exception):
 class AOSModule:
     name: str = field(init=False)
     path: Path
-    flags: list[AosFlag] = field(init=False)
+    flags: list[AosOption] = field(init=False)
 
     def __post_init__(self):
         self.name = self.path.name
@@ -23,13 +23,13 @@ class AOSModule:
         return self.path.joinpath("Makefile")
 
     def create_global_flags(self, search_results: list[tuple[str, str]]):
-        self.create_flags(search_results, GlobalFlag)
+        self.create_flags(search_results, GlobalOption)
 
     def create_user_flags(self, search_results: list[tuple[str, str]]):
-        self.create_flags(search_results, UserFlag)
+        self.create_flags(search_results, UserOption)
 
     def create_flags(self, search_results: list[tuple[str, str]],
-                     flag_type: Type[AosFlag]=AosFlag):
+                     flag_type: Type[AosOption]=AosOption):
         """Create flags from given search results.
         Example:
         > create_flags([('USE_COPT', '-std=c99 -fshort-enums')])
@@ -65,7 +65,7 @@ class AOSModule:
             for s_flag in sub_flags:
                 u_flag.resolve(s_flag)
 
-    def get_unresolved_flags(self) -> list[AosFlag]:
+    def get_unresolved_flags(self) -> list[AosOption]:
         """Get all flags with unresolved arguments"""
         u_flags = []
         for flag in self.flags:
@@ -73,28 +73,28 @@ class AOSModule:
                 u_flags.append(flag)
         return u_flags
 
-    def get_substitution_flags(self) -> list[AosFlag]:
+    def get_substitution_flags(self) -> list[AosOption]:
         """Get Flag contained in unresolved arguments.
         Also referred to as substitution flag because their
         content is substituted into the argument"""
         sub_flag_names = []
         u_flags = self.get_unresolved_flags()
         for u_flag in u_flags:
-            sub_flag_names += u_flag.get_substitution_flag_names()
+            sub_flag_names += u_flag.get_substitution_opt_names()
         sub_flags = self.find_flags_by_names(sub_flag_names)
         return sub_flags
 
-    def find_flags_by_names(self, flag_names: list[str]) -> list[AosFlag]:
+    def find_flags_by_names(self, flag_names: list[str]) -> list[AosOption]:
         flags = []
         for flag_name in flag_names:
             flags.append(self.find_flag_by_name(flag_name))
         return flags
 
-    def find_flag_by_name(self, flag_name: str) -> AosFlag:
+    def find_flag_by_name(self, flag_name: str) -> AosOption:
         for flag in self.flags:
             if flag.name == flag_name:
                 return flag
-        raise FlagNotFoundException(f"Cannot find {flag_name}!")
+        raise OptionNotFoundException(f"Cannot find {flag_name}!")
 
     def dict_factory(self):
         return {self.name: 42}
@@ -105,8 +105,8 @@ class AOSModule:
         # conf[self.name]["path"] = self.path
 
         conf[self.name]["flags"] = {}
-        conf[self.name]["flags"][GlobalFlag.__name__] = {}
-        conf[self.name]["flags"][UserFlag.__name__] = {}
+        conf[self.name]["flags"][GlobalOption.__name__] = {}
+        conf[self.name]["flags"][UserOption.__name__] = {}
 
         for flag in self.flags:
             conf[self.name]["flags"][flag.get_type()][flag.name] = [arg.name for arg in flag.args]

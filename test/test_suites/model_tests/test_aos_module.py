@@ -2,7 +2,7 @@ from ..test_utils.module_creation_helper import AosModuleHelper
 from ..test_utils.path_helper import PathHelper
 import unittest
 
-from amirotest.model import AosFlag, FlagNotFoundException
+from amirotest.model import AosOption, OptionNotFoundException
 from amirotest.tools.makefile_search import MakefileSearch
 
 class TestAosModel(unittest.TestCase):
@@ -59,10 +59,10 @@ class TestAosModel(unittest.TestCase):
         self.assertFalse(self.aos_module.is_resolved())
 
     def test_get_substitution_flag_name_from_argument(self):
-        unresolved_flag = AosFlag(
+        unresolved_flag = AosOption(
             'USE_FPU_OPT',
             '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
-        sub_flag_names = unresolved_flag.get_substitution_flag_names()
+        sub_flag_names = unresolved_flag.get_substitution_opt_names()
         self.assertEqual(len(sub_flag_names), 1)
         self.assertEqual(sub_flag_names[0], 'USE_FPU')
 
@@ -82,7 +82,7 @@ class TestAosModel(unittest.TestCase):
 
     def test_module_find_flag_by_name_not_found_exception(self):
         self.assertRaises(
-            FlagNotFoundException,
+            OptionNotFoundException,
             self.aos_module.find_flag_by_name,
             'USE_FPU')
 
@@ -113,7 +113,7 @@ class TestAosModel(unittest.TestCase):
         # therefore raise exception if resolution fails
         self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(USE_UNKNOWN_FLAG)"))
         self.aos_module.create_global_flags(self.search_results)
-        self.assertRaises(FlagNotFoundException, self.aos_module.resolve)
+        self.assertRaises(OptionNotFoundException, self.aos_module.resolve)
 
     def test_module_resolve_multiple_args_with_same_sub_flag(self):
         self.search_results.append(("USE_THIS_SUB", "42"))

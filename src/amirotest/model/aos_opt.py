@@ -8,7 +8,7 @@ class WrongArgumentCount(Exception):
     pass
 
 @dataclass
-class AosFlag():
+class AosOption():
     name: str
     argument_str: str
 
@@ -17,9 +17,9 @@ class AosFlag():
         self.args = [AosArgument(arg) for arg in splitted_args]
 
     def is_resolved(self) -> bool:
-        return len(self.get_substitution_flag_names()) == 0
+        return len(self.get_substitution_opt_names()) == 0
 
-    def get_substitution_flag_names(self) -> list[str]:
+    def get_substitution_opt_names(self) -> list[str]:
         """Returns all substitution flags that are found in the arguments."""
         return self._get_substitution_flag_names(self.args)
 
@@ -30,7 +30,7 @@ class AosFlag():
                 flags.append(arg.get_substitution_flag())
         return flags
 
-    def resolve(self, flag: 'AosFlag') -> bool:
+    def resolve(self, flag: 'AosOption') -> bool:
         for arg in self.args:
             arg.resolve(flag.name, flag.argument_str)
         return self.is_resolved()
@@ -44,11 +44,11 @@ class AosFlag():
     __repr__ = __str__
 
 
-class GlobalFlag(AosFlag):
+class GlobalOption(AosOption):
     pass
 
 
-class UserFlag(AosFlag):
+class UserOption(AosOption):
     pass
     def __init__(self, flag_name, arg_str):
         """Add substitution flag to argument"""
