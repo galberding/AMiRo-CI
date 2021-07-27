@@ -36,12 +36,3 @@ class YamlDumper(AosDumper):
         with conf_path.open() as conf:
             data = yml_load(conf, Loader=Loader)
         return data
-
-
-
-
-
-class AosLoader(ABC):
-    @abstractmethod
-    def load(self, conf_path: Path) -> list[AOSModule]:
-        """Return list of modules if config path exists"""

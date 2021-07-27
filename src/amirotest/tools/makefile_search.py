@@ -3,7 +3,7 @@ import re
 from typing import Any, Optional
 
 
-class MultipelUserFlagsException(Exception):
+class MultipelUserOptionsException(Exception):
     pass
 
 class MakefileSearch:
@@ -24,27 +24,27 @@ class MakefileSearch:
             """, self.regex_options)
 
     def search_global_options(self, makefile: Path) -> list[tuple[str, str]]:
-        return self._search_file_with_regex(makefile, self.global_flag_regex)
+        return self._search_with_regex(makefile, self.global_flag_regex)
 
     def search_user_options(self, makefile: Path) -> list[tuple[str, str]]:
-        return self._search_file_with_regex(makefile, self.user_flag_regex)
+        return self._search_with_regex(makefile, self.user_flag_regex)
 
     def search_user_default_argument(self, makefile: Path, argument_name: str)-> Optional[str]:
-        """Return """
+        """Return default for user argument if it is set."""
         regex = re.compile(
             fr"""
             ^{argument_name}\s*\?=\s*(?P<value>.*)\n # ARGUMENT ?= VALUE
             """, self.regex_options)
 
-        res = self._search_file_with_regex(makefile, regex)
+        res = self._search_with_regex(makefile, regex)
         if len(res) > 1:
-            raise MultipelUserFlagsException("Multiple user default values are provided!")
+            raise MultipelUserOptionsException("Multiple user default values are provided!")
 
         return res[0] if len(res) == 1 else None
 
 
-    def _search_file_with_regex(self, file: Path, regex: re.Pattern) -> list[Any]:
-        with file.open() as make:
+    def _search_with_regex(self, path: Path, regex: re.Pattern) -> list[Any]:
+        with path.open() as make:
             content = make.read()
             res =  regex.findall(content)
             return res
