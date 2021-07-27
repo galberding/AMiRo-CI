@@ -16,6 +16,11 @@ class AosOption():
         splitted_args = self.argument_str.split(" ")
         self.args = [AosArgument(arg) for arg in splitted_args]
 
+    def resolve(self, flag: 'AosOption') -> bool:
+        for arg in self.args:
+            arg.resolve(flag.name, flag.argument_str)
+        return self.is_resolved()
+
     def is_resolved(self) -> bool:
         return len(self.get_substitution_opt_names()) == 0
 
@@ -30,10 +35,13 @@ class AosOption():
                 flags.append(arg.get_substitution_flag())
         return flags
 
-    def resolve(self, flag: 'AosOption') -> bool:
+    def extract_variables(self) -> list['AosVariable']:
+        aos_vars = []
         for arg in self.args:
-            arg.resolve(flag.name, flag.argument_str)
-        return self.is_resolved()
+            variable_description = arg.extract_variable(self.name)
+            if variable_description:
+                aos_vars.append(AosVariable(variable_description[0], variable_description[1]))
+        return aos_vars
 
     def get_type(self) -> str:
         """Retrun type description for listing in config"""
@@ -43,6 +51,9 @@ class AosOption():
         return f'{self.name}: {self.args}'
     __repr__ = __str__
 
+
+class AosVariable(AosOption):
+    pass
 
 class GlobalOption(AosOption):
     pass
