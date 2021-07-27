@@ -102,13 +102,9 @@ class AOSModule:
     def to_dict(self) -> dict:
         conf = {}
         conf[self.name] = {}
-        # conf[self.name]["path"] = self.path
-
-        conf[self.name] = {}
-        conf[self.name][GlobalOption.__name__] = {}
-        conf[self.name][UserOption.__name__] = {}
-
         for flag in self.flags:
+            if flag.get_type() not in conf[self.name]:
+                conf[self.name][flag.get_type()] = {}
             conf[self.name][flag.get_type()][flag.name] = [arg.name for arg in flag.args]
         return conf
 
