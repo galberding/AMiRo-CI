@@ -1,4 +1,4 @@
-from amirotest.tools.aos_serialization import YamlDumper, yml_load, Loader
+from amirotest.tools import YamlDumper, yml_load, Loader
 from amirotest.tools import YamlDumper
 from ..test_utils import AosModuleHelper, PathHelper
 import unittest
@@ -21,7 +21,6 @@ class TestModuleDumping(unittest.TestCase):
         dumper.dump(self.nucleo_module, self.config_path)
         conf = self.load_config()
         self.assertIn("NUCLEO-L476RG", conf)
-
 
     def test_dump_several_modules(self):
         modules = self.module_helper.get_modules_with_options(self.module_helper.module_names)

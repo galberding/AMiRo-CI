@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
-from amirotest.model.aos_model import AOSModule
+from amirotest.model import AOSModule
 
 from amirotest.tools import yml_load, yml_dump, Loader, Dumper
 
