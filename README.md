@@ -12,19 +12,21 @@ The default configuration is stored in yaml format which is structured as follow
 ```yaml
 NUCLEO-L476RG:
   flags:
-    UDEFS: [-DBOARD_MPU6050_CONNECTED]
-    USE_COPT: [-std=c99, -fshort-enums]
-    USE_CPPOPT: [-fno-rtti, -std=c++17]
-    USE_EXCEPTIONS_STACKSIZE: ['0x400']
-    USE_FPU: [softfp]
-    USE_FPU_OPT: [-mfloat-abi=$(USE_FPU), -mfpu=fpv4-sp-d16]
-    USE_LDOPT: [-lm]
-    USE_LINK_GC: ['yes']
-    USE_LTO: ['yes']
-    USE_OPT: [-O2, -fstack-usage, '-Wl,--print-memory-usage']
-    USE_PROCESS_STACKSIZE: ['0x400']
-    USE_SMART_BUILD: ['no']
-    USE_VERBOSE_COMPILE: ['no']
+    GlobalFlag:
+      USE_COPT: [-std=c99, -fshort-enums]
+      USE_CPPOPT: [-fno-rtti, -std=c++17]
+      USE_EXCEPTIONS_STACKSIZE: ['0x400']
+      USE_FPU: [softfp]
+      USE_FPU_OPT: [-mfloat-abi=$(USE_FPU), -mfpu=fpv4-sp-d16]
+      USE_LDOPT: [-lm]
+      USE_LINK_GC: ['yes']
+      USE_LTO: ['yes']
+      USE_OPT: [-O2, -fstack-usage, '-Wl,--print-memory-usage']
+      USE_PROCESS_STACKSIZE: ['0x400']
+      USE_SMART_BUILD: ['no']
+      USE_VERBOSE_COMPILE: ['no']
+    UserFlag:
+      UDEFS: [-DBOARD_MPU6050_CONNECTED=$(BOARD_MPU6050_CONNECTED)]
 ```
 
 ## General Architecture
