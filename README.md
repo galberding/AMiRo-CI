@@ -12,7 +12,7 @@ The default configuration is stored in yaml format which is structured as follow
 ```yaml
 NUCLEO-L476RG:
   flags:
-    BOARD_MPU6050_CONNECTED: [-DBOARD_MPU6050_CONNECTED]
+    UDEFS: [-DBOARD_MPU6050_CONNECTED]
     USE_COPT: [-std=c99, -fshort-enums]
     USE_CPPOPT: [-fno-rtti, -std=c++17]
     USE_EXCEPTIONS_STACKSIZE: ['0x400']
