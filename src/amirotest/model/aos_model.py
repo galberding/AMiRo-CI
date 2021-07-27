@@ -104,12 +104,12 @@ class AOSModule:
         conf[self.name] = {}
         # conf[self.name]["path"] = self.path
 
-        conf[self.name]["flags"] = {}
-        conf[self.name]["flags"][GlobalOption.__name__] = {}
-        conf[self.name]["flags"][UserOption.__name__] = {}
+        conf[self.name] = {}
+        conf[self.name][GlobalOption.__name__] = {}
+        conf[self.name][UserOption.__name__] = {}
 
         for flag in self.flags:
-            conf[self.name]["flags"][flag.get_type()][flag.name] = [arg.name for arg in flag.args]
+            conf[self.name][flag.get_type()][flag.name] = [arg.name for arg in flag.args]
         return conf
 
 
