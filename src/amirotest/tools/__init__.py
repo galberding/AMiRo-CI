@@ -5,6 +5,5 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-
 from amirotest.tools.makefile_search import MakefileSearch
 from amirotest.tools.aos_serialization import AosDumper, YamlDumper

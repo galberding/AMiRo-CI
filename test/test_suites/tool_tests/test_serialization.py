@@ -9,21 +9,26 @@ class TestModuleDumping(unittest.TestCase):
         self.path_helper = PathHelper()
         self.path_helper.create_test_env()
         self.module_helper = AosModuleHelper()
-        self.nucleo_module = self.module_helper.get_nucleo_with_flags()
+        self.nucleo_module = self.module_helper.get_nucleo_with_options()
         self.config_path = self.path_helper.get_default_config_yml_path()
 
     def test_yaml_dumper_create_if_not_exists(self):
         dumper = YamlDumper()
-        dumper.dump(self.nucleo_module, self.path_helper.get_default_config_yml_path())
+        dumper.dump(self.nucleo_module, self.config_path)
         self.assertTrue(self.config_path.exists())
 
     def test_yaml_write_module_to_file(self):
         dumper = YamlDumper()
-        dumper.dump(self.nucleo_module, self.path_helper.get_default_config_yml_path())
+        dumper.dump(self.nucleo_module, self.config_path)
         with self.path_helper.get_default_config_yml_path().open() as f:
             module = yml_load(f, Loader=Loader)
             print(module)
             self.assertIn("NUCLEO-L476RG", module)
+
+    def test_dump_several_modules(self):
+        modules = self.module_helper.get_modules_with_options(self.module_helper.module_names)
+        dumper = YamlDumper()
+        dumper.dump_all(modules, self.config_path)
 
     def tearDown(self) -> None:
         # self.path_helper.clear_test_env()
