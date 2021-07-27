@@ -1,15 +1,9 @@
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
-from dataclasses import asdict
-from yaml import dump as yml_dump
-from yaml import load as yml_load
-
 from amirotest.model.aos_model import AOSModule
-try:
-    from yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
+
+from amirotest.tools import yml_load, yml_dump, Loader, Dumper
 
 class AosDumper(ABC):
     @abstractmethod

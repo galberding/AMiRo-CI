@@ -3,7 +3,7 @@ from ..test_utils.module_creation_helper import AosModuleHelper
 from ..test_utils.path_helper import PathHelper
 import unittest
 
-from amirotest.tools.makefile_search import MakefileSearch
+from amirotest.tools import MakefileSearch
 
 
 
