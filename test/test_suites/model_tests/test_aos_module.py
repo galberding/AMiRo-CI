@@ -1,9 +1,8 @@
-from ..test_utils.module_creation_helper import AosModuleHelper
-from ..test_utils.path_helper import PathHelper
+from ..test_utils import AosModuleHelper, PathHelper
 import unittest
 
 from amirotest.model import AosOption, OptionNotFoundException
-from amirotest.tools.makefile_search import MakefileSearch
+from amirotest.tools import MakefileSearch
 
 class TestAosModel(unittest.TestCase):
 
@@ -13,20 +12,7 @@ class TestAosModel(unittest.TestCase):
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
         self.module_name = "NUCLEO-L476RG"
-        self.search_results = [
-            ('USE_OPT', '-O2 -fstack-usage -Wl,--print-memory-usage'), # Has option for preprocessor (-Wl,)
-            ('USE_COPT', '-std=c99 -fshort-enums'),
-            ('USE_CPPOPT', '-fno-rtti -std=c++17'),
-            ('USE_LINK_GC', 'yes'),
-            ('USE_LDOPT', '-lm'),
-            ('USE_LTO', 'yes'),
-            ('USE_VERBOSE_COMPILE', 'no'),
-            ('USE_SMART_BUILD', 'no'),
-            ('USE_PROCESS_STACKSIZE', '0x400'),
-            ('USE_EXCEPTIONS_STACKSIZE', '0x400'),
-            ('USE_FPU', 'softfp'),
-            ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16') # Needs to be substituted
-        ]
+        self.search_results = self.module_helper.nucleo_search_results
 
     def test_create_module(self):
         self.assertEqual(self.aos_module.name, self.module_name)
