@@ -27,8 +27,8 @@ class AosModuleHelper:
     def get_nucleo_with_flags(self) -> AOSModule:
         module = self.get_aos_module()
         user_res = self.get_user_results_for("NUCLEO-L476RG")
-        module.create_global_flags(self.nucleo_search_results)
-        module.create_user_flags(user_res)
+        module.create_global_options(self.nucleo_search_results)
+        module.create_user_options(user_res)
         return module
 
     def get_global_results_for(self, module_name) -> list[tuple[str, str]]:
