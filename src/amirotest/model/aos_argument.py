@@ -32,12 +32,10 @@ class AosArgument:
         """Get extracted variable. Variable name is place in self.name.
         After this operation is_resolved() will evaluate to False.
         """
-        # if not self.is_resolved():
         if not self.can_extract_variable():
             return
 
         arg, a_left, a_value = self._search_argument_pattern()
-        print(arg)
         if arg:
             var_name = self._append_allcaps_to_prefix(prefix, arg)
             self.name = f"-$({var_name})"
