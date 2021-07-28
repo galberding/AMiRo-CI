@@ -1,60 +1,92 @@
 from dataclasses import dataclass
 import re
-from typing import Optional
+from typing import Optional, Union
+from enum import Enum, auto
 
 class MalformatedUserArgument(Exception):
     pass
+
+
+class RegexGroupID(Enum):
+    STANDARD_OPTION = auto()
+    ASSIGNMENT_LEFT = auto()
+    ASSIGNMENT_VALUE = auto()
+    STANDARD_ARG = auto()
+
 
 @dataclass(unsafe_hash=True)
 class AosArgument:
     name: str
     def __post_init__(self):
-        self.substitution_flag_regex: re.Pattern = re.compile(r'\$\((?P<flag>.*)\)')
+        self.option_substitution_regex: re.Pattern = re.compile(
+            fr'\$\((?P<{RegexGroupID.STANDARD_OPTION.name}>.*)\)')
         self.variable_extraction_regex = re.compile(
-            r"-((?P<assign_left>.*)=(?P<assign_value>.*)|(?P<normal_arg>[\dA-Za-z-]*))")
+            fr"""
+            -((?P<{RegexGroupID.ASSIGNMENT_LEFT.name}>.*)        # -std
+            =(?P<{RegexGroupID.ASSIGNMENT_VALUE.name}>.*)        # =c99 --> -std=c99
+            |(?P<{RegexGroupID.STANDARD_ARG.name}>[\dA-Za-z-,]*)) # -fsth-else
+            """, re.VERBOSE)
         self.resolved = False
 
     def extract_variable(self, prefix) -> Optional[tuple[str, str]]:
         if not self.is_resolved():
             return
-        res = self.variable_extraction_regex.search(self.name)
-        normal_arg = res.group("normal_arg")
-        assign_left = res.group("assign_left")
-        assign_value = res.group("assign_value")
-
-        if normal_arg:
-            suffix = normal_arg.replace("-", "_").upper()
-            var_name = f"{prefix}_{suffix}"
+        arg, a_left, a_value = self._search_variable_pattern()
+        print(arg)
+        if arg:
+            var_name = self._append_allcaps_to_prefix(prefix, arg)
             self.name = f"-$({var_name})"
-            return var_name, normal_arg
-        elif assign_left and assign_value:
-            suffix = assign_left.replace("-", "_").upper()
-            var_name = f"{prefix}_{suffix}"
-            self.name = f"-{assign_left}=$({var_name})"
-            return var_name, assign_value
+            return var_name, arg
+        elif a_left and a_value:
+            var_name = self._append_allcaps_to_prefix(prefix, a_left)
+            self.name = f"-{a_left}=$({var_name})"
+            return var_name, a_value
+
+    def _search_variable_pattern(self) -> tuple[Optional[str], Optional[str], Optional[str]]:
+        """Search for different argument patterns:
+        1. Assignment pattern: -std=c99, -mfpu=fpv4-sp-d16
+        2. Standard argument: -fshort-enums, -O2, -Wl,--print-memory-usage ..."""
+        res = self.variable_extraction_regex.search(self.name)
+        arg = res.group(RegexGroupID.STANDARD_ARG.name)
+        a_left = res.group(RegexGroupID.ASSIGNMENT_LEFT.name)
+        a_value = res.group(RegexGroupID.ASSIGNMENT_VALUE.name)
+        return arg, a_left, a_value
+
+    def _append_allcaps_to_prefix(self, prefix: str, raw_suffix: str) -> str:
+        """Convert raw_suffix to allcaps, remove other special characters and append to prefix."""
+        suffix = raw_suffix.replace(",", "")
+        # Collapse multiple occurances of '--' e.g. -Wl,--print-memory-usage
+        suffix = suffix.replace("--", "_")
+        suffix = suffix.replace("-", "_")
+        suffix = suffix.upper()
+        return f"{prefix}_{suffix}"
+
 
     def is_resolved(self) -> bool:
-        if self.resolved:
-            return True
-        # If no substitution flag is returned
-        # the Argument is considered resolved
-        if not self.get_substitution_flag():
-            self.resolved = True
-        return self.resolved
+        """If no substitution option is found the arg is considered resolved."""
+        return not self.search_substitution_option()
 
-    def resolve(self, sub_flag_name: str, flag_value: str):
-        """Replace name attribute with substituted flag_value."""
-        if sub_flag_name != self.get_substitution_flag():
+    def resolve(self, option_name: str, option_value: str):
+        """Resolve option name, ensure that the provided option is suited for substitution."""
+        if option_name != self.search_substitution_option():
             # Not the matching sub_flag
             return
-        arg_name = re.sub(self.substitution_flag_regex,
-               flag_value,
+        self._substitute_option_value_in_name(option_value)
+        # arg_name = re.sub(self.option_substitution_regex,
+        #        flag_value,
+        #        self.name)
+        # self.name = arg_name
+
+    def _substitute_option_value_in_name(self, option_value):
+        """Replace name attribute with substituted option_value."""
+        arg_name = re.sub(self.option_substitution_regex,
+               option_value,
                self.name)
         self.name = arg_name
 
-    def get_substitution_flag(self) -> Optional[re.Match]:
-        res = self.substitution_flag_regex.search(self.name)
-        return res.group('flag') if res else None
+    def search_substitution_option(self) -> Optional[re.Match]:
+        res = self.option_substitution_regex.search(self.name)
+        return res.group(RegexGroupID.STANDARD_OPTION.name) if res else None
 
 
     def __str__(self) -> str:
@@ -63,14 +95,20 @@ class AosArgument:
 
 
 class UserArgument(AosArgument):
-    def __init__(self, name):
-        self.user_flag_substitution_regex = re.compile(r"-D(?P<flag1>[\dA-Z_]*)(=\$\((?P<flag2>.*)\)|$)")
-        res = self.user_flag_substitution_regex.search(name)
-        if not res.group("flag1"):
-            raise MalformatedUserArgument(f"Cannot process user argument: {name}")
-        if not res.group("flag2"):
-            name = self.append_substitution_to_arg(name, res.group("flag1"))
-        super().__init__(name)
+    def __init__(self, user_arg_name):
+        self.user_flag_substitution_regex = re.compile(
+            fr"""
+            -D(?P<{RegexGroupID.STANDARD_ARG.name}>[\dA-Z_]*)      # -D<ARG_NAME>
+            (=\$\((?P<{RegexGroupID.STANDARD_OPTION.name}>.*)\)|$) # =$(<OPTION_NAME>) or None
+            """, re.VERBOSE)
+        res = self.user_flag_substitution_regex.search(user_arg_name)
+        extracted_arg_name = res.group(RegexGroupID.STANDARD_ARG.name)
+        option = res.group(RegexGroupID.STANDARD_OPTION.name)
+        if not extracted_arg_name:
+            raise MalformatedUserArgument(f"Cannot process user argument: {user_arg_name}")
+        if not option:
+            user_arg_name = self.append_substitution_to_arg(user_arg_name, extracted_arg_name)
+        super().__init__(user_arg_name)
 
     def append_substitution_to_arg(self, arg, sub_flag) -> str:
         return f"{arg}=$({sub_flag})"

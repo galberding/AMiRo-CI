@@ -32,7 +32,7 @@ class AosOption():
         flags = []
         for arg in args:
             if not arg.is_resolved():
-                flags.append(arg.get_substitution_flag())
+                flags.append(arg.search_substitution_option())
         return flags
 
     def extract_variables(self) -> list['AosVariable']:

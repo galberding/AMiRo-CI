@@ -83,7 +83,7 @@ class TestArgumentModel(unittest.TestCase):
             u_opt.args[0].name,
             "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
 
-    def test_inject_variable_in_option_args(self):
+    def test_extract_variable_in_option_args(self):
         option = AosOption("USE_COPT", "-std=c99 -fshort-enums")
         aos_vars: list[AosVariable] = option.extract_variables()
         self.assertEqual(len(aos_vars), 2)
@@ -94,3 +94,10 @@ class TestArgumentModel(unittest.TestCase):
 
         self.assertEqual(option.args[0].name, "-std=$(USE_COPT_STD)")
         self.assertEqual(option.args[1].name, "-$(USE_COPT_FSHORT_ENUMS)")
+
+    def test_extract_variable_preprocessor_option(self):
+        option = AosOption("USE_COPT", '-Wl,--print-memory-usage')
+        aos_vars: list[AosVariable] = option.extract_variables()
+        self.assertEqual(len(aos_vars), 1)
+        self.assertEqual(aos_vars[0].name, "USE_COPT_WL_PRINT_MEMORY_USAGE")
+        self.assertEqual(aos_vars[0].args[0].name, "Wl,--print-memory-usage")
