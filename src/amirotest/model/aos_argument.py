@@ -66,7 +66,6 @@ class AosArgument:
         suffix = suffix.upper()
         return f"{prefix}_{suffix}"
 
-
     def is_resolved(self) -> bool:
         """If no substitution option is found the arg is considered resolved."""
         return not self.search_substitution_option()
@@ -77,10 +76,10 @@ class AosArgument:
             # Not the matching sub_flag
             return
         self._substitute_option_value_in_name(option_value)
-        # arg_name = re.sub(self.option_substitution_regex,
-        #        flag_value,
-        #        self.name)
-        # self.name = arg_name
+
+    def search_substitution_option(self) -> Optional[re.Match]:
+        res = self.option_substitution_regex.search(self.name)
+        return res.group(RegexGroupID.STANDARD_OPTION.name) if res else None
 
     def _substitute_option_value_in_name(self, option_value):
         """Replace name attribute with substituted option_value."""
@@ -89,9 +88,6 @@ class AosArgument:
                self.name)
         self.name = arg_name
 
-    def search_substitution_option(self) -> Optional[re.Match]:
-        res = self.option_substitution_regex.search(self.name)
-        return res.group(RegexGroupID.STANDARD_OPTION.name) if res else None
 
 
     def __str__(self) -> str:
