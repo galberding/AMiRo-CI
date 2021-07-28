@@ -101,3 +101,8 @@ class TestArgumentModel(unittest.TestCase):
         self.assertEqual(len(aos_vars), 1)
         self.assertEqual(aos_vars[0].name, "USE_COPT_WL_PRINT_MEMORY_USAGE")
         self.assertEqual(aos_vars[0].args[0].name, "Wl,--print-memory-usage")
+
+    def test_extract_no_option(self):
+        option = AosOption("USE_FPU", 'softfp')
+        aos_vars: list[AosVariable] = option.extract_variables()
+        self.assertEqual(len(aos_vars), 0)

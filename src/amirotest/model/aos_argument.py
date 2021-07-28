@@ -32,7 +32,8 @@ class AosArgument:
         """Get extracted variable. Variable name is place in self.name.
         After this operation is_resolved() will evaluate to False.
         """
-        if not self.is_resolved():
+        # if not self.is_resolved():
+        if not self.can_extract_variable():
             return
 
         arg, a_left, a_value = self._search_argument_pattern()
@@ -46,6 +47,13 @@ class AosArgument:
             self.name = f"-{a_left}=$({var_name})"
             return var_name, a_value
 
+    def can_extract_variable(self):
+        return self.is_resolved() and self._can_detect_argument_pattern()
+
+    def _can_detect_argument_pattern(self) -> bool:
+        res = self.variable_extraction_regex.search(self.name)
+        return res is not None
+
     def _search_argument_pattern(self) -> tuple[Optional[str], Optional[str], Optional[str]]:
         """Search for different argument patterns:
         1. Assignment pattern: -std=c99, -mfpu=fpv4-sp-d16, ...
@@ -55,6 +63,7 @@ class AosArgument:
         a_left = res.group(RegexGroupID.ASSIGNMENT_LEFT.name)
         a_value = res.group(RegexGroupID.ASSIGNMENT_VALUE.name)
         return arg, a_left, a_value
+
 
     def _append_allcaps_to_prefix(self, prefix: str, raw_suffix: str) -> str:
         """Convert raw_suffix to allcaps,
