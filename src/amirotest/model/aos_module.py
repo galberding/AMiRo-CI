@@ -9,7 +9,7 @@ class OptionNotFoundException(Exception):
     pass
 
 @dataclass
-class AOSModule:
+class AosModule:
     name: str = field(init=False)
     path: Path
     options: list[AosOption] = field(init=False)

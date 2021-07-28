@@ -1,5 +1,7 @@
 from pathlib import Path
 
+
+
 class PathHelper():
 
     def __init__(self, aos_root=Path("/home/schorschi/hiwi/AMiRo-OS")):
@@ -31,3 +33,9 @@ class PathHelper():
 
     def get_default_config_yml_path(self) -> Path:
         return self.default_config_yml_path
+
+    def get_assets_default_config_path(self) -> Path:
+        asset_conf = Path("../assets/default_conf.yml").resolve()
+        if not asset_conf.exists():
+            raise FileNotFoundError(f"Cannot find: {asset_conf}")
+        return asset_conf

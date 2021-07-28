@@ -1,4 +1,4 @@
-from amirotest.model import AOSModule
+from amirotest.model import AosModule
 from amirotest.tools.makefile_search import MakefileSearch
 from ..test_utils.path_helper import PathHelper
 
@@ -40,19 +40,19 @@ class AosModuleHelper:
         ]
         self.nucleo_flag_count = len(self.nucleo_search_results)
 
-    def get_nucleo_with_options(self) -> AOSModule:
+    def get_nucleo_with_options(self) -> AosModule:
         return self.get_module_with_options("NUCLEO-L476RG")
 
-    def get_power_management_with_options(self) -> AOSModule:
+    def get_power_management_with_options(self) -> AosModule:
         return self.get_module_with_options("PowerManagement_1-2")
 
-    def get_modules_with_options(self, module_names: list[str]) -> list[AOSModule]:
+    def get_modules_with_options(self, module_names: list[str]) -> list[AosModule]:
         modules = []
         for module_name in module_names:
             modules.append(self.get_module_with_options(module_name))
         return modules
 
-    def get_module_with_options(self, module_name: str) -> AOSModule:
+    def get_module_with_options(self, module_name: str) -> AosModule:
         if module_name not in self.module_names:
             raise UnknownModuleNameException(f"Cannot find {module_name}")
         module = self.get_aos_module(module_name=module_name)
@@ -70,6 +70,6 @@ class AosModuleHelper:
         return self.searcher.search_user_options(
             self.get_aos_module(module_name=module_name).get_makefile())
 
-    def get_aos_module(self, module_name="NUCLEO-L476RG") -> AOSModule:
+    def get_aos_module(self, module_name="NUCLEO-L476RG") -> AosModule:
         nucleo_path = self.helper.get_aos_module_path(module_name=module_name)
-        return AOSModule(nucleo_path)
+        return AosModule(nucleo_path)

@@ -1,5 +1,6 @@
+from amirotest.model.aos_opt import GlobalOption, UserOption
 from amirotest.tools import YamlDumper, yml_load, Loader
-from amirotest.tools import YamlDumper
+from amirotest.tools import YamlDumper, YamlLoader
 from ..test_utils import AosModuleHelper, PathHelper
 import unittest
 
@@ -38,3 +39,29 @@ class TestModuleDumping(unittest.TestCase):
     def tearDown(self) -> None:
         self.path_helper.clear_test_env()
         pass
+
+class TestModuleLoading(unittest.TestCase):
+    def setUp(self) -> None:
+        self.path_helper = PathHelper()
+        # self.path_helper.create_test_env()
+        self.module_helper = AosModuleHelper()
+        self.nucleo_module = self.module_helper.get_nucleo_with_options()
+        self.config_path = self.path_helper.get_assets_default_config_path()
+
+    def test_load_modules_from_asset_config(self):
+        loader = YamlLoader()
+        config = loader.get_config(self.config_path)
+        modules = loader.load(self.config_path)
+        self.assertEqual(len(modules), len(self.module_helper.module_names))
+        for module in modules:
+            self.assertIn(module.name, self.module_helper.module_names)
+            self.assertGreater(len(module.options), 0)
+            # Check global options
+            for option, args in config[module.name][GlobalOption.__name__].items():
+                self.assertTrue(module.find_option_by_name(option))
+            if UserOption.__name__ in config[module.name]:
+                for option, args in config[module.name][UserOption.__name__].items():
+                    mod_opt = module.find_option_by_name(option)
+                    self.assertTrue(mod_opt)
+                    for mod_args in mod_opt.args:
+                        self.assertIn(mod_args.name, args)
