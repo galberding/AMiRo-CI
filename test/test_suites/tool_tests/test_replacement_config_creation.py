@@ -11,6 +11,7 @@ class TestReplacementConfigCreation(unittest.TestCase):
 
     def test_check_if_config_exists(self):
         pass
+
     # Check if default config exists
     # load default config
     # dump defaults to replace config

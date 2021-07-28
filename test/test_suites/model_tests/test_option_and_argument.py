@@ -106,3 +106,49 @@ class TestArgumentModel(unittest.TestCase):
         option = AosOption("USE_FPU", 'softfp')
         aos_vars: list[AosVariable] = option.extract_variables()
         self.assertEqual(len(aos_vars), 0)
+
+    def test_variable_resolution(self):
+        option = AosOption("USE_COPT", '-Wl,--print-memory-usage')
+        aos_vars = option.extract_variables()
+        self.assertFalse(option.is_resolved())
+        self.assertTrue(option.resolve(aos_vars[0]))
+        self.assertEqual(option.args[0].name, "-Wl,--print-memory-usage")
+
+    def test_check_for_substitution_option(self):
+        option = AosOption("USE_COPT", '-Wl,--print-memory-usage')
+        option.extract_variables()
+        opt_names = option.get_substitution_opt_names()
+        self.assertEqual(len(opt_names), 1)
+        self.assertEqual(opt_names[0], "USE_COPT_WL_PRINT_MEMORY_USAGE")
+
+    def test_use_variable_extraction_for_reset(self):
+        """Special by the reset is that argument string is utilized to generate the default values."""
+        sub_option = AosOption("USE_FPU", 'softfp')
+        self.check_resolution_reset(
+            option=AosOption("USE_FPU_COPT", '-mfloat-abi=$(USE_FPU)'),
+            before="-mfloat-abi=softfp",
+            after="-mfloat-abi=$(USE_FPU)",
+            res_option=sub_option
+        )
+
+    def test_option_reset_with_resolved_opt(self):
+        self.check_resolution_reset(
+            option=AosOption("USE_COPT", '-Wl,--print-memory-usage'),
+            before="-Wl,--print-memory-usage",
+            after="-$(USE_COPT_WL_PRINT_MEMORY_USAGE)"
+        )
+
+    def check_resolution_reset(self,option: AosOption,
+                               before: str,
+                               after: str,
+                               res_option: AosOption=None):
+        aos_vars = option.extract_variables()
+        if res_option:
+            option.resolve(res_option)
+        else:
+            option.resolve(aos_vars[0])
+        # Before reset (after resolution)
+        self.assertEqual(option.args[0], AosArgument(before))
+        option.reset_resolution()
+        # After reset
+        self.assertEqual(option.args[0], AosArgument(after))

@@ -13,6 +13,17 @@ class AosOption():
     argument_str: str
 
     def __post_init__(self):
+        self.args = []
+        self._reset_args_from_argumnet_str()
+
+    def reset_resolution(self):
+        """Perform new argument initialization and variable extraction.
+        """
+        self._reset_args_from_argumnet_str()
+        self.extract_variables()
+
+    def _reset_args_from_argumnet_str(self):
+        self.args.clear()       # TODO: Is it required?
         splitted_args = self.argument_str.split(" ")
         self.args = [AosArgument(arg) for arg in splitted_args]
 
