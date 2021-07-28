@@ -29,9 +29,13 @@ class AosArgument:
         self.resolved = False
 
     def extract_variable(self, prefix) -> Optional[tuple[str, str]]:
+        """Get extracted variable. Variable name is place in self.name.
+        After this operation is_resolved() will evaluate to False.
+        """
         if not self.is_resolved():
             return
-        arg, a_left, a_value = self._search_variable_pattern()
+
+        arg, a_left, a_value = self._search_argument_pattern()
         print(arg)
         if arg:
             var_name = self._append_allcaps_to_prefix(prefix, arg)
@@ -42,9 +46,9 @@ class AosArgument:
             self.name = f"-{a_left}=$({var_name})"
             return var_name, a_value
 
-    def _search_variable_pattern(self) -> tuple[Optional[str], Optional[str], Optional[str]]:
+    def _search_argument_pattern(self) -> tuple[Optional[str], Optional[str], Optional[str]]:
         """Search for different argument patterns:
-        1. Assignment pattern: -std=c99, -mfpu=fpv4-sp-d16
+        1. Assignment pattern: -std=c99, -mfpu=fpv4-sp-d16, ...
         2. Standard argument: -fshort-enums, -O2, -Wl,--print-memory-usage ..."""
         res = self.variable_extraction_regex.search(self.name)
         arg = res.group(RegexGroupID.STANDARD_ARG.name)
@@ -53,7 +57,8 @@ class AosArgument:
         return arg, a_left, a_value
 
     def _append_allcaps_to_prefix(self, prefix: str, raw_suffix: str) -> str:
-        """Convert raw_suffix to allcaps, remove other special characters and append to prefix."""
+        """Convert raw_suffix to allcaps,
+        remove other special characters and append to prefix."""
         suffix = raw_suffix.replace(",", "")
         # Collapse multiple occurances of '--' e.g. -Wl,--print-memory-usage
         suffix = suffix.replace("--", "_")
