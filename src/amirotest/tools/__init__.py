@@ -4,7 +4,7 @@ try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-from amirotest.tools.searcher import Searcher
-from amirotest.tools.makefile_search import MakefileSearcher
+from amirotest.tools.searcher import Searcher, GenericSearchResults
+from amirotest.tools.makefile_search import MakefileGlobalOptSearcher
 from amirotest.tools.aos_module_default_config_creatro import AosDumper, YamlDumper, YamlLoader
 from amirotest.tools.config_path_finder import ConfigFinder, AosConfigFinder, AppsConfigFinder, CannotFindConfigError, CannotFindModuleError

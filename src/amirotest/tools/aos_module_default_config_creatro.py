@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Optional
-from amirotest.model import AosModule
+from amirotest.model.aos_module import AosModule
 from amirotest.model.aos_opt import GlobalOption, UserOption
+from amirotest.model.search_results import SearchResult
 
 from amirotest.tools import yml_load, yml_dump, Loader, Dumper
 
@@ -64,10 +65,10 @@ class YamlLoader(AosModuleLoader, ConfigYmlHandler):
         module = AosModule(Path(module_name))
         global_config_options = self.get_options_by_type(config, GlobalOption.__name__)
         if global_config_options:
-            module.create_global_options(global_config_options)
+            module.add_options(SearchResult(global_config_options, GlobalOption))
         user_config_options = self.get_options_by_type(config, UserOption.__name__)
         if user_config_options:
-            module.create_global_options(user_config_options)
+            module.add_options(SearchResult(user_config_options, UserOption))
         return module
 
     def get_options_by_type(self, config: dict, opt_type: str):

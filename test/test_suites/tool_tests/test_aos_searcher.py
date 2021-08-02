@@ -14,7 +14,7 @@ class TestAosSearcher(unittest.TestCase):
 
     def test_search_aosconf(self):
         res = self.searcher.search_options(self.conf_finder)
-        self.assertGreater(len(res), 0)
+        self.assertEqual(len(res), 27)
         # Ensure that results contain the str OS_CONF and AMIROOS_CFG
         # are at the right index
         self.assertIn(

@@ -1,5 +1,7 @@
 from amirotest.model import AosModule
-from amirotest.tools.makefile_search import MakefileSearcher
+from amirotest.tools import MakefileGlobalOptSearcher
+from amirotest.tools.config_path_finder import AosConfigFinder
+from amirotest.tools.makefile_search import MakefileUserOptSearcher
 from .test_helper import PathHelper
 
 class UnknownModuleNameException(Exception):
@@ -8,7 +10,8 @@ class UnknownModuleNameException(Exception):
 class AosModuleHelper:
     def __init__(self) -> None:
         self.helper = PathHelper()
-        self.searcher = MakefileSearcher()
+        self.make_glob_searcher = MakefileGlobalOptSearcher()
+        self.make_usr_searcher = MakefileUserOptSearcher()
         self.module_names = [
             "DiWheelDrive_1-1",
             "DiWheelDrive_1-2",
@@ -56,18 +59,23 @@ class AosModuleHelper:
         if module_name not in self.module_names:
             raise UnknownModuleNameException(f"Cannot find {module_name}")
         module = self.get_aos_module(module_name=module_name)
-        global_opts  = self.search_global_options_for(module_name)
-        user_opts = self.search_user_options_for(module_name)
-        module.create_global_options(global_opts)
-        module.create_user_options(user_opts)
+        g_res = self.make_glob_searcher.search_options(AosConfigFinder(module.path))
+        u_res = self.make_usr_searcher.search_options(AosConfigFinder(module.path))
+        module.add_options(g_res)
+        module.add_options(u_res)
+        # global_opts  = self.search_global_options_for(module_name)
+        # user_opts = self.search_user_options_for(module_name)
+        # module.create_global_options(global_opts)
+        # module.create_user_options(user_opts)
+        # raise NotImplemented("Create opts from search results")
         return module
 
     def search_global_options_for(self, module_name) -> list[tuple[str, str]]:
-        return self.searcher.search_global_options(
+        return self.make_glob_searcher.search_global_options(
             self.get_aos_module(module_name=module_name).get_makefile())
 
     def search_user_options_for(self, module_name) -> list[tuple[str, str]]:
-        return self.searcher.search_user_options(
+        return self.make_glob_searcher.search_user_options(
             self.get_aos_module(module_name=module_name).get_makefile())
 
     def get_aos_module(self, module_name="NUCLEO-L476RG") -> AosModule:

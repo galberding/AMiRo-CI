@@ -3,6 +3,8 @@ from pathlib import Path
 from typing import Type
 
 from amirotest.model import GlobalOption, UserOption, AosOption
+from amirotest.model.search_results import GenericSearchResults
+
 
 
 class OptionNotFoundException(Exception):
@@ -21,21 +23,24 @@ class AosModule:
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")
 
-    def create_global_options(self, search_results: list[tuple[str, str]]):
-        self.create_options(search_results, GlobalOption)
+    def add_options(self, search_results: GenericSearchResults):
+        self.options += search_results.get_options()
 
-    def create_user_options(self, search_results: list[tuple[str, str]]):
-        self.create_options(search_results, UserOption)
+    # def create_global_options(self, search_results: list[tuple[str, str]]):
+    #     self.create_options(search_results, GlobalOption)
 
-    def create_options(self, search_results: list[tuple[str, str]],
-                     option_type: Type[AosOption]=AosOption):
-        """Create options from given search results.
-        Example:
-        > create_options([('USE_COPT', '-std=c99 -fshort-enums')])
-        Refer to the tests to get a deeper understanding.
-        """
-        for option_name, option_args in search_results:
-            self.options.append(option_type(option_name, option_args))
+    # def create_user_options(self, search_results: list[tuple[str, str]]):
+    #     self.create_options(search_results, UserOption)
+
+    # def create_options(self, search_results: list[tuple[str, str]],
+    #                  option_type: Type[AosOption]=AosOption):
+    #     """Create options from given search results.
+    #     Example:
+    #     > create_options([('USE_COPT', '-std=c99 -fshort-enums')])
+    #     Refer to the tests to get a deeper understanding.
+    #     """
+    #     for option_name, option_args in search_results:
+    #         self.options.append(option_type(option_name, option_args))
 
 
     def is_resolved(self) -> bool:
