@@ -120,3 +120,8 @@ class UserArgument(AosArgument):
 
     def append_substitution_to_arg(self, arg, sub_flag) -> str:
         return f"{arg}=$({sub_flag})"
+
+class ArgumentWithDefault(AosArgument):
+    def __init__(self, name, default=None):
+        self.default = default
+        super().__init__(name)

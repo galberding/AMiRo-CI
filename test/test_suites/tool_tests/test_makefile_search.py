@@ -1,7 +1,7 @@
 from ..test_utils import AosModuleHelper
 import unittest
 
-from amirotest.tools import MakefileSearch
+from amirotest.tools import MakefileSearcher
 
 
 
@@ -11,7 +11,7 @@ class TestMakefileSearch(unittest.TestCase):
         # self.helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
-        self.searcher = MakefileSearch()
+        self.searcher = MakefileSearcher()
 
     def test_makefile_search_global_options(self):
         flags = self.searcher.search_global_options(

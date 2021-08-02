@@ -98,7 +98,7 @@ class AosModule:
     def dict_factory(self):
         return {self.name: 42}
 
-    def to_dict(self) -> dict:
+    def to_default_config_dict(self) -> dict:
         conf = {}
         conf[self.name] = {}
         for option in self.options:

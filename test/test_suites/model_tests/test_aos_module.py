@@ -2,12 +2,12 @@ from ..test_utils import AosModuleHelper, PathHelper
 import unittest
 
 from amirotest.model import AosOption, OptionNotFoundException
-from amirotest.tools import MakefileSearch
+from amirotest.tools import MakefileSearcher
 
 class TestAosModel(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.searcher = MakefileSearch()
+        self.searcher = MakefileSearcher()
         self.helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()

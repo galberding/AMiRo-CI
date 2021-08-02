@@ -1,6 +1,6 @@
 from amirotest.model import AosModule
-from amirotest.tools.makefile_search import MakefileSearch
-from ..test_utils.path_helper import PathHelper
+from amirotest.tools.makefile_search import MakefileSearcher
+from .test_helper import PathHelper
 
 class UnknownModuleNameException(Exception):
     pass
@@ -8,7 +8,7 @@ class UnknownModuleNameException(Exception):
 class AosModuleHelper:
     def __init__(self) -> None:
         self.helper = PathHelper()
-        self.searcher = MakefileSearch()
+        self.searcher = MakefileSearcher()
         self.module_names = [
             "DiWheelDrive_1-1",
             "DiWheelDrive_1-2",

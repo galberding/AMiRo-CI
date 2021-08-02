@@ -1,4 +1,4 @@
-from .path_helper import PathHelper
+from .test_helper import PathHelper
 import unittest
 
 # @unittest.SkipTest

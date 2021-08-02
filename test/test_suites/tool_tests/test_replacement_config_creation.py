@@ -2,7 +2,7 @@ import unittest
 from amirotest.tools import YamlDumper, yml_load, Loader
 from amirotest.tools import YamlDumper
 from ..test_utils.module_creation_helper import AosModuleHelper
-from ..test_utils.path_helper import PathHelper
+from ..test_utils import PathHelper
 
 class TestReplacementConfigCreation(unittest.TestCase):
     def setUp(self) -> None:
