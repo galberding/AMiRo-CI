@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Type
 
 from amirotest.model import GlobalOption, UserOption, AosOption
-from amirotest.model.search_results import GenericSearchResults
+from amirotest.model.search_results import GenericSearchResult
 
 
 
@@ -23,7 +23,7 @@ class AosModule:
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")
 
-    def add_options(self, search_results: GenericSearchResults):
+    def add_options(self, search_results: GenericSearchResult):
         self.options += search_results.get_options()
 
     # def create_global_options(self, search_results: list[tuple[str, str]]):

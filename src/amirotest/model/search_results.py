@@ -5,7 +5,7 @@ from typing import Any, Type
 from amirotest.model.aos_opt import AosOption
 
 @dataclass
-class GenericSearchResults(ABC):
+class GenericSearchResult(ABC):
     results: list[Any]
 
     @abstractmethod
@@ -19,7 +19,7 @@ class GenericSearchResults(ABC):
         return options
 
 
-class SearchResult(GenericSearchResults):
+class SearchResult(GenericSearchResult):
     def __init__(self, results: list[Any], opt_type: Type[AosOption]):
         self.opt_type = opt_type
         super().__init__(results)

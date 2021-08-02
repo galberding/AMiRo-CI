@@ -63,20 +63,15 @@ class AosModuleHelper:
         u_res = self.make_usr_searcher.search_options(AosConfigFinder(module.path))
         module.add_options(g_res)
         module.add_options(u_res)
-        # global_opts  = self.search_global_options_for(module_name)
-        # user_opts = self.search_user_options_for(module_name)
-        # module.create_global_options(global_opts)
-        # module.create_user_options(user_opts)
-        # raise NotImplemented("Create opts from search results")
         return module
 
-    def search_global_options_for(self, module_name) -> list[tuple[str, str]]:
-        return self.make_glob_searcher.search_global_options(
-            self.get_aos_module(module_name=module_name).get_makefile())
+    # def search_global_options_for(self, module_name) -> list[tuple[str, str]]:
+    #     return self.make_glob_searcher.search_global_options(
+    #         self.get_aos_module(module_name=module_name).get_makefile())
 
-    def search_user_options_for(self, module_name) -> list[tuple[str, str]]:
-        return self.make_glob_searcher.search_user_options(
-            self.get_aos_module(module_name=module_name).get_makefile())
+    # def search_user_options_for(self, module_name) -> list[tuple[str, str]]:
+    #     return self.make_glob_searcher.search_user_options(
+    #         self.get_aos_module(module_name=module_name).get_makefile())
 
     def get_aos_module(self, module_name="NUCLEO-L476RG") -> AosModule:
         nucleo_path = self.helper.get_aos_module_path(module_name=module_name)

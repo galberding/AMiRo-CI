@@ -1,3 +1,8 @@
+from amirotest.model.aos_argument import AosArgument
+from amirotest.model.search_results import GenericSearchResult
+from amirotest.tools.config_path_finder import AosConfigFinder, ConfigFinder
+from amirotest.tools.makefile_search import MakefileUserOptSearcher
+from amirotest.tools.searcher import Searcher
 from ..test_utils import AosModuleHelper
 import unittest
 
@@ -13,16 +18,26 @@ class TestMakefileSearch(unittest.TestCase):
         self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileGlobalOptSearcher()
 
+    def search_current_module(self, searcher: Searcher) -> GenericSearchResult:
+        return searcher.search_options(
+            AosConfigFinder(self.aos_module.path))
+
     def test_makefile_search_global_options(self):
-        flags = self.searcher.search_global_options(
-            self.aos_module.get_makefile())
-        self.assertGreater(len(flags), 0)
+        global_searcher = MakefileGlobalOptSearcher()
+        res = self.search_current_module(global_searcher)
+        self.assertGreater(len(res.get_options()), 0)
 
     def test_search_user_flags_in_nucleo(self):
-        results = self.searcher.search_user_options(self.aos_module.get_makefile())
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][0], 'UDEFS')
-        self.assertEqual(results[0][1], '-DBOARD_MPU6050_CONNECTED')
+        res = self.searcher.search_user_options(self.aos_module.get_makefile())
+        user_searcher = MakefileUserOptSearcher()
+        res = self.search_current_module(user_searcher)
+        res = res.get_options()
+        print(res)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0].name, 'UDEFS')
+        self.assertEqual(
+            res[0].args[0],
+            AosArgument('-DBOARD_MPU6050_CONNECTED=$(BOARD_MPU6050_CONNECTED)'))
 
     def test_search_user_flag_default_argument_non_existent(self):
         # Default module (NUCLEO-L476RG) has no default argument for its flag

@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 from typing import Any, Optional
 from amirotest.model.aos_opt import AosOption, GlobalOption, UserOption
-from amirotest.model.search_results import GenericSearchResults, SearchResult
+from amirotest.model.search_results import GenericSearchResult, SearchResult
 from amirotest.tools import Searcher
 from amirotest.tools.config_path_finder import ConfigFinder
 class MultipelUserOptionsException(Exception):
@@ -37,7 +37,7 @@ class MakefileGlobalOptSearcher(Searcher):
     def search_user_options(self, makefile: Path) -> list[tuple[str, str]]:
         return self._search_with_regex(makefile, self.user_option_regex)
 
-    def search_options(self, finder : ConfigFinder) -> GenericSearchResults:
+    def search_options(self, finder : ConfigFinder) -> GenericSearchResult:
         return SearchResult(
             self._search_with_regex(
                 finder.get_makefile(),
@@ -68,7 +68,7 @@ class MakefileUserOptSearcher(Searcher):
             endif                                            # endif
             """, self.regex_options)
 
-    def search_options(self, finder: ConfigFinder) -> GenericSearchResults:
+    def search_options(self, finder: ConfigFinder) -> GenericSearchResult:
         return SearchResult(
             self._search_with_regex(
                 finder.get_makefile(),
