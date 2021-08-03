@@ -1,6 +1,8 @@
-from .aos_opt import AosOption
+from .aos_opt import DefaultOpiton
 
 
-class AosconfOption(AosOption):
-    def __init__(self, name, ):
-        pass
+class AosconfOption(DefaultOpiton):
+    def __init__(self, name, sub, default):
+        # Prepare arg for substitution
+        sub = f"$({sub})"
+        super().__init__(name, sub, default)

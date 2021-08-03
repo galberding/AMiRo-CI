@@ -66,11 +66,11 @@ class AosOption():
 class AosVariable(AosOption):
     pass
 
-class GlobalOption(AosOption):
+class MakeGlobalOption(AosOption):
     pass
 
 
-class UserOption(AosOption):
+class MakeUserOption(AosOption):
     def __init__(self, flag_name, arg_str):
         """Add substitution flag to argument"""
         flag_args = arg_str.split(" ")
@@ -81,4 +81,5 @@ class UserOption(AosOption):
 
 class DefaultOpiton(AosOption):
     def __init__(self, name: str, arg_str: str, default: Any):
-        pass
+        self.default = default
+        super().__init__(name, arg_str)

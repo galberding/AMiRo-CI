@@ -1,4 +1,4 @@
-from amirotest.model.option import GlobalOption
+from amirotest.model.option import MakeGlobalOption
 from amirotest.tools.search.search_result import SearchResult
 from ..test_utils import PathHelper, AosModuleHelper
 import unittest

@@ -2,7 +2,7 @@ from enum import Enum
 from pathlib import Path
 import re
 from typing import Any, Optional
-from amirotest.model.option import GlobalOption, UserOption
+from amirotest.model.option import MakeGlobalOption, MakeUserOption
 from amirotest.tools.search.search_result import GenericSearchResult, SearchResult
 from amirotest.tools.search import Searcher
 from amirotest.tools.config_path_finder import ConfigFinder
@@ -39,7 +39,7 @@ class MakefileGlobalOptSearcher(Searcher):
         return SearchResult(
             self._search_with_regex(
                 finder.get_makefile(),
-                self.regex), GlobalOption)
+                self.regex), MakeGlobalOption)
         # return self._search_with_regex(finder.get_makefile(), self.global_option_regex)
 
     def search_user_default_argument(self, makefile: Path, argument_name: str)-> Optional[str]:
@@ -70,7 +70,7 @@ class MakefileUserOptSearcher(Searcher):
         return SearchResult(
             self._search_with_regex(
                 finder.get_makefile(),
-                self.regex), UserOption)
+                self.regex), MakeUserOption)
 
     # TODO: Is it actually useful?
     def search_user_default_argument(self, makefile: Path, argument_name: str)-> Optional[str]:

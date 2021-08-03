@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from amirotest.model.option import AosOption
+from amirotest.model.option.aos_opt import DefaultOpiton
 
 class OptionNotFoundException(Exception):
     pass
@@ -88,7 +89,12 @@ class AosModule:
         for option in self.options:
             if option.get_type() not in conf[self.name]:
                 conf[self.name][option.get_type()] = {}
-            conf[self.name][option.get_type()][option.name] = [arg.name for arg in option.args]
+            if isinstance(option, DefaultOpiton):
+                conf[self.name][option.get_type()][option.name] = \
+                    [option.default]
+            else:
+                conf[self.name][option.get_type()][option.name] = \
+                    [arg.name for arg in option.args]
         return conf
 
 

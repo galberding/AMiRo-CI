@@ -10,8 +10,8 @@ import amirotest.model.aos_module as aos_module
 import amirotest.model.option as aos_opt
 import amirotest.model.option as aos_opt
 
-GlobalOption = aos_opt.GlobalOption
-UserOption = aos_opt.UserOption
+GlobalOption = aos_opt.MakeGlobalOption
+UserOption = aos_opt.MakeUserOption
 AosModule = aos_module.AosModule
 
 class ConfigYmlHandler:
@@ -54,6 +54,7 @@ class AosModuleLoader(ABC):
     def load(self, conf: Path) -> list[AosModule]:
         """Load modules from config file"""
 
+# TODO: Dangerous Do not use!!
 class YamlLoader(AosModuleLoader, ConfigYmlHandler):
     def load(self, conf: Path) -> list[AosModule]:
         default_conf = self.get_config(conf)
@@ -70,17 +71,27 @@ class YamlLoader(AosModuleLoader, ConfigYmlHandler):
         # in order to search the Makefile
         # ==> How to handle paths after modules are loaded from default config?
         module = AosModule(Path(module_name))
-        global_config_options = self.get_options_by_type(config, GlobalOption.__name__)
-        if global_config_options:
-            module.add_options(SearchResult(global_config_options, GlobalOption).get_options())
-        user_config_options = self.get_options_by_type(config, UserOption.__name__)
-        if user_config_options:
-            module.add_options(SearchResult(user_config_options, UserOption).get_options())
+        # print(config)
+        # global_config_options = self.get_options_by_type(config, GlobalOption.__name__)
+        config_options = self.dict_to_options(config)
+        module.add_options(config_options)
+        # print(global_config_options)
+        # if global_config_options:
+            # module.add_options(SearchResult(global_config_options, GlobalOption).get_options())
+        # user_config_options = self.get_options_by_type(config, UserOption.__name__)
+        # if user_config_options:
+            # module.add_options(SearchResult(user_config_options, UserOption).get_options())
         return module
 
     def get_options_by_type(self, config: dict, opt_type: str):
         if opt_type in config:
             return self._get_options(config[opt_type])
+
+    def dict_to_options(self, conf):
+        print(conf)
+        # TODO: for later if it is required to load modules from default:
+        # https://stackoverflow.com/questions/11775460/lexical-cast-from-string-to-type
+
 
     def _get_options(self, config: dict) -> list[tuple[str, str]]:
         results = []

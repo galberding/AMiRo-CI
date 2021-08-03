@@ -1,5 +1,5 @@
 import unittest
-from amirotest.model.option import AosOption, UserOption, GlobalOption
+from amirotest.model.option import AosOption, MakeUserOption, MakeGlobalOption
 from amirotest.model.argument import AosArgument
 
 
@@ -57,7 +57,7 @@ class TestArgumentModel(unittest.TestCase):
         )
 
     def test_create_global_option(self):
-        u_opt = GlobalOption("UDEFS", "-DBOARD_TOF_CONNECTED")
+        u_opt = MakeGlobalOption("UDEFS", "-DBOARD_TOF_CONNECTED")
         self.assertEqual(len(u_opt.args), 1)
         self.assertEqual(
             u_opt.args[0].name,
@@ -65,14 +65,14 @@ class TestArgumentModel(unittest.TestCase):
 
     def test_create_user_option_sub_argument(self):
 
-        u_opt = UserOption("UDEFS", "-DBOARD_TOF_CONNECTED")
+        u_opt = MakeUserOption("UDEFS", "-DBOARD_TOF_CONNECTED")
         self.assertEqual(len(u_opt.args), 1)
         self.assertEqual(
             u_opt.args[0].name,
             "-DBOARD_TOF_CONNECTED=$(BOARD_TOF_CONNECTED)")
 
     def test_create_user_option_sub_argument_already_exists(self):
-        u_opt = UserOption("UDEFS", "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
+        u_opt = MakeUserOption("UDEFS", "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
         self.assertEqual(len(u_opt.args), 1)
         self.assertEqual(
             u_opt.args[0].name,

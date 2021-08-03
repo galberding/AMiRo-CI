@@ -1,5 +1,6 @@
+from amirotest.tools.search.search_result.aosconf_result import AosconfResult
 from ...test_utils import PathHelper
-from amirotest.model.option import AosOption, GlobalOption
+from amirotest.model.option import AosOption, MakeGlobalOption
 from amirotest.tools.search.search_result import GenericSearchResult
 
 import unittest
@@ -15,25 +16,15 @@ class TestAosSearcher(unittest.TestCase):
         self.searcher = AosConfSearcher()
 
 
-    # def test_get_options_returns_default_options(self):
-    #     res = self.searcher.search_options(self.conf_finder)
-    #     print(res)
-    #     self.assertEqual(AosconfResult, type(res))
+    def test_get_options_returns_aosconf_result(self):
+        res = self.searcher.search_options(self.conf_finder)
+        # print(res)
+        self.assertEqual(AosconfResult, type(res))
 
-
-    # def test_search_aosconf(self):
-    #     res = self.get_options()
-    #     self.assertEqual(len(res), 27)
-    #     # Ensure that results contain the str OS_CONF and AMIROOS_CFG
-    #     # are at the right index
-    #     self.assertIn(
-    #         SearchGroupIdx.OS_CFG.name,
-    #         res[0][SearchGroupIdx.OS_CFG.value]
-    #     )
-    #     self.assertIn(
-    #         SearchGroupIdx.AMIROOS_CFG.name,
-    #         res[0][SearchGroupIdx.AMIROOS_CFG.value]
-    #     )
+    def test_search_aosconf(self):
+        res = self.searcher.search_options(self.conf_finder)
+        # Amount of possible options that can be found in NUCLEO-L476RG
+        self.assertEqual(len(res.get_options()), 27)
 
     # def get_options(self) -> list[AosOption]:
     #     res = self.searcher.search_options(self.conf_finder)

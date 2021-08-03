@@ -4,6 +4,7 @@ import re
 from amirotest.tools.search.search_result import GenericSearchResult
 from amirotest.tools.config_path_finder import ConfigFinder
 from amirotest.tools.search import Searcher
+from amirotest.tools.search.search_result.aosconf_result import AosconfResult
 
 class SearchGroupIdx(Enum):
     OS_CFG = 0
@@ -24,5 +25,4 @@ class AosConfSearcher(Searcher):
     def search_options(self, finder: ConfigFinder) -> GenericSearchResult:
         # TODO:
         res = self._search_with_regex(finder.get_aosconf(), self.regex)
-
-        # return AosconfResult(res)
+        return AosconfResult(res)
