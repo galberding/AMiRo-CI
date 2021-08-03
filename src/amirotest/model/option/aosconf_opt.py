@@ -1,5 +1,6 @@
+from amirotest.model.option.aos_opt import AosOption
 
-from . import AosOption
 
 class AosconfOption(AosOption):
-    def __init__(self, name, )
+    def __init__(self, name, ):
+        pass

@@ -1,18 +1,9 @@
 from enum import Enum
-# from amirotest.model.aos_opt import DefaultOpiton
-# from amirotest.model.search_results import GenericSearchResult
-import amirotest.model.aos_module as aos_module
-# from amirotest.model.aos_opt import DefaultOpiton
-import amirotest.model.option as aos_opt
-import amirotest.model.search_result as aos_search_res
-import amirotest.tools as aos_tools
-# from amirotest.tools import ConfigFinder
-# from . import Searcher
 import re
 
-Searcher = aos_tools.Searcher
-GenericSearchResult = aos_search_res.GenericSearchResult
-ConfigFinder = aos_tools.ConfigFinder
+from amirotest.model.search_result import GenericSearchResult
+from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.searcher import Searcher
 
 class SearchGroupIdx(Enum):
     OS_CFG = 0
@@ -31,5 +22,7 @@ class AosConfSearcher(Searcher):
         """, self.regex_options)
 
     def search_options(self, finder: ConfigFinder) -> GenericSearchResult:
+        # TODO:
         res = self._search_with_regex(finder.get_aosconf(), self.regex)
+
         return

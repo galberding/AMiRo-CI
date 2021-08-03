@@ -2,10 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Any
 
-
-import amirotest.model.argument as aos_arg
-from amirotest.model.argument import UserArgument
-
+from amirotest.model.argument import UserArgument, AosArgument
 
 class WrongArgumentCount(Exception):
     pass
@@ -28,7 +25,7 @@ class AosOption():
     def _reset_args_from_argumnet_str(self):
         self.args.clear()       # TODO: Is it required?
         splitted_args = self.argument_str.split(" ")
-        self.args = [aos_arg.AosArgument(arg) for arg in splitted_args]
+        self.args = [AosArgument(arg) for arg in splitted_args]
 
     def resolve(self, flag: 'AosOption') -> bool:
         for arg in self.args:
@@ -42,7 +39,7 @@ class AosOption():
         """Returns all substitution option names that are found in the arguments."""
         return self._get_substitution_option_names(self.args)
 
-    def _get_substitution_option_names(self, args: list[aos_arg.AosArgument]) -> list[str]:
+    def _get_substitution_option_names(self, args: list[AosArgument]) -> list[str]:
         flags = []
         for arg in args:
             if not arg.is_resolved():

@@ -2,12 +2,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Type
 
-import amirotest.model.option as aos_opt
-import amirotest.model.search_result as search_res
-# from . import search_res
-
-# from amirotest.model import AosOption
-# from amirotest.model import GenericSearchResult
+from amirotest.model.option import AosOption
+from amirotest.model.search_result import GenericSearchResult
 
 
 
@@ -18,7 +14,7 @@ class OptionNotFoundException(Exception):
 class AosModule:
     name: str = field(init=False)
     path: Path
-    options: list[aos_opt.AosOption] = field(init=False)
+    options: list[AosOption] = field(init=False)
 
     def __post_init__(self):
         self.name = self.path.name
@@ -27,7 +23,7 @@ class AosModule:
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")
 
-    def add_options(self, search_results: search_res.GenericSearchResult):
+    def add_options(self, search_results: GenericSearchResult):
         self.options += search_results.get_options()
 
     def is_resolved(self) -> bool:
@@ -56,7 +52,7 @@ class AosModule:
             for s_opt in sub_opts:
                 u_opt.resolve(s_opt)
 
-    def get_unresolved_options(self) -> list[aos_opt.AosOption]:
+    def get_unresolved_options(self) -> list[AosOption]:
         """Get all options with unresolved arguments"""
         u_options = []
         for option in self.options:
@@ -64,7 +60,7 @@ class AosModule:
                 u_options.append(option)
         return u_options
 
-    def get_substitution_options(self) -> list[aos_opt.AosOption]:
+    def get_substitution_options(self) -> list[AosOption]:
         """Get Option contained in unresolved arguments.
         Also referred to as substitution option because their
         content is substituted into the argument"""
@@ -75,13 +71,13 @@ class AosModule:
         sub_options = self.find_options_by_names(sub_option_names)
         return sub_options
 
-    def find_options_by_names(self, option_names: list[str]) -> list[aos_opt.AosOption]:
+    def find_options_by_names(self, option_names: list[str]) -> list[AosOption]:
         options = []
         for option_name in option_names:
             options.append(self.find_option_by_name(option_name))
         return options
 
-    def find_option_by_name(self, option_name: str) -> aos_opt.AosOption:
+    def find_option_by_name(self, option_name: str) -> AosOption:
         for option in self.options:
             if option.name == option_name:
                 return option

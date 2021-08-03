@@ -6,12 +6,10 @@ from amirotest.model.option import GlobalOption, UserOption
 from amirotest.model.search_result import GenericSearchResult, SearchResult
 from amirotest.tools import Searcher
 from amirotest.tools.config_path_finder import ConfigFinder
+
+
 class MultipelUserOptionsException(Exception):
     pass
-
-# class MakeRegexGroupIdx(Enum):
-#     GLOBAL_OPT = 0
-#     ARG = 1
 
 
 class MakefileGlobalOptSearcher(Searcher):

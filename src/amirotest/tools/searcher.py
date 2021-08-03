@@ -5,8 +5,8 @@ from pathlib import Path
 import re
 from typing import Any
 
-import amirotest.tools as aos_tools
-import amirotest.model.search_result as aos_search_res
+from amirotest.model.search_result.search_results import GenericSearchResult
+from amirotest.tools.config_path_finder import ConfigFinder
 
 
 class Searcher(ABC):
@@ -15,7 +15,7 @@ class Searcher(ABC):
         self.regex_options = re.VERBOSE | re.MULTILINE
 
     @abstractmethod
-    def search_options(self, module : aos_tools.ConfigFinder) -> aos_search_res.GenericSearchResult:
+    def search_options(self, module : ConfigFinder) -> GenericSearchResult:
         """Search options by the paths provided in the module."""
 
     def _search_with_regex(self, path: Path, regex: re.Pattern) -> list[Any]:
