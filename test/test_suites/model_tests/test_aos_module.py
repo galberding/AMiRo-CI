@@ -1,6 +1,6 @@
 from amirotest.model.option.aos_opt import GlobalOption, AosOption
 from amirotest.model.search_result.search_results import SearchResult
-from amirotest.tools.makefile_search import MakefileGlobalOptSearcher
+from amirotest.tools import MakefileGlobalOptSearcher
 from amirotest.model import OptionNotFoundException
 
 from ..test_utils import AosModuleHelper, PathHelper

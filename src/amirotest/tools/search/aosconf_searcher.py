@@ -3,7 +3,7 @@ import re
 
 from amirotest.model.search_result import GenericSearchResult
 from amirotest.tools.config_path_finder import ConfigFinder
-from amirotest.tools.searcher import Searcher
+from amirotest.tools import Searcher
 
 class SearchGroupIdx(Enum):
     OS_CFG = 0

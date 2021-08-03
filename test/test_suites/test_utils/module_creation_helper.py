@@ -1,7 +1,7 @@
 from amirotest.model import AosModule
 from amirotest.tools import MakefileGlobalOptSearcher
 from amirotest.tools.config_path_finder import AosConfigFinder
-from amirotest.tools.makefile_search import MakefileUserOptSearcher
+from amirotest.tools import MakefileUserOptSearcher
 from .test_helper import PathHelper
 
 class UnknownModuleNameException(Exception):
