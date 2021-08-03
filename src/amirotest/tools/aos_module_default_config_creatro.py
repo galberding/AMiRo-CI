@@ -1,10 +1,18 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional
-from amirotest.model import AosModule
-from amirotest.model.option import GlobalOption, UserOption
-from amirotest.model.search_result import SearchResult
-from amirotest.tools import yml_load, yml_dump, Loader, Dumper
+from typing import Optional
+from . import yml_load, yml_dump, Loader, Dumper
+
+from .search.search_result import SearchResult
+# from amirotest.model.option import GlobalOption, UserOption
+# from amirotest.model.aos_module import AosModule
+import amirotest.model.aos_module as aos_module
+import amirotest.model.option as aos_opt
+import amirotest.model.option as aos_opt
+
+GlobalOption = aos_opt.GlobalOption
+UserOption = aos_opt.UserOption
+AosModule = aos_module.AosModule
 
 class ConfigYmlHandler:
     def get_config(self, conf_path: Path) -> Optional[dict]:
@@ -64,10 +72,10 @@ class YamlLoader(AosModuleLoader, ConfigYmlHandler):
         module = AosModule(Path(module_name))
         global_config_options = self.get_options_by_type(config, GlobalOption.__name__)
         if global_config_options:
-            module.add_options(SearchResult(global_config_options, GlobalOption))
+            module.add_options(SearchResult(global_config_options, GlobalOption).get_options())
         user_config_options = self.get_options_by_type(config, UserOption.__name__)
         if user_config_options:
-            module.add_options(SearchResult(user_config_options, UserOption))
+            module.add_options(SearchResult(user_config_options, UserOption).get_options())
         return module
 
     def get_options_by_type(self, config: dict, opt_type: str):

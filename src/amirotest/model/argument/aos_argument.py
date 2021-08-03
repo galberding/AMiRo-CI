@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import re
-from typing import Optional, Union
+from typing import Optional
 from enum import Enum, auto
 
 class MalformatedUserArgument(Exception):

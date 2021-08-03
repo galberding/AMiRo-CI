@@ -1,9 +1,9 @@
 from enum import Enum
 import re
 
-from amirotest.model.search_result import GenericSearchResult
+from amirotest.tools.search.search_result import GenericSearchResult
 from amirotest.tools.config_path_finder import ConfigFinder
-from amirotest.tools import Searcher
+from amirotest.tools.search import Searcher
 
 class SearchGroupIdx(Enum):
     OS_CFG = 0
@@ -25,4 +25,4 @@ class AosConfSearcher(Searcher):
         # TODO:
         res = self._search_with_regex(finder.get_aosconf(), self.regex)
 
-        return
+        # return AosconfResult(res)

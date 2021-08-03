@@ -1,12 +1,12 @@
 from amirotest.model.argument import AosArgument
-from amirotest.model.search_result import GenericSearchResult
+from amirotest.tools.search.search_result import GenericSearchResult
 from amirotest.tools.config_path_finder import AosConfigFinder, ConfigFinder
-from amirotest.tools import MakefileUserOptSearcher
-from amirotest.tools import Searcher
+from amirotest.tools.search import MakefileUserOptSearcher, MakefileGlobalOptSearcher
+from amirotest.tools.search import Searcher
 from ...test_utils import AosModuleHelper
 import unittest
 
-from amirotest.tools import MakefileGlobalOptSearcher
+
 
 
 

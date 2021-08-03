@@ -4,8 +4,9 @@ from enum import Enum
 from pathlib import Path
 import re
 from typing import Any
+# from amirotest.model.search_result.search_results import GenericSearchResult
 
-from amirotest.model.search_result.search_results import GenericSearchResult
+from amirotest.tools.search.search_result import GenericSearchResult
 from amirotest.tools.config_path_finder import ConfigFinder
 
 

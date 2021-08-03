@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Type
 
-from amirotest.model.option import AosOption
+
+# import amirotest.model.option as aos_opt
+from amirotest.model.option.aos_opt import AosOption
 
 
 @dataclass

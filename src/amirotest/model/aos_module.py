@@ -1,11 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Type
 
 from amirotest.model.option import AosOption
-from amirotest.model.search_result import GenericSearchResult
-
-
 
 class OptionNotFoundException(Exception):
     pass
@@ -23,8 +19,8 @@ class AosModule:
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")
 
-    def add_options(self, search_results: GenericSearchResult):
-        self.options += search_results.get_options()
+    def add_options(self, options: list[AosOption]):
+        self.options += options
 
     def is_resolved(self) -> bool:
         """Check if all options are resolved."""

@@ -1,4 +1,4 @@
-from amirotest.model.option.aos_opt import AosOption
+from .aos_opt import AosOption
 
 
 class AosconfOption(AosOption):

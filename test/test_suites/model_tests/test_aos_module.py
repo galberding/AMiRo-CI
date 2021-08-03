@@ -1,7 +1,10 @@
-from amirotest.model.option.aos_opt import GlobalOption, AosOption
-from amirotest.model.search_result.search_results import SearchResult
-from amirotest.tools import MakefileGlobalOptSearcher
+from typing import Type
+from amirotest.model.aos_module import AosModule
+from amirotest.tools.search import MakefileGlobalOptSearcher
+from amirotest.tools.search.search_result import SearchResult
+from amirotest.model.option import GlobalOption, AosOption
 from amirotest.model import OptionNotFoundException
+from amirotest.tools.search.search_result.search_results import GenericSearchResult
 
 from ..test_utils import AosModuleHelper, PathHelper
 import unittest
@@ -29,7 +32,7 @@ class TestAosModel(unittest.TestCase):
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfpu=fpv4-sp-d16')
         ], GlobalOption)
-        self.aos_module.add_options(result)
+        self.aos_module.add_options(result.get_options())
         self.assertTrue(self.aos_module.is_resolved())
 
     def test_module_with_flags_is_unresolved(self):
@@ -37,7 +40,7 @@ class TestAosModel(unittest.TestCase):
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
         ], GlobalOption)
-        self.aos_module.add_options(result)
+        self.aos_module.add_options(result.get_options())
         self.assertFalse(self.aos_module.is_resolved())
 
     def test_module_with_no_flags_is_resolved(self):
@@ -58,9 +61,7 @@ class TestAosModel(unittest.TestCase):
             'USE_FPU')
 
     def test_module_resolve_module(self):
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
-        self.assertFalse(self.aos_module.is_resolved())
-        self.aos_module.resolve()
+        self.build_options_and_resolve_module([], self.aos_module)
         self.assertTrue(self.aos_module.is_resolved())
         self.assertEqual(
             self.aos_module.find_option_by_name("USE_FPU_OPT").args[0].name,
@@ -68,11 +69,12 @@ class TestAosModel(unittest.TestCase):
         )
 
     def test_module_resolve_multiple_flags(self):
-        self.search_results.append(("USE_FANCY_EXCEPTIONS_STACK", "-stack-usage=$(USE_EXCEPTIONS_STACKSIZE)"))
-        self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(RAND_SEED)"))
-        self.search_results.append(("RAND_SEED", "42"))
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
-        self.aos_module.resolve()
+        search_res = [
+            (("USE_FANCY_EXCEPTIONS_STACK", "-stack-usage=$(USE_EXCEPTIONS_STACKSIZE)")),
+            (("USE_RANDOM_VALUE", "-set-seed=$(RAND_SEED)")),
+            (("RAND_SEED", "42"))
+        ]
+        self.build_options_and_resolve_module(search_res, self.aos_module)
         self.assertTrue(self.aos_module.is_resolved())
         exc_flag = self.aos_module.find_option_by_name("USE_FANCY_EXCEPTIONS_STACK")
         rval_flag = self.aos_module.find_option_by_name("USE_RANDOM_VALUE")
@@ -83,14 +85,37 @@ class TestAosModel(unittest.TestCase):
         # TODO: not sure yet what's the best approach
         # therefore raise exception if resolution fails
         self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(USE_UNKNOWN_FLAG)"))
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
+        self.aos_module.add_options(
+            SearchResult(self.search_results, GlobalOption).get_options())
         self.assertRaises(OptionNotFoundException, self.aos_module.resolve)
 
     def test_module_resolve_multiple_args_with_same_sub_flag(self):
-        self.search_results.append(("USE_THIS_SUB", "42"))
-        self.search_results.append(("USE_CASE1", "-case1=$(USE_THIS_SUB)"))
-        self.search_results.append(("USE_CASE2", "-case2=$(USE_THIS_SUB)"))
-        self.search_results.append(("USE_CASE3", "-case3=$(USE_THIS_SUB)"))
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
-        self.aos_module.resolve()
+        search_res = [
+            (("USE_THIS_SUB", "42")),
+            (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
+            (("USE_CASE2", "-case2=$(USE_THIS_SUB)")),
+            (("USE_CASE3", "-case3=$(USE_THIS_SUB)"))
+        ]
+        self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=GlobalOption)
         self.assertTrue(self.aos_module.is_resolved())
+
+    def test_add_multiple_identical_options(self):
+        search_res = [
+            (("USE_THIS_SUB", "42")),
+            (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
+            (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
+            (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
+        ]
+        self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=GlobalOption)
+        self.assertTrue(self.aos_module.is_resolved())
+
+
+
+    def build_options_and_resolve_module(self, search_res,
+                                         module: AosModule,
+                                         result_type=SearchResult,
+                                         opt_type: Type[AosOption]=AosOption):
+        self.search_results += search_res
+        s_res = result_type(self.search_results, opt_type)
+        module.add_options(s_res.get_options())
+        module.resolve()
