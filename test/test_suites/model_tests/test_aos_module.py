@@ -1,15 +1,19 @@
-from amirotest.model.aos_opt import GlobalOption
-from amirotest.model.search_results import SearchResult
+# from amirotest.model.aos_opt import GlobalOption
+# from amirotest.model import SearchResult
+from amirotest.model import aos_module
+import amirotest.model.option as aos_opt
+import amirotest.tools as tools
+import amirotest.model.search_result as search_res
+
 from ..test_utils import AosModuleHelper, PathHelper
 import unittest
 
-from amirotest.model import AosOption, OptionNotFoundException
-from amirotest.tools import MakefileGlobalOptSearcher
+from amirotest.model import OptionNotFoundException
 
 class TestAosModel(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.searcher = MakefileGlobalOptSearcher()
+        self.searcher = tools.MakefileGlobalOptSearcher()
         self.helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
@@ -24,18 +28,18 @@ class TestAosModel(unittest.TestCase):
         self.assertTrue(makefile.exists())
 
     def test_module_with_flags_is_resolved(self):
-        result = SearchResult([
+        result = search_res.SearchResult([
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfpu=fpv4-sp-d16')
-        ], GlobalOption)
+        ], aos_opt.GlobalOption)
         self.aos_module.add_options(result)
         self.assertTrue(self.aos_module.is_resolved())
 
     def test_module_with_flags_is_unresolved(self):
-        result = SearchResult([
+        result = search_res.SearchResult([
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
-        ], GlobalOption)
+        ], aos_opt.GlobalOption)
         self.aos_module.add_options(result)
         self.assertFalse(self.aos_module.is_resolved())
 
@@ -43,7 +47,7 @@ class TestAosModel(unittest.TestCase):
         self.assertTrue(self.aos_module.is_resolved())
 
     def test_get_substitution_flag_name_from_argument(self):
-        unresolved_flag = AosOption(
+        unresolved_flag = aos_opt.AosOption(
             'USE_FPU_OPT',
             '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
         sub_flag_names = unresolved_flag.get_substitution_opt_names()
@@ -52,12 +56,12 @@ class TestAosModel(unittest.TestCase):
 
     def test_module_find_flag_by_name_not_found_exception(self):
         self.assertRaises(
-            OptionNotFoundException,
+            aos_module.OptionNotFoundException,
             self.aos_module.find_option_by_name,
             'USE_FPU')
 
     def test_module_resolve_module(self):
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
+        self.aos_module.add_options(search_res.SearchResult(self.search_results, aos_opt.GlobalOption))
         self.assertFalse(self.aos_module.is_resolved())
         self.aos_module.resolve()
         self.assertTrue(self.aos_module.is_resolved())
@@ -70,7 +74,7 @@ class TestAosModel(unittest.TestCase):
         self.search_results.append(("USE_FANCY_EXCEPTIONS_STACK", "-stack-usage=$(USE_EXCEPTIONS_STACKSIZE)"))
         self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(RAND_SEED)"))
         self.search_results.append(("RAND_SEED", "42"))
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
+        self.aos_module.add_options(search_res.SearchResult(self.search_results, aos_opt.GlobalOption))
         self.aos_module.resolve()
         self.assertTrue(self.aos_module.is_resolved())
         exc_flag = self.aos_module.find_option_by_name("USE_FANCY_EXCEPTIONS_STACK")
@@ -82,7 +86,7 @@ class TestAosModel(unittest.TestCase):
         # TODO: not sure yet what's the best approach
         # therefore raise exception if resolution fails
         self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(USE_UNKNOWN_FLAG)"))
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
+        self.aos_module.add_options(search_res.SearchResult(self.search_results, aos_opt.GlobalOption))
         self.assertRaises(OptionNotFoundException, self.aos_module.resolve)
 
     def test_module_resolve_multiple_args_with_same_sub_flag(self):
@@ -90,6 +94,6 @@ class TestAosModel(unittest.TestCase):
         self.search_results.append(("USE_CASE1", "-case1=$(USE_THIS_SUB)"))
         self.search_results.append(("USE_CASE2", "-case2=$(USE_THIS_SUB)"))
         self.search_results.append(("USE_CASE3", "-case3=$(USE_THIS_SUB)"))
-        self.aos_module.add_options(SearchResult(self.search_results, GlobalOption))
+        self.aos_module.add_options(search_res.SearchResult(self.search_results, aos_opt.GlobalOption))
         self.aos_module.resolve()
         self.assertTrue(self.aos_module.is_resolved())

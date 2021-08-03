@@ -2,8 +2,8 @@ from enum import Enum
 from pathlib import Path
 import re
 from typing import Any, Optional
-from amirotest.model.aos_opt import AosOption, GlobalOption, UserOption
-from amirotest.model.search_results import GenericSearchResult, SearchResult
+from amirotest.model.option import GlobalOption, UserOption
+from amirotest.model.search_result import GenericSearchResult, SearchResult
 from amirotest.tools import Searcher
 from amirotest.tools.config_path_finder import ConfigFinder
 class MultipelUserOptionsException(Exception):

@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Optional
-from amirotest.model.aos_module import AosModule
-from amirotest.model.aos_opt import GlobalOption, UserOption
-from amirotest.model.search_results import SearchResult
-
+from amirotest.model import AosModule
+from amirotest.model.option import GlobalOption, UserOption
+from amirotest.model.search_result import SearchResult
 from amirotest.tools import yml_load, yml_dump, Loader, Dumper
 
 class ConfigYmlHandler:

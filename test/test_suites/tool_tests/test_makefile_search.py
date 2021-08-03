@@ -1,5 +1,5 @@
-from amirotest.model.aos_argument import AosArgument
-from amirotest.model.search_results import GenericSearchResult
+from amirotest.model.argument import AosArgument
+from amirotest.model.search_result import GenericSearchResult
 from amirotest.tools.config_path_finder import AosConfigFinder, ConfigFinder
 from amirotest.tools.makefile_search import MakefileUserOptSearcher
 from amirotest.tools.searcher import Searcher
@@ -13,31 +13,30 @@ from amirotest.tools import MakefileGlobalOptSearcher
 class TestMakefileSearch(unittest.TestCase):
 
     def setUp(self):
-        # self.helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileGlobalOptSearcher()
 
-    def search_current_module(self, searcher: Searcher) -> GenericSearchResult:
-        return searcher.search_options(
-            AosConfigFinder(self.aos_module.path))
-
-    def test_makefile_search_global_options(self):
-        global_searcher = MakefileGlobalOptSearcher()
-        res = self.search_current_module(global_searcher)
-        self.assertGreater(len(res.get_options()), 0)
-
-    def test_search_user_flags_in_nucleo(self):
-        res = self.searcher.search_user_options(self.aos_module.get_makefile())
-        user_searcher = MakefileUserOptSearcher()
-        res = self.search_current_module(user_searcher)
+    def test_makefile_search_global_options_in_module(self):
+        res = self.search_current_module(
+            MakefileGlobalOptSearcher())
         res = res.get_options()
-        print(res)
+        # 12 Global options are used in NUCLEO-L476RG (and usually in the other modules)
+        self.assertEqual(len(res), 12)
+
+    def test_search_user_options_in_module(self):
+        res = self.search_current_module(
+            MakefileUserOptSearcher())
+        res = res.get_options()
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0].name, 'UDEFS')
         self.assertEqual(
             res[0].args[0],
             AosArgument('-DBOARD_MPU6050_CONNECTED=$(BOARD_MPU6050_CONNECTED)'))
+
+    def search_current_module(self, searcher: Searcher) -> GenericSearchResult:
+        return searcher.search_options(
+            AosConfigFinder(self.aos_module.path))
 
     def test_search_user_flag_default_argument_non_existent(self):
         # Default module (NUCLEO-L476RG) has no default argument for its flag

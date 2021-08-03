@@ -1,12 +1,7 @@
-from enum import Flag
 import unittest
+from amirotest.model.option import AosOption, UserOption, GlobalOption
+from amirotest.model.argument import AosArgument
 
-from amirotest.model import \
-    AosArgument, \
-    AosOption, \
-    GlobalOption, \
-    UserOption, \
-    AosVariable
 
 
 class TestArgumentModel(unittest.TestCase):

@@ -1,4 +1,4 @@
-from amirotest.model.aos_opt import GlobalOption, UserOption
+from amirotest.model.option import GlobalOption, UserOption
 from amirotest.tools import YamlDumper, yml_load, Loader
 from amirotest.tools import YamlDumper, YamlLoader
 from ..test_utils import AosModuleHelper, PathHelper

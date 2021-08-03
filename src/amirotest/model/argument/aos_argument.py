@@ -95,8 +95,6 @@ class AosArgument:
                self.name)
         self.name = arg_name
 
-
-
     def __str__(self) -> str:
         return f'{self.name}'
     __repr__ = __str__
@@ -120,6 +118,7 @@ class UserArgument(AosArgument):
 
     def append_substitution_to_arg(self, arg, sub_flag) -> str:
         return f"{arg}=$({sub_flag})"
+
 
 class ArgumentWithDefault(AosArgument):
     def __init__(self, name, default=None):

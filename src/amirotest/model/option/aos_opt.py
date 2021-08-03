@@ -1,7 +1,10 @@
 from abc import ABC
 from dataclasses import dataclass
+from typing import Any
 
-from amirotest.model.aos_argument import AosArgument, UserArgument
+
+import amirotest.model.argument as aos_arg
+from amirotest.model.argument import UserArgument
 
 
 class WrongArgumentCount(Exception):
@@ -25,7 +28,7 @@ class AosOption():
     def _reset_args_from_argumnet_str(self):
         self.args.clear()       # TODO: Is it required?
         splitted_args = self.argument_str.split(" ")
-        self.args = [AosArgument(arg) for arg in splitted_args]
+        self.args = [aos_arg.AosArgument(arg) for arg in splitted_args]
 
     def resolve(self, flag: 'AosOption') -> bool:
         for arg in self.args:
@@ -36,10 +39,10 @@ class AosOption():
         return len(self.get_substitution_opt_names()) == 0
 
     def get_substitution_opt_names(self) -> list[str]:
-        """Returns all substitution flags that are found in the arguments."""
-        return self._get_substitution_flag_names(self.args)
+        """Returns all substitution option names that are found in the arguments."""
+        return self._get_substitution_option_names(self.args)
 
-    def _get_substitution_flag_names(self, args: list[AosArgument]) -> list[str]:
+    def _get_substitution_option_names(self, args: list[aos_arg.AosArgument]) -> list[str]:
         flags = []
         for arg in args:
             if not arg.is_resolved():
@@ -71,7 +74,6 @@ class GlobalOption(AosOption):
 
 
 class UserOption(AosOption):
-    pass
     def __init__(self, flag_name, arg_str):
         """Add substitution flag to argument"""
         flag_args = arg_str.split(" ")
@@ -79,3 +81,7 @@ class UserOption(AosOption):
             raise WrongArgumentCount(f"Cannot process {len(flag_args)} arguments!\nGiven arguments:{flag_args}")
         u_arg = UserArgument(arg_str)
         super().__init__(flag_name, u_arg.name)
+
+class DefaultOpiton(AosOption):
+    def __init__(self, name: str, arg_str: str, default: Any):
+        pass
