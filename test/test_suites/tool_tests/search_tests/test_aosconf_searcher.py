@@ -1,8 +1,9 @@
+from ...test_utils import PathHelper
 from amirotest.model.option import AosOption, GlobalOption
 from amirotest.model.search_result import GenericSearchResult
-from ..test_utils.test_helper import PathHelper
-import unittest
 
+import unittest
+PathHelper
 from amirotest.tools import AosConfSearcher, SearchGroupIdx
 from amirotest.tools.config_path_finder import AosConfigFinder
 
