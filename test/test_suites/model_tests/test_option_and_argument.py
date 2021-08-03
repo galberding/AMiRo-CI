@@ -1,10 +1,12 @@
 import unittest
 from amirotest.model.option import AosOption, MakeUserOption, MakeGlobalOption
 from amirotest.model.argument import AosArgument
+from amirotest.model.option.aos_opt import AosVariable, DefaultOpiton
+from amirotest.model.option.aosconf_opt import AosconfOption
 
 
 
-class TestArgumentModel(unittest.TestCase):
+class TestOptions(unittest.TestCase):
     def test_create_arguments(self):
         arg = AosArgument("-WALL")
         self.assertEqual(arg.name, "-WALL")
@@ -132,6 +134,12 @@ class TestArgumentModel(unittest.TestCase):
             before="-Wl,--print-memory-usage",
             after="-$(USE_COPT_WL_PRINT_MEMORY_USAGE)"
         )
+
+    def test_resolution_of_aosconf_option(self):
+        opt = AosconfOption("NAME", "SUB", "42")
+        opt.resolve(AosVariable("SUB", "var"))
+        self.assertTrue(opt.is_resolved())
+        self.assertTrue(opt.args[0], "var")
 
     def check_resolution_reset(self,option: AosOption,
                                before: str,
