@@ -3,6 +3,7 @@ from amirotest.model.option.aos_opt import AosOption
 from amirotest.tools.search import MakefileGlobalOptSearcher
 from amirotest.tools.config_path_finder import AosConfigFinder
 from amirotest.tools.search import MakefileUserOptSearcher
+from amirotest.tools.search.aosconf_searcher import AosConfSearcher
 from amirotest.tools.search.searcher import Searcher
 from .test_helper import PathHelper
 
@@ -61,12 +62,12 @@ class AosModuleHelper:
         if module_name not in self.module_names:
             raise UnknownModuleNameException(f"Cannot find {module_name}")
         module = self.get_aos_module(module_name=module_name)
-        # g_res = self.make_glob_searcher.search_options(AosConfigFinder(module.path))
-        g_res = self.get_search_options(MakefileGlobalOptSearcher(), module_name)
-        # u_res = self.make_usr_searcher.search_options(AosConfigFinder(module.path))
-        u_res = self.get_search_options(MakefileUserOptSearcher(), module_name)
-        module.add_options(g_res)
-        module.add_options(u_res)
+        make_g_res = self.get_search_options(MakefileGlobalOptSearcher(), module_name)
+        make_u_res = self.get_search_options(MakefileUserOptSearcher(), module_name)
+        aosconf_res = self.get_search_options(AosConfSearcher(), module_name)
+        module.add_options(make_g_res)
+        module.add_options(make_u_res)
+        module.add_options(aosconf_res)
         return module
 
     def get_search_options(self, searcher: Searcher, module_name, Finder=AosConfigFinder) -> list[AosOption]:

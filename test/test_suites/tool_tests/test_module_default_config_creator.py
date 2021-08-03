@@ -45,7 +45,7 @@ class TestModuleDumping(unittest.TestCase):
         return conf
 
     def tearDown(self) -> None:
-        self.path_helper.clear_test_env()
+        # self.path_helper.clear_test_env()
         pass
 
 # TODO: Default module loader does not fully work
