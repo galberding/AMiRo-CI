@@ -16,7 +16,7 @@ class TestAosSearcher(unittest.TestCase):
 
 
     def test_get_options_returns_default_options(self):
-        pass
+        print("Hello World")
         # res = self.get_options()
 
     # def test_search_aosconf(self):
