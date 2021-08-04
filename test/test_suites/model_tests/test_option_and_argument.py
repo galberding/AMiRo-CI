@@ -5,7 +5,6 @@ from amirotest.model.option.aos_opt import AosVariable, DefaultOpiton
 from amirotest.model.option.aosconf_opt import AosconfOption
 
 
-
 class TestOptions(unittest.TestCase):
     def test_create_arguments(self):
         arg = AosArgument("-WALL")
