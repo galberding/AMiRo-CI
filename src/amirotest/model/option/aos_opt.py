@@ -54,6 +54,12 @@ class AosOption():
                 aos_vars.append(AosVariable(variable_description[0], variable_description[1]))
         return aos_vars
 
+    def get_build_option(self) -> str:
+        if len(self.args) == 1:
+            return f"-D{self.name}={self.args[0]}"
+        else:
+            raise NotImplementedError()
+
     def get_type(self) -> str:
         """Retrun type description for listing in config"""
         return type(self).__name__
