@@ -29,4 +29,4 @@ class TestReplacementConfigCreation(unittest.TestCase):
 
     def test_get_flatten_config(self):
         self.repl_conf.load(self.conf_finder.get_repl_conf_path())
-        self.assertAlmostEqual(16, len(self.repl_conf.get_flatten_config()))
+        self.assertAlmostEqual(6, len(self.repl_conf.get_flatten_config()))

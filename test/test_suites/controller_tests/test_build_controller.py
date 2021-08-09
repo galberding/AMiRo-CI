@@ -21,12 +21,19 @@ class TestBuildController(unittest.TestCase):
 
     def test_build_generate_conf_matrix(self):
         config_mat = self.bc.generate_config_matrix()
-        self.assertEqual(16, config_mat.shape[1])
+        self.assertEqual(6, config_mat.shape[1])
 
     def test_generate_template_modules(self):
         modules = self.bc.generate_template_modules_from_repl_conf()
         self.assertEqual(12, len(modules))
         [self.assertTrue(isinstance(module, AosModule)) for module in modules]
         [self.assertFalse(module.is_resolved()) for module in modules]
-        for opt in modules[0].options:
-            print(opt.get_build_option())
+        # for opt in modules[0].options:
+            # print(opt.get_build_option())
+
+    def test_generate_configured_modules(self):
+        modules = self.bc.generate_template_modules_from_repl_conf()
+        c_modules = self.bc.generateConfiguredModulesFromTemplate(modules[0])
+        # 6 Option with 2 arguments each
+        self.assertEqual(2**6, len(c_modules))
+        [self.assertTrue(module.is_resolved()) for module in c_modules]
