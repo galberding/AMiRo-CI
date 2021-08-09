@@ -40,10 +40,15 @@ class AosConfigFinder(ConfigFinder):
     def get_aosconf(self) -> Path:
         return self._get_module_config_by_name("aosconf.h")
 
+    def get_repl_conf_path(self) -> Path:
+        # TODO: Point to correct path!
+        return Path("/home/schorschi/hiwi/amiroci/assets/repl_conf.yml")
+
     def _get_module_config_by_name(self, name: str):
         conf = self.module.joinpath(name)
         self._ensure_config_exists(conf)
         return conf
+
 
 class AppsConfigFinder(ConfigFinder):
     def __init__(self, module_path: Path) -> None:

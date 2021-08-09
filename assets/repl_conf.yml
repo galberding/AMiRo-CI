@@ -1,0 +1,41 @@
+Modules: [
+            "DiWheelDrive_1-1",
+            "DiWheelDrive_1-2",
+            "LightRing_1-0",
+            "LightRing_1-2",
+            "NUCLEO-F103RB",
+            "NUCLEO-F401RE",
+            "NUCLEO-F767ZI",
+            "NUCLEO-G071RB",
+            "NUCLEO-L476RG",
+            "PowerManagement_1-1",
+            "PowerManagement_1-2",
+            "STM32F407G-DISC1",
+        ]
+Options:
+    AosconfOption:
+      OS_CFG_DBG: ['true', 'false']
+      OS_CFG_FBCAN1_ENABLE: ['true', 'false']
+      OS_CFG_FBCAN2_ENABLE: ['true', 'false']
+      OS_CFG_FBCAN3_ENABLE: ['true', 'false']
+      # OS_CFG_MAIN_LOOP_GPIOEVENT_FLAGSMASK: ['0']
+      # OS_CFG_MAIN_LOOP_TIMEOUT: ['0']
+      OS_CFG_PROFILE: ['true', 'false']
+      OS_CFG_SHELL_ENABLE: ['true', 'false']
+      OS_CFG_SHELL_HISTLENGTH: ['0', '3']
+      # OS_CFG_SHELL_LINEWIDTH: ['64']
+      # OS_CFG_SHELL_MAXARGS: ['8']
+      OS_CFG_SHELL_REMOTE_ENABLE: ['true', 'false']
+      # OS_CFG_SHELL_STACKSIZE: ['1024']
+      # OS_CFG_SHELL_THREADPRIO: [AOS_THD_NORMALPRIO_MIN]
+      OS_CFG_SSSP_ENABLE: ['true', 'false']
+      OS_CFG_SSSP_MASTER: ['true', 'false']
+      # OS_CFG_SSSP_MODULEIDWIDTH: ['16']
+      OS_CFG_SSSP_MSI: ['true', 'false']
+      OS_CFG_SSSP_SHUTDOWN: ['true', 'false']
+      # OS_CFG_SSSP_SIGNALDELAY: ['1000']
+      OS_CFG_SSSP_STACK_END: ['true', 'false']
+      OS_CFG_SSSP_STACK_START: ['true', 'false']
+      OS_CFG_SSSP_STARTUP: ['true', 'false']
+      # OS_CFG_SSSP_SYSSYNCPERIOD: ['1000000']
+      OS_CFG_TESTS_ENABLE: ['true', 'false']
