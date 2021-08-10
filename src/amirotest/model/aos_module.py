@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+import uuid
 
 from amirotest.model.option import AosOption
 from amirotest.model.option.aos_opt import DefaultOpiton
@@ -7,15 +8,17 @@ from amirotest.model.option.aos_opt import DefaultOpiton
 class OptionNotFoundException(Exception):
     pass
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class AosModule:
     name: str = field(init=False)
+    uid: str = field(init=False, default="")
     path: Path
     options: list[AosOption] = field(init=False)
 
     def __post_init__(self):
         self.name = self.path.name
         self.options = []
+        self.uid = str(uuid.uuid1())
 
     def get_makefile(self) -> Path:
         return self.path.joinpath("Makefile")

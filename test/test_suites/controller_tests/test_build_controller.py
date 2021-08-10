@@ -33,7 +33,7 @@ class TestBuildController(unittest.TestCase):
 
     def test_generate_configured_modules(self):
         modules = self.bc.generate_template_modules_from_repl_conf()
-        c_modules = self.bc.generateConfiguredModulesFromTemplate(modules[0])
+        c_modules = self.bc.generate_configured_modules_from_template(modules[0])
         # 6 Option with 2 arguments each
         self.assertEqual(2**6, len(c_modules))
         [self.assertTrue(module.is_resolved()) for module in c_modules]

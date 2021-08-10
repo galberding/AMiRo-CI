@@ -11,12 +11,14 @@ class ConfigInvalidError(Exception):
 
 class BuildController:
     def __init__(self, repl_conf: ReplaceConfig) -> None:
+        """
+        """
         self.repl_conf = repl_conf
         if not self.repl_conf.is_valid():
             raise ConfigInvalidError("Cannot use config!")
         self.mat_builder = ConfMatrixBuilder()
 
-    def generateConfiguredModulesFromTemplate(self, t_module: AosModule):
+    def generate_configured_modules_from_template(self, t_module: AosModule):
         conf_mat = self.generate_config_matrix()
         c_modules = []
         # print(conf_mat.shape)
@@ -52,8 +54,6 @@ class BuildController:
         return options
 
 
-    def buildConfiguredModules(self):
-        pass
 # Build module from search
 # Build module from replacement config
 # Create module configurations
