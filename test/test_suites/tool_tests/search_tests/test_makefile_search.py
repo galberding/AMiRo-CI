@@ -6,16 +6,13 @@ from amirotest.tools.search import Searcher
 from ...test_utils import AosModuleHelper
 import unittest
 
-
-
-
-
 class TestMakefileSearch(unittest.TestCase):
 
     def setUp(self):
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileGlobalOptSearcher()
+        self.finder = AosConfigFinder(self.aos_module.path)
 
     def test_makefile_search_global_options_in_module(self):
         res = self.search_current_module(
@@ -40,11 +37,15 @@ class TestMakefileSearch(unittest.TestCase):
 
     def test_search_user_flag_default_argument_non_existent(self):
         # Default module (NUCLEO-L476RG) has no default argument for its flag
-        results = self.searcher.search_user_default_argument(self.aos_module.get_makefile(), 'BOARD_MPU6050_CONNECTED')
+        results = self.searcher.search_user_default_argument(
+            self.finder.get_makefile(), 'BOARD_MPU6050_CONNECTED')
         self.assertEqual(results, None)
 
     def test_search_user_flag_multiple_default_flags(self):
         # Powermanagement hast a default value for its sensor ring
-        pm_module = self.module_helper.get_aos_module(module_name="PowerManagement_1-2")
-        results = self.searcher.search_user_default_argument(pm_module.get_makefile(), 'BOARD_SENSORRING')
+        pm_module = self.module_helper.get_aos_module(
+            module_name="PowerManagement_1-2")
+        finder = AosConfigFinder(pm_module.path)
+        results = self.searcher.search_user_default_argument(
+            finder.get_makefile(), 'BOARD_SENSORRING')
         self.assertEqual(results, 'BOARD_PROXIMITYSENSOR')

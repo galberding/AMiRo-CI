@@ -28,11 +28,6 @@ class TestAosModel(unittest.TestCase):
         self.assertNotEqual(AosModule(Path("Hello")).uid,
                             AosModule(Path("Hello")).uid)
 
-
-    def test_module_get_makefile(self):
-        makefile = self.aos_module.get_makefile()
-        self.assertTrue(makefile.exists())
-
     def test_module_with_options_is_resolved(self):
         result = SearchResult([
             ('USE_FPU', 'softfp'),

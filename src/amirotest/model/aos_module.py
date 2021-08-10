@@ -20,9 +20,6 @@ class AosModule:
         self.options = []
         self.uid = str(uuid.uuid1())
 
-    def get_makefile(self) -> Path:
-        return self.path.joinpath("Makefile")
-
     def add_options(self, options: list[AosOption]):
         self.options += options
 
