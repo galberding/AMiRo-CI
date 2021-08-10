@@ -22,9 +22,9 @@ class TestMakeCommand(unittest.TestCase):
         command = self.generate_command()
         self.assertRegex(command, rf'{MakeParameter.UDEFS.name}="(?P<paras>.*)"')
 
-    def test_ADEFS_set(self):
+    def test_UADEFS_set(self):
         command = self.generate_command()
-        self.assertRegex(command, rf'{MakeParameter.ADEFS.name}="(?P<paras>.*)"')
+        self.assertRegex(command, rf'{MakeParameter.UADEFS.name}="(?P<paras>.*)"')
 
     def test_contains_module_name(self):
         command = self.generate_command()
@@ -42,7 +42,19 @@ class TestMakeCommand(unittest.TestCase):
 
     def test_contains_build_dir(self):
         command = self.generate_command()
-        self.assertRegex(command, rf'{MakeParameter.ADEFS.name}="(?P<paras>.*)"')
+        self.assertRegex(command, rf'{MakeParameter.BUILDDIR.name}="{MakeParameter.BUILDDIR.value}.*"')
+
+    def test_visual_command_inspection(self):
+        command = self.generate_command()
+        print()
+        print("Serial Command")
+        print(command)
+        command = self.generate_command(factory=ParallelMakeCommandFactory)
+        print()
+        print("Parallel Command")
+        print(command)
+        print()
+
 
 
     # UDEFS and ADEFS needs to be set and equal

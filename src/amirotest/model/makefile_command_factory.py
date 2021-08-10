@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+from pathlib import Path
 from amirotest.model.aos_module import AosModule
 import multiprocessing
 
 
 class MakeParameter(Enum):
     UDEFS = auto()
-    ADEFS = auto()
+    UADEFS = auto()
     make = auto()
-    BUILDDIR = auto()
+    # TODO: Ugly should be set by ConfigFinder module or something else
+    BUILDDIR = Path("/dev/sha/amiroCI")
 
 class MakeCommandFactory(ABC):
     def __init__(self) -> None:
@@ -25,9 +27,11 @@ class MakeCommandFactory(ABC):
         module: resolved \a AosModule
         """
         opt_str = self._generate_option_str(module)
+        module_build_dir = MakeParameter.BUILDDIR.value.joinpath(module.uid)
         return f'''{MakeParameter.make.name} -j{cpu_count} \\
         {MakeParameter.UDEFS.name}="{opt_str}" \\
-        {MakeParameter.ADEFS.name}="{opt_str}" \\
+        {MakeParameter.UADEFS.name}="{opt_str}" \\
+        {MakeParameter.BUILDDIR.name}="{module_build_dir}" \\
         {module.name}'''
 
     def _generate_option_str(self, module):
