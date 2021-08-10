@@ -68,6 +68,8 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">amirotest.model.argument.aos_argument.AosArgument Class Reference</div>  </div>
@@ -109,6 +111,22 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a5c61dc1e9017def577cae1e298ccc78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59396bf8493c8142859dbc971eb8d84e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a59396bf8493c8142859dbc971eb8d84e">name</a></td></tr>
 <tr class="separator:a59396bf8493c8142859dbc971eb8d84e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a0b506ebb45a542d97b633bde07d45cae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a0b506ebb45a542d97b633bde07d45cae">_can_detect_argument_pattern</a> (self)</td></tr>
+<tr class="separator:a0b506ebb45a542d97b633bde07d45cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c12fb3b1b30a096dc0b5b2fa1634cc9"><td class="memItemLeft" align="right" valign="top">tuple[Optional[str], Optional[str], Optional[str]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a7c12fb3b1b30a096dc0b5b2fa1634cc9">_search_argument_pattern</a> (self)</td></tr>
+<tr class="separator:a7c12fb3b1b30a096dc0b5b2fa1634cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669385bf027e6d10db62164838800537"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a669385bf027e6d10db62164838800537">_append_allcaps_to_prefix</a> (self, str prefix, str raw_suffix)</td></tr>
+<tr class="separator:a669385bf027e6d10db62164838800537"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38d261c3ee81f3788262bbb3dc762508"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a38d261c3ee81f3788262bbb3dc762508">_substitute_option_value_in_name</a> (self, option_value)</td></tr>
+<tr class="separator:a38d261c3ee81f3788262bbb3dc762508"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a5f40458aa8d4227dfbd687e9b5092378"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a5f40458aa8d4227dfbd687e9b5092378">__repr__</a> = <a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#ab2ad4e13cad4ad69c63c853c1eea0217">__str__</a></td></tr>
+<tr class="separator:a5f40458aa8d4227dfbd687e9b5092378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a68bfe71aaa1e67533cbc9e1cc6813672"></a>
@@ -145,6 +163,139 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a669385bf027e6d10db62164838800537"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669385bf027e6d10db62164838800537">&#9670;&nbsp;</a></span>_append_allcaps_to_prefix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str amirotest.model.argument.aos_argument.AosArgument._append_allcaps_to_prefix </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>raw_suffix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Convert raw_suffix to allcaps,
+remove other special characters and append to prefix.</pre> 
+</div>
+</div>
+<a id="a0b506ebb45a542d97b633bde07d45cae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b506ebb45a542d97b633bde07d45cae">&#9670;&nbsp;</a></span>_can_detect_argument_pattern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool amirotest.model.argument.aos_argument.AosArgument._can_detect_argument_pattern </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7c12fb3b1b30a096dc0b5b2fa1634cc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c12fb3b1b30a096dc0b5b2fa1634cc9">&#9670;&nbsp;</a></span>_search_argument_pattern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> tuple[Optional[str], Optional[str], Optional[str]] amirotest.model.argument.aos_argument.AosArgument._search_argument_pattern </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Search for different argument patterns:
+1. Assignment pattern: -std=c99, -mfpu=fpv4-sp-d16, ...
+2. Standard argument: -fshort-enums, -O2, -Wl,--print-memory-usage ...</pre> 
+</div>
+</div>
+<a id="a38d261c3ee81f3788262bbb3dc762508"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38d261c3ee81f3788262bbb3dc762508">&#9670;&nbsp;</a></span>_substitute_option_value_in_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def amirotest.model.argument.aos_argument.AosArgument._substitute_option_value_in_name </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>option_value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Replace name attribute with substituted option_value.</pre> 
 </div>
 </div>
 <a id="a68ca6557ce4a5f61468e5a57f333fb62"></a>
@@ -312,6 +463,28 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5f40458aa8d4227dfbd687e9b5092378"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f40458aa8d4227dfbd687e9b5092378">&#9670;&nbsp;</a></span>__repr__</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">str amirotest.model.argument.aos_argument.AosArgument.__repr__ = <a class="el" href="classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#ab2ad4e13cad4ad69c63c853c1eea0217">__str__</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a59396bf8493c8142859dbc971eb8d84e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a59396bf8493c8142859dbc971eb8d84e">&#9670;&nbsp;</a></span>name</h2>
 

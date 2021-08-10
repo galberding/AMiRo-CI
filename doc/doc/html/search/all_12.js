@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['write_5fconf_5fto_5ffile_158',['write_conf_to_file',['../classamirotest_1_1tools_1_1aos__module__default__config__creatro_1_1_config_yml_handler.html#ac806ba31c5289367ea1f50ccb64dee01',1,'amirotest::tools::aos_module_default_config_creatro::ConfigYmlHandler']]],
-  ['wrongargumentcount_159',['WrongArgumentCount',['../classamirotest_1_1model_1_1option_1_1aos__opt_1_1_wrong_argument_count.html',1,'amirotest::model::option::aos_opt']]]
+  ['valid_191',['valid',['../classamirotest_1_1tools_1_1replace__config__builder_1_1_replace_config.html#aae315c49e3b03aaa9a14f5177da2e203',1,'amirotest.tools.replace_config_builder.ReplaceConfig.valid()'],['../classamirotest_1_1tools_1_1replace__config__builder_1_1_yaml_repl_conf.html#a4eb44b583da53f87facf2bf8f6ecd241',1,'amirotest.tools.replace_config_builder.YamlReplConf.valid()']]],
+  ['variable_5fextraction_5fregex_192',['variable_extraction_regex',['../classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a0d503c8fab596f92bc4d1ca1c135cb9c',1,'amirotest::model::argument::aos_argument::AosArgument']]]
 ];

@@ -1,0 +1,6 @@
+<map id="amirotest.model.makefile_command_factory.MakeCommandFactory" name="amirotest.model.makefile_command_factory.MakeCommandFactory">
+<area shape="rect" id="node1" title="Abstract class to create make commands." alt="" coords="104,53,375,94"/>
+<area shape="rect" id="node3" href="$classamirotest_1_1model_1_1makefile__command__factory_1_1_parallel_make_command_factory.html" title="Generates commands similar to:" alt="" coords="423,5,693,61"/>
+<area shape="rect" id="node4" href="$classamirotest_1_1model_1_1makefile__command__factory_1_1_serial_make_command_factory.html" title="Generates commands similar to:" alt="" coords="428,85,688,141"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,60,56,87"/>
+</map>

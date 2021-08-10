@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['name_310',['name',['../classamirotest_1_1model_1_1aos__module_1_1_aos_module.html#a4a1c2a97a8672bb3875abc67981d8c4f',1,'amirotest.model.aos_module.AosModule.name()'],['../classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a59396bf8493c8142859dbc971eb8d84e',1,'amirotest.model.argument.aos_argument.AosArgument.name()']]]
+  ['globaloption_371',['GlobalOption',['../namespaceamirotest_1_1tools_1_1aos__module__default__config__creatro.html#a1ddc3fea4f186dd51746b31ea64d1938',1,'amirotest::tools::aos_module_default_config_creatro']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['wrongargumentcount_202',['WrongArgumentCount',['../classamirotest_1_1model_1_1option_1_1aos__opt_1_1_wrong_argument_count.html',1,'amirotest::model::option::aos_opt']]]
+  ['userargument_240',['UserArgument',['../classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_user_argument.html',1,'amirotest::model::argument::aos_argument']]]
 ];
