@@ -6,6 +6,15 @@ import multiprocessing
 
 
 class MakeParameter(Enum):
+    """!Dataholder used for make command creation.
+    By issuing:
+    \code{.py}
+    MakeParameter.BUILDDIR.name # -> BUILDDIR
+    # or
+    MakeParameter.BUILDDIR.value # -> "/dev/shm/amiroCI"
+    \endcode
+    the single parts of the make command can be assembled.
+    """
     UDEFS = auto()
     UADEFS = auto()
     make = auto()
