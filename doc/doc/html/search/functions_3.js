@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['dump_111',['dump',['../classamirotest_1_1tools_1_1aos__module__default__config__creatro_1_1_aos_dumper.html#a8db6f9da426ad2cf3cf8da3ffbbb578b',1,'amirotest.tools.aos_module_default_config_creatro.AosDumper.dump()'],['../classamirotest_1_1tools_1_1aos__module__default__config__creatro_1_1_yaml_dumper.html#a1ee6956db1b639f85291abb9fe8ab7fb',1,'amirotest.tools.aos_module_default_config_creatro.YamlDumper.dump()']]]
+  ['can_5fextract_5fvariable_256',['can_extract_variable',['../classamirotest_1_1model_1_1argument_1_1aos__argument_1_1_aos_argument.html#a68ca6557ce4a5f61468e5a57f333fb62',1,'amirotest::model::argument::aos_argument::AosArgument']]],
+  ['create_5fmodule_257',['create_module',['../classamirotest_1_1tools_1_1aos__module__default__config__creatro_1_1_yaml_loader.html#af0037b22149e5738f8fbac739fb580e3',1,'amirotest::tools::aos_module_default_config_creatro::YamlLoader']]]
 ];
