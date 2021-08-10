@@ -10,11 +10,9 @@ class MakeParameter(Enum):
     UADEFS = auto()
     make = auto()
     # TODO: Ugly should be set by ConfigFinder module or something else
-    BUILDDIR = Path("/dev/sha/amiroCI")
+    BUILDDIR = Path("/dev/shm/amiroCI")
 
 class MakeCommandFactory(ABC):
-    def __init__(self) -> None:
-        self.cpu_count = multiprocessing.cpu_count() * 2
 
     @abstractmethod
     def build_make_command(self, module: AosModule) -> str:
@@ -43,7 +41,8 @@ class MakeCommandFactory(ABC):
 
 class SerialMakeCommandFactory(MakeCommandFactory):
     def build_make_command(self, module: AosModule) -> str:
-        return self._build_command(self.cpu_count, module)
+        cpu_count = multiprocessing.cpu_count() * 2
+        return self._build_command(cpu_count, module)
 
 
 class ParallelMakeCommandFactory(MakeCommandFactory):
