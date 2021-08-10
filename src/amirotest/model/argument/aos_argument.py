@@ -1,3 +1,15 @@
+"""!
+# Amiro OS Argument
+This package contains the smallest unit called argument.
+It holds a name encoded as a string.
+
+## Substitution System
+It can be utilized to substitute content to its name.
+If the name holds the pattern <em>\$(OPTION)</em> than the pattern can
+be \b substituted. Until than the argument is in a so called \b unresolved
+state
+"""
+
 from dataclasses import dataclass
 import re
 from typing import Optional

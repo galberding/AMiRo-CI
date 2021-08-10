@@ -1,0 +1,35 @@
+\hypertarget{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder}{}\doxysection{amirotest.\+tools.\+config.\+conf\+\_\+matrix\+\_\+builder.\+Conf\+Matrix\+Builder Class Reference}
+\label{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder}\index{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder@{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+pd.\+Data\+Frame \mbox{\hyperlink{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder_ae9414c3ba141d537eaad061523a3cffc}{build\+\_\+dataframe\+\_\+config}} (self, dict\mbox{[}str, list\mbox{[}Any\mbox{]}\mbox{]} config)
+\item 
+list\mbox{[}list\mbox{]} \mbox{\hyperlink{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder_a4da7ef525c3d292929e6207c25cee2a7}{augment\+\_\+config}} (self, dict\mbox{[}str, list\mbox{[}Any\mbox{]}\mbox{]} config)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder_a4da7ef525c3d292929e6207c25cee2a7}\label{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder_a4da7ef525c3d292929e6207c25cee2a7}} 
+\index{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder@{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder}!augment\_config@{augment\_config}}
+\index{augment\_config@{augment\_config}!amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder@{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder}}
+\doxysubsubsection{\texorpdfstring{augment\_config()}{augment\_config()}}
+{\footnotesize\ttfamily  list\mbox{[}list\mbox{]} amirotest.\+tools.\+config.\+conf\+\_\+matrix\+\_\+builder.\+Conf\+Matrix\+Builder.\+augment\+\_\+config (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{dict\mbox{[}str, list\mbox{[}Any\mbox{]}\mbox{]}}]{config }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Combine all config values with each other
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder_ae9414c3ba141d537eaad061523a3cffc}\label{classamirotest_1_1tools_1_1config_1_1conf__matrix__builder_1_1_conf_matrix_builder_ae9414c3ba141d537eaad061523a3cffc}} 
+\index{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder@{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder}!build\_dataframe\_config@{build\_dataframe\_config}}
+\index{build\_dataframe\_config@{build\_dataframe\_config}!amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder@{amirotest.tools.config.conf\_matrix\_builder.ConfMatrixBuilder}}
+\doxysubsubsection{\texorpdfstring{build\_dataframe\_config()}{build\_dataframe\_config()}}
+{\footnotesize\ttfamily  pd.\+Data\+Frame amirotest.\+tools.\+config.\+conf\+\_\+matrix\+\_\+builder.\+Conf\+Matrix\+Builder.\+build\+\_\+dataframe\+\_\+config (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{dict\mbox{[}str, list\mbox{[}Any\mbox{]}\mbox{]}}]{config }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Creates matrix where all parameters passed by the config are combined with each other.
+config: dict in form of: {"ParamerterName": ["list", "of", "Values"], ...}
+return  configuration matrix in form of a DataFrame where the columns hold the parameter names.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/schorschi/hiwi/amiroci/src/amirotest/tools/config/conf\+\_\+matrix\+\_\+builder.\+py\end{DoxyCompactItemize}
