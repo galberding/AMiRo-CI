@@ -11,7 +11,8 @@ from amirotest.model.option.aos_opt import AosOption
 class TestMakeCommand(unittest.TestCase):
     def setUp(self) -> None:
         self.module_name = "TestModule"
-        self.make_factory = SerialMakeCommandFactory()
+        self.builddir = Path("/dev/shm/amiroCI")
+        self.make_factory = SerialMakeCommandFactory(self.builddir)
 
 
     def test_make_command_make_at_first_place(self):
@@ -42,7 +43,7 @@ class TestMakeCommand(unittest.TestCase):
 
     def test_contains_build_dir(self):
         command = self.generate_command()
-        self.assertRegex(command, rf'{MakeParameter.BUILDDIR.name}="{MakeParameter.BUILDDIR.value}.*"')
+        self.assertRegex(command, rf'{MakeParameter.BUILDDIR.name}="{self.builddir}.*"')
 
     def test_visual_command_inspection(self):
         command = self.generate_command()
@@ -57,12 +58,12 @@ class TestMakeCommand(unittest.TestCase):
 
     def test_build_commands(self):
         module_count = 5
-        fac = SerialMakeCommandFactory()
+        fac = SerialMakeCommandFactory(self.builddir)
         modules = [self.generate_module() for _ in range(module_count)]
         self.assertEqual(module_count, len(fac.build_make_commands(modules)))
 
     def generate_command(self, factory: Type[MakeCommandFactory] = SerialMakeCommandFactory):
-        make_factory = factory()
+        make_factory = factory(self.builddir)
         module = self.generate_module()
         self.assertTrue(module.is_resolved())
         return make_factory.build_make_command(module)

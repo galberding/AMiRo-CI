@@ -31,7 +31,7 @@ class SerialExecutor(BuildExecutor):
     One module is build at a time with several cpus.
     """
     def __init__(self, builddir: Path) -> None:
-        cmd_factory = SerialMakeCommandFactory()
+        cmd_factory = SerialMakeCommandFactory(builddir)
         super().__init__(builddir, cmd_factory)
 
     def build(self, modules: list[AosModule]):
@@ -50,7 +50,7 @@ class SerialExecutor(BuildExecutor):
 
 class ParallelExecutor(BuildExecutor):
     def __init__(self, builddir: Path) -> None:
-        cmd_factory = ParallelMakeCommandFactory()
+        cmd_factory = ParallelMakeCommandFactory(builddir)
         super().__init__(builddir, cmd_factory)
 
     def build(self, modules: list[AosModule]):
