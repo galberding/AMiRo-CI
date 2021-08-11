@@ -41,6 +41,11 @@ class ReplaceConfig(ABC):
         return self.options
 
 class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
+
+    def __init__(self, path: Path) -> None:
+        super().__init__()
+        self.load(path)
+
     def load(self, path: Path):
         if not path.exists():
             raise ReplaceConfigNotFound(path)

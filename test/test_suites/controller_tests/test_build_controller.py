@@ -1,8 +1,10 @@
 import unittest
 from pathlib import Path
 from amirotest.controller.build_controller import BuildController
+from amirotest.controller.build_executer import SerialExecutor
 from amirotest.model.aos_module import AosModule
 from amirotest.tools.replace_config_builder import YamlReplConf
+
 
 class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
@@ -14,10 +16,8 @@ class TestBuildController(unittest.TestCase):
                        "AnotherConf":{
                            "OS_OPT": ["true", "false"],
                            "OS_SHELL": ["on", "off"]}}}
-        self.repl_conf = YamlReplConf()
-        self.repl_conf.load(
-            Path("/home/schorschi/hiwi/amiroci/assets/repl_conf.yml"))
-        self.bc = BuildController(self.repl_conf)
+        self.repl_conf = YamlReplConf(Path("/home/schorschi/hiwi/amiroci/assets/repl_conf.yml"))
+        self.bc = BuildController(self.repl_conf, SerialExecutor)
 
     def test_build_generate_conf_matrix(self):
         config_mat = self.bc.generate_config_matrix()

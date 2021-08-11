@@ -10,8 +10,9 @@ class CannotFindModuleError(Exception):
     pass
 
 class ConfigFinder(ABC):
-    def __init__(self, module_path: Path) -> None:
+    def __init__(self, module_path: Path, builddir=Path("/dev/shm/amiroCI")) -> None:
         self.module = module_path
+        self.b_dir = builddir
         if not self.module.exists():
             raise CannotFindModuleError(f"Cannot find module at: {self.module}")
 
@@ -22,6 +23,9 @@ class ConfigFinder(ABC):
     @abstractmethod
     def get_aosconf(self) -> Path:
         pass
+
+    def get_build_dir(self) -> Path:
+        return self.b_dir
 
     def _ensure_config_exists(self, config: Path):
         if not config.exists():
