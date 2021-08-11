@@ -8,7 +8,8 @@ from amirotest.controller.build_executer import BuildExecutor
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, ConfVariable
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
-from amirotest.tools.replace_config_builder import ReplaceConfig
+from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 
 
 class ConfigInvalidError(Exception):
@@ -25,9 +26,9 @@ class BuildController:
     4. TODO: Pass configured modules to BuildExecutor
     5. TODO: Call reporter on the build results
     """
-    def __init__(self, repl_conf: ReplaceConfig,
-                 build_executor: Type[BuildExecutor],
-                 builddir: Path = Path("/dev/shm/amiroCI")) -> None:
+    def __init__(self, finder: ConfigFinder,
+                 # repl_conf: ReplaceConfig,
+                 build_executor: Type[BuildExecutor]) -> None:
         """!# Initialize controller
         - Check if repl config exists
         - initialize conf matrix builder
@@ -35,14 +36,16 @@ class BuildController:
         @param build_executor: BuildExecuter to controll the execution
         @param builddir: directory to save build results
         """
-        self.repl_conf = repl_conf
+
+        self.finder = finder
+        self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
         # TODO: Better place would be in the repl_conf to not allow an
         # invalid config in the first place!
         if not self.repl_conf.is_valid():
             raise ConfigInvalidError("Cannot use config!")
         self.mat_builder = ConfMatrixBuilder()
-        self.b_dir = builddir
-        self.b_executor = build_executor(self.b_dir)
+        self.b_dir = self.finder.get_build_dir()
+        self.b_executor = build_executor(self.finder)
 
     def build_modules(self):
         pass

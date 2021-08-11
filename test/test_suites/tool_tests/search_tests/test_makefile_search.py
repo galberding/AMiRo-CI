@@ -1,6 +1,6 @@
 from amirotest.model.argument import AosArgument
 from amirotest.tools.search.search_result import GenericSearchResult
-from amirotest.tools.config_path_finder import AosConfigFinder, ConfigFinder
+from amirotest.tools.config_path_finder import AosModuleConfigFinder, ConfigFinder
 from amirotest.tools.search import MakefileUserOptSearcher, MakefileGlobalOptSearcher
 from amirotest.tools.search import Searcher
 from ...test_utils import AosModuleHelper
@@ -12,7 +12,7 @@ class TestMakefileSearch(unittest.TestCase):
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
         self.searcher = MakefileGlobalOptSearcher()
-        self.finder = AosConfigFinder(self.aos_module.path)
+        self.finder = AosModuleConfigFinder(self.aos_module.path)
 
     def test_makefile_search_global_options_in_module(self):
         res = self.search_current_module(
@@ -33,19 +33,19 @@ class TestMakefileSearch(unittest.TestCase):
 
     def search_current_module(self, searcher: Searcher) -> GenericSearchResult:
         return searcher.search_options(
-            AosConfigFinder(self.aos_module.path))
+            AosModuleConfigFinder(self.aos_module.path))
 
     def test_search_user_flag_default_argument_non_existent(self):
         # Default module (NUCLEO-L476RG) has no default argument for its flag
         results = self.searcher.search_user_default_argument(
-            self.finder.get_makefile(), 'BOARD_MPU6050_CONNECTED')
+            self.finder.get_module_makefile(""), 'BOARD_MPU6050_CONNECTED')
         self.assertEqual(results, None)
 
     def test_search_user_flag_multiple_default_flags(self):
         # Powermanagement hast a default value for its sensor ring
         pm_module = self.module_helper.get_aos_module(
             module_name="PowerManagement_1-2")
-        finder = AosConfigFinder(pm_module.path)
+        finder = AosModuleConfigFinder(pm_module.path)
         results = self.searcher.search_user_default_argument(
-            finder.get_makefile(), 'BOARD_SENSORRING')
+            finder.get_module_makefile(""), 'BOARD_SENSORRING')
         self.assertEqual(results, 'BOARD_PROXIMITYSENSOR')

@@ -1,7 +1,7 @@
 from amirotest.model import AosModule
 from amirotest.model.option.aos_opt import AosOption
 from amirotest.tools.search import MakefileGlobalOptSearcher
-from amirotest.tools.config_path_finder import AosConfigFinder
+from amirotest.tools.config_path_finder import AosModuleConfigFinder
 from amirotest.tools.search import MakefileUserOptSearcher
 from amirotest.tools.search.aosconf_searcher import AosConfSearcher
 from amirotest.tools.search.searcher import Searcher
@@ -70,7 +70,7 @@ class AosModuleHelper:
         module.add_options(aosconf_res)
         return module
 
-    def get_search_options(self, searcher: Searcher, module_name, Finder=AosConfigFinder) -> list[AosOption]:
+    def get_search_options(self, searcher: Searcher, module_name, Finder=AosModuleConfigFinder) -> list[AosOption]:
         results = searcher.search_options(
             Finder(
                 self.helper.get_aos_module_path(module_name)))

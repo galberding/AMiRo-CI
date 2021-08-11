@@ -6,13 +6,13 @@ from amirotest.tools.search.search_result import GenericSearchResult
 import unittest
 PathHelper
 from amirotest.tools.search import AosConfSearcher
-from amirotest.tools.config_path_finder import AosConfigFinder
+from amirotest.tools.config_path_finder import AosModuleConfigFinder
 
 
 class TestAosSearcher(unittest.TestCase):
     def setUp(self) -> None:
         self.path_helper = PathHelper()
-        self.conf_finder = AosConfigFinder(self.path_helper.get_aos_module_path())
+        self.conf_finder = AosModuleConfigFinder(self.path_helper.get_aos_module_path())
         self.searcher = AosConfSearcher()
 
 

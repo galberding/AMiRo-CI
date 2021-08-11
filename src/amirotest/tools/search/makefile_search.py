@@ -38,7 +38,7 @@ class MakefileGlobalOptSearcher(Searcher):
     def search_options(self, finder : ConfigFinder) -> GenericSearchResult:
         return SearchResult(
             self._search_with_regex(
-                finder.get_makefile(),
+                finder.get_module_makefile(""),
                 self.regex), MakeGlobalOption)
         # return self._search_with_regex(finder.get_makefile(), self.global_option_regex)
 
@@ -69,7 +69,7 @@ class MakefileUserOptSearcher(Searcher):
     def search_options(self, finder: ConfigFinder) -> GenericSearchResult:
         return SearchResult(
             self._search_with_regex(
-                finder.get_makefile(),
+                finder.get_module_makefile(""),
                 self.regex), MakeUserOption)
 
     # TODO: Is it actually useful?

@@ -24,5 +24,5 @@ class AosConfSearcher(Searcher):
 
     def search_options(self, finder: ConfigFinder) -> GenericSearchResult:
         # TODO:
-        res = self._search_with_regex(finder.get_aosconf(), self.regex)
+        res = self._search_with_regex(finder.get_aosconf(""), self.regex)
         return AosconfResult(res)

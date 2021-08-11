@@ -1,18 +1,22 @@
 import multiprocessing
 from pathlib import Path
+from ..test_utils.test_helper import PathHelper
 from typing import Type
 import unittest
 
 from amirotest.model.aos_module import AosModule
 from amirotest.model.makefile_command_factory import MakeCommandFactory, MakeParameter, ParallelMakeCommandFactory, SerialMakeCommandFactory
 from amirotest.model.option.aos_opt import AosOption
+from amirotest.tools.config_path_finder import AosPathManager
 
 
 class TestMakeCommand(unittest.TestCase):
     def setUp(self) -> None:
+        self.path_helper = PathHelper()
         self.module_name = "TestModule"
         self.builddir = Path("/dev/shm/amiroCI")
-        self.make_factory = SerialMakeCommandFactory(self.builddir)
+        self.finder = AosPathManager(self.path_helper.aos_path)
+        self.make_factory = SerialMakeCommandFactory(self.finder)
 
 
     def test_make_command_make_at_first_place(self):
@@ -58,12 +62,12 @@ class TestMakeCommand(unittest.TestCase):
 
     def test_build_commands(self):
         module_count = 5
-        fac = SerialMakeCommandFactory(self.builddir)
+        fac = SerialMakeCommandFactory(self.finder)
         modules = [self.generate_module() for _ in range(module_count)]
         self.assertEqual(module_count, len(fac.build_make_commands(modules)))
 
     def generate_command(self, factory: Type[MakeCommandFactory] = SerialMakeCommandFactory):
-        make_factory = factory(self.builddir)
+        make_factory = factory(self.finder)
         module = self.generate_module()
         self.assertTrue(module.is_resolved())
         return make_factory.build_make_command(module)

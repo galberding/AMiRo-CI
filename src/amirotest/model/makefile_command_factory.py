@@ -4,6 +4,8 @@ from pathlib import Path
 from amirotest.model.aos_module import AosModule
 import multiprocessing
 
+from amirotest.tools.config_path_finder import ConfigFinder
+
 
 class MakeParameter(Enum):
     """!Dataholder used for make command creation.
@@ -31,10 +33,16 @@ class MakeCommandFactory(ABC):
 
 
     """
-    def __init__(self, builddir: Path) -> None:
-        self.b_dir = builddir
+    def __init__(self, finder: ConfigFinder) -> None:
+        self.finder = finder
+        self.make_dir = finder.get_project_makefile()
+        self.b_dir = finder.get_build_dir()
 
     def build_make_commands(self, modules: list[AosModule]) -> list[str]:
+        """!Build make command for all modules.
+        @param modules: list of AosModules
+        @return list of strings aka. make commands
+        """
         make_cmd = []
         for module in modules:
             make_cmd.append(self.build_make_command(module))
@@ -54,17 +62,34 @@ class MakeCommandFactory(ABC):
         """
         opt_str = self._generate_option_str(module)
         module_build_dir = self.b_dir.joinpath(module.uid)
-        return f'''{MakeParameter.make.name} -j{cpu_count} \\
+        return f'''{self._generate_make_f_makefile_path()} -j{cpu_count} \\
         {MakeParameter.UDEFS.name}="{opt_str}" \\
         {MakeParameter.UADEFS.name}="{opt_str}" \\
         {MakeParameter.BUILDDIR.name}="{module_build_dir}" \\
         {module.name}'''
 
+
     def _generate_option_str(self, module):
+        """!Convert AosOption to string.
+        Each AosOption provides a get_build_option() which creates the
+        desired format for the make command:
+        \code{.unparsed}
+        -DOPTION_NAME=VALUE
+        \endcode
+        """
         options = []
         for opt in module.options:
             options.append(opt.get_build_option())
         return ' '.join(options)
+
+    def _generate_make_f_makefile_path(self) -> str:
+        """!Generate command of the form:
+        \code{.unparsed}
+        make -f /path/to/Makefile
+        \endcode
+        """
+        return f'{MakeParameter.make.name} -f {self.make_dir}'
+
 
 
 class SerialMakeCommandFactory(MakeCommandFactory):
