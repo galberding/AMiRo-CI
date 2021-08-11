@@ -15,6 +15,9 @@ class ReplaceConfigNotFound(Exception):
 
 
 class ReplaceConfig(ABC):
+    """!Load the replacement configuration.
+    During the load it is checked if the provided config is valid.
+    """
     def __init__(self) -> None:
         self.valid = False
         self.conf = {}
@@ -69,9 +72,14 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         return bool(self.options)
 
     def get_flatten_config(self) -> dict[str, list]:
-        # return super().get_flatten_config()
+        """!Remove all config groups and join all underlying options.
+        A config group is usually provided to indicate where the options take effect
+        or determine how those options should be treated.
+        Options in different groups have different names therefore they
+        can be merged together.
+        @return dict with all options as keys and lists as values.
+        """
         flattened = {}
-        for name, opt in self.options.items():
-            # print(name)
+        for _, opt in self.options.items():
             flattened.update(opt)
         return flattened
