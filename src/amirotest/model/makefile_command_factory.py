@@ -31,11 +31,18 @@ class MakeCommandFactory(ABC):
 
 
     """
+    def build_make_commands(self, modules: list[AosModule]) -> list[str]:
+        make_cmd = []
+        for module in modules:
+            make_cmd.append(self.build_make_command(module))
+        return make_cmd
+
     @abstractmethod
     def build_make_command(self, module: AosModule) -> str:
         """!Generate make command.
         @param module: Resolved \b AosModule
         """
+
 
     def _build_command(self, cpu_count, module: AosModule):
         """!Build the actual make command.

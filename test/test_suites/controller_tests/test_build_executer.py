@@ -16,8 +16,11 @@ class TestExecutor(unittest.TestCase):
         self.repl_conf = YamlReplConf(self.finder.get_repl_conf_path())
         self.bc = BuildController(self.repl_conf, SerialExecutor)
 
-    def get_configured_modules(self) -> list[AosModule]:
-        pass
-
     def test_executer_init(self):
         exe = SerialExecutor(self.finder.b_dir)
+        exe.build(self.get_configured_modules())
+
+
+    def get_configured_modules(self) -> list[AosModule]:
+        tmpl = self.bc.generate_template_modules_from_repl_conf()
+        return self.bc.generate_configured_modules_from_template(tmpl[0])

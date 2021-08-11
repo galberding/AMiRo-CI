@@ -55,14 +55,19 @@ class TestMakeCommand(unittest.TestCase):
         print(command)
         print()
 
-
-
-    # UDEFS and ADEFS needs to be set and equal
-    # BUILDDIR needst to be set
-    # Target / Module name at the end
+    def test_build_commands(self):
+        module_count = 5
+        fac = SerialMakeCommandFactory()
+        modules = [self.generate_module() for _ in range(module_count)]
+        self.assertEqual(module_count, len(fac.build_make_commands(modules)))
 
     def generate_command(self, factory: Type[MakeCommandFactory] = SerialMakeCommandFactory):
         make_factory = factory()
+        module = self.generate_module()
+        self.assertTrue(module.is_resolved())
+        return make_factory.build_make_command(module)
+
+    def generate_module(self) -> AosModule:
         module = AosModule(Path(self.module_name))
         options = [
             AosOption("HELLO", "true"),
@@ -70,5 +75,4 @@ class TestMakeCommand(unittest.TestCase):
             AosOption("STACK_SIZE", "42"),
         ]
         module.add_options(options)
-        self.assertTrue(module.is_resolved())
-        return make_factory.build_make_command(module)
+        return module
