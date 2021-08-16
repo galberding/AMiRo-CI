@@ -18,18 +18,17 @@ class TestMakeCommand(unittest.TestCase):
         self.finder = AosPathManager(self.path_helper.aos_path)
         self.make_factory = SerialMakeCommandFactory(self.finder)
 
-
     def test_make_command_make_at_first_place(self):
         command = self.generate_command()
         self.assertEqual(0, command.find(MakeParameter.make.name))
 
     def test_UDEFS_set(self):
         command = self.generate_command()
-        self.assertRegex(command, rf'{MakeParameter.UDEFS.name}="(?P<paras>.*)"')
+        self.assertRegex(command, rf'{MakeParameter.UDEFS.name}=(?P<paras>.*)')
 
     def test_UADEFS_set(self):
         command = self.generate_command()
-        self.assertRegex(command, rf'{MakeParameter.UADEFS.name}="(?P<paras>.*)"')
+        self.assertRegex(command, rf'{MakeParameter.UADEFS.name}=(?P<paras>.*)')
 
     def test_contains_module_name(self):
         command = self.generate_command()
@@ -47,7 +46,7 @@ class TestMakeCommand(unittest.TestCase):
 
     def test_contains_build_dir(self):
         command = self.generate_command()
-        self.assertRegex(command, rf'{MakeParameter.BUILDDIR.name}="{self.builddir}.*"')
+        self.assertRegex(command, rf'{MakeParameter.BUILDDIR.name}={self.builddir}.*')
 
     def test_visual_command_inspection(self):
         command = self.generate_command()
@@ -70,7 +69,7 @@ class TestMakeCommand(unittest.TestCase):
         make_factory = factory(self.finder)
         module = self.generate_module()
         self.assertTrue(module.is_resolved())
-        return make_factory.build_make_command(module)
+        return " ".join(make_factory.build_make_command(module))
 
     def generate_module(self) -> AosModule:
         module = AosModule(Path(self.module_name))
