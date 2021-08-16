@@ -64,13 +64,27 @@ class AosOption():
         """Retrun type description for listing in config"""
         return type(self).__name__
 
+    def __hash__(self) -> int:
+        return hash(self.name)
+
+    def __eq__(self, o: object) -> bool:
+        return hash(self) == hash(o)
+
     def __str__(self) -> str:
         return f'{self.name}: {self.args}'
     __repr__ = __str__
 
 
 class AosVariable(AosOption):
-    pass
+    """!Varuable solely used for resolution.
+    Behaves the same as AosOption except that no build option for the make command
+    is generated.
+    """
+    def get_build_option(self) -> str:
+        if len(self.args) == 1:
+            return ""
+        else:
+            raise NotImplementedError()
 
 class ConfVariable(AosOption):
     def __init__(self, flag_name, arg_str):

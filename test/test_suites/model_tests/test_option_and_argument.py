@@ -140,6 +140,10 @@ class TestOptions(unittest.TestCase):
         self.assertTrue(opt.is_resolved())
         self.assertTrue(opt.args[0], "var")
 
+    def test_aos_variable_returns_no_build_option(self):
+        var = AosVariable("OPT", "Value")
+        self.assertEqual("", var.get_build_option())
+
     def check_resolution_reset(self,option: AosOption,
                                before: str,
                                after: str,
