@@ -1,3 +1,5 @@
+from pathlib import Path
+from amirotest.model.aos_module import AosModule
 from amirotest.model.option import MakeGlobalOption, MakeUserOption
 from amirotest.model.option.aosconf_opt import AosconfOption
 from amirotest.tools import YamlDumper, yml_load, Loader
@@ -22,10 +24,10 @@ class TestModuleDumping(unittest.TestCase):
     def test_yaml_write_module_to_file(self):
         dumper = YamlDumper()
         opt = self.module_helper.get_search_options(AosConfSearcher(), "NUCLEO-L476RG")
-        self.nucleo_module.add_options(opt)
         dumper.dump(self.nucleo_module, self.config_path)
         conf = self.load_config()
         # print(conf)
+
         self.assertIn("NUCLEO-L476RG", conf)
         self.assertIn(MakeGlobalOption.__name__, conf["NUCLEO-L476RG"])
         self.assertIn(MakeUserOption.__name__, conf["NUCLEO-L476RG"])

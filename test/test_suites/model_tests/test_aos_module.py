@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Type
-from amirotest.model.aos_module import AosModule
+from amirotest.model.aos_module import AosModule, AmbigousOptionError
 from amirotest.tools.search import MakefileGlobalOptSearcher
 from amirotest.tools.search.search_result import SearchResult
 from amirotest.model.option import MakeGlobalOption, AosOption
@@ -100,16 +100,17 @@ class TestAosModel(unittest.TestCase):
         self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=MakeGlobalOption)
         self.assertTrue(self.aos_module.is_resolved())
 
-    def test_add_multiple_identical_options(self):
+
+    def test_several_options_for_substitution(self):
         search_res = [
             (("USE_THIS_SUB", "42")),
-            (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
-            (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
+            (("USE_THIS_SUB", "41")),
+            (("USE_THIS_SUB", "39")),
             (("USE_CASE1", "-case1=$(USE_THIS_SUB)")),
         ]
-        self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=MakeGlobalOption)
-        self.assertTrue(self.aos_module.is_resolved())
-
+        # self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=MakeGlobalOption)
+        # self.assertTrue(self.aos_module.is_resolved())
+        self.assertRaises(AmbigousOptionError, self.build_options_and_resolve_module, search_res, self.aos_module, opt_type=MakeGlobalOption)
 
 
     def build_options_and_resolve_module(self, search_res,

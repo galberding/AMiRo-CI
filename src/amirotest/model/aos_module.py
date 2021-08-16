@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 import uuid
@@ -6,6 +7,9 @@ from amirotest.model.option import AosOption
 from amirotest.model.option.aos_opt import DefaultOpiton
 
 class OptionNotFoundException(Exception):
+    pass
+
+class AmbigousOptionError(Exception):
     pass
 
 @dataclass(unsafe_hash=True)
@@ -21,7 +25,16 @@ class AosModule:
         self.uid = str(uuid.uuid1())
 
     def add_options(self, options: list[AosOption]):
+        opt_set = set(self.options)
+        for opt in options:
+            if opt not in opt_set:
+                opt_set.add(opt)
+            else:
+                raise AmbigousOptionError(f"Option: {opt} already exists!")
         self.options += options
+
+    def get_option_copy(self) -> list[AosOption]:
+        return deepcopy(self.options)
 
     def is_resolved(self) -> bool:
         """Check if all options are resolved."""
