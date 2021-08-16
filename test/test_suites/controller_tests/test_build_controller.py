@@ -11,15 +11,6 @@ from amirotest.tools.replace_config_builder import YamlReplConf
 class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
         self.module_helper = AosModuleHelper()
-        self.config = {"Module": ["Name1", "Name2"],
-                       "Config":{
-                       "Aosconf":{
-                           "Opt1": [1,2],
-                           "Opt2": [1,2]},
-                       "AnotherConf":{
-                           "OS_OPT": ["true", "false"],
-                           "OS_SHELL": ["on", "off"]}}}
-        # self.repl_conf = YamlReplConf(Path("/home/schorschi/hiwi/amiroci/assets/repl_conf.yml"))
         self.finder = AosPathManager(self.module_helper.helper.aos_path)
         self.bc = BuildController(self.finder, SerialExecutor)
 

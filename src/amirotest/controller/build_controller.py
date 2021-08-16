@@ -65,7 +65,8 @@ class BuildController:
             variables: list[AosOption] = []
             for col in conf_mat.columns:
                 variables.append(ConfVariable(col, conf_mat[col].iloc[i]))
-            module = deepcopy(t_module)
+            module = AosModule(t_module.path)
+            module.add_options(t_module.get_option_copy())
             module.add_options(variables)
             module.resolve()
             c_modules.append(module)

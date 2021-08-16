@@ -48,6 +48,7 @@ class TestMakeCommand(unittest.TestCase):
         command = self.generate_command()
         self.assertRegex(command, rf'{MakeParameter.BUILDDIR.name}={self.builddir}.*')
 
+    @unittest.SkipTest
     def test_visual_command_inspection(self):
         command = self.generate_command()
         print()
