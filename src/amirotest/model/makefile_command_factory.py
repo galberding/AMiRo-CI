@@ -38,7 +38,7 @@ class MakeCommandFactory(ABC):
         self.make_dir = finder.get_project_makefile()
         self.b_dir = finder.get_build_dir()
 
-    def build_make_commands(self, modules: list[AosModule]) -> list[str]:
+    def build_make_commands(self, modules: list[AosModule]) -> list[list[str]]:
         """!Build make command for all modules.
         @param modules: list of AosModules
         @return list of strings aka. make commands
@@ -49,24 +49,28 @@ class MakeCommandFactory(ABC):
         return make_cmd
 
     @abstractmethod
-    def build_make_command(self, module: AosModule) -> str:
+    def build_make_command(self, module: AosModule) -> list[str]:
         """!Generate make command.
+        The command is generated after a fixed pattern, defined in _build_command_list().
         @param module: Resolved \b AosModule
+        @return list of strings where each entry in the list corresponds to one part of the make command.
         """
 
-
-    def _build_command(self, cpu_count, module: AosModule):
-        """!Build the actual make command.
-        @param cpu_count: Parameter for \b -j<cpu_count>
-        @param module: Resolved \b AosModule
-        """
+    def _build_command_list(self, cpu_count, module: AosModule) -> list[str]:
         opt_str = self._generate_option_str(module)
         module_build_dir = self.b_dir.joinpath(module.uid)
-        return f'''{self._generate_make_f_makefile_path()} -j{cpu_count} \\
-        {MakeParameter.UDEFS.name}="{opt_str}" \\
-        {MakeParameter.UADEFS.name}="{opt_str}" \\
-        {MakeParameter.BUILDDIR.name}="{module_build_dir}" \\
-        {module.name}'''
+        # print(module.uid)
+        # print(type(cpu_count))
+        return [
+            f'{MakeParameter.make.name}',
+            '-f',
+            f'{self.make_dir}',
+            f'-j{cpu_count}',
+            f'{MakeParameter.UDEFS.name}={opt_str}',
+            f'{MakeParameter.UADEFS.name}={opt_str}',
+            f'{MakeParameter.BUILDDIR.name}={module_build_dir}',
+            f'{module.name}'
+        ]
 
 
     def _generate_option_str(self, module):
@@ -102,9 +106,9 @@ class SerialMakeCommandFactory(MakeCommandFactory):
         TestModule
     \endcode
     """
-    def build_make_command(self, module: AosModule) -> str:
+    def build_make_command(self, module: AosModule) -> list[str]:
         cpu_count = multiprocessing.cpu_count() * 2
-        return self._build_command(cpu_count, module)
+        return self._build_command_list(cpu_count, module)
 
 
 class ParallelMakeCommandFactory(MakeCommandFactory):
@@ -117,5 +121,5 @@ class ParallelMakeCommandFactory(MakeCommandFactory):
         TestModule
     \endcode
     """
-    def build_make_command(self, module: AosModule) -> str:
-        return self._build_command(1, module)
+    def build_make_command(self, module: AosModule) -> list[str]:
+        return self._build_command_list(1, module)
