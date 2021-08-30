@@ -4,8 +4,9 @@ UDEFS +=
 # Define ASM defines here
 UADEFS +=
 
-
+BUILDDIR +=
 
 test:
 	$(info UDEFS=$(UDEFS))
 	$(info UADEFS=$(UADEFS))
+	$(info UADEFS=$(BUILDDIR))

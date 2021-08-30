@@ -4,7 +4,12 @@ import unittest
 
 class TestAosArgumentWithDefault(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.help = 32
+
+
     def test_create_arg(self):
+        self.help = 14
         # arg = ArgumentWithDefault("AMIROOS_CFG_SHELL_HISTLENGTH", default=3)
         # self.assertEqual("AMIROOS_CFG_SHELL_HISTLENGTH", arg.name)
         # self.assertTrue(3, arg.default)

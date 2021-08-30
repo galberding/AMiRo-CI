@@ -20,8 +20,6 @@ class ConfMatrixBuilder:
         tmp_conf = {}
         mat: list[list] = []
         for opt, args in config.items():
-            # print(args)
-
             mat = self._insert_in_config_mat(args, mat)
         return mat
 

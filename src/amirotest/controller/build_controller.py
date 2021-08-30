@@ -28,7 +28,7 @@ class BuildController:
     """
     def __init__(self, finder: ConfigFinder,
                  # repl_conf: ReplaceConfig,
-                 build_executor: Type[BuildExecutor]) -> None:
+                 build_executor: BuildExecutor) -> None:
         """!# Initialize controller
         - Check if repl config exists
         - initialize conf matrix builder
@@ -45,12 +45,22 @@ class BuildController:
             raise ConfigInvalidError("Cannot use config!")
         self.mat_builder = ConfMatrixBuilder()
         self.b_dir = self.finder.get_build_dir()
-        self.b_executor = build_executor(self.finder)
+        self.b_executor = build_executor
 
-    def build_modules(self):
-        pass
+    def execute_build_modules(self):
+        t_modules = self.generate_template_modules_from_repl_conf()
+        c_modules = self.generate_configured_modules_from_templates(t_modules)
+        self.b_executor.build(c_modules)
+        return c_modules
 
-    def generate_configured_modules_from_template(self, t_module: AosModule):
+
+    def generate_configured_modules_from_templates(self, t_modules: list[AosModule]) -> list[AosModule]:
+        c_mods = []
+        for tmod in t_modules:
+            c_mods += self.generate_configured_modules_from_template(tmod)
+        return c_mods
+
+    def generate_configured_modules_from_template(self, t_module: AosModule) -> list[AosModule]:
         """!Generate configured modules from template.
         All configurations, listed in the conf matrix are used to configure the template.
         At the end each row in the conf matrix generate one configured module.

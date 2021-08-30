@@ -20,7 +20,6 @@ class MakeParameter(Enum):
     UDEFS = auto()
     UADEFS = auto()
     make = auto()
-    # TODO: Ugly should be set by ConfigFinder module or something else
     BUILDDIR = auto()
 
 class MakeCommandFactory(ABC):
@@ -85,15 +84,6 @@ class MakeCommandFactory(ABC):
         for opt in module.options:
             options.append(opt.get_build_option())
         return ' '.join(options)
-
-    def _generate_make_f_makefile_path(self) -> str:
-        """!Generate command of the form:
-        \code{.unparsed}
-        make -f /path/to/Makefile
-        \endcode
-        """
-        return f'{MakeParameter.make.name} -f {self.make_dir}'
-
 
 
 class SerialMakeCommandFactory(MakeCommandFactory):

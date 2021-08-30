@@ -1,6 +1,7 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
+import subprocess
 import uuid
 
 from amirotest.model.option import AosOption
@@ -12,9 +13,15 @@ class OptionNotFoundException(Exception):
 class AmbigousOptionError(Exception):
     pass
 
+@dataclass
+class BuildInfo:
+    comp_proc: subprocess.CompletedProcess
+    duration: float
+
 @dataclass(unsafe_hash=True)
 class AosModule:
     name: str = field(init=False)
+    _build_info: BuildInfo = field(init=False)
     uid: str = field(init=False, default="")
     path: Path
     options: list[AosOption] = field(init=False)
@@ -35,6 +42,14 @@ class AosModule:
 
     def get_option_copy(self) -> list[AosOption]:
         return deepcopy(self.options)
+
+    @property
+    def build_info(self) -> BuildInfo:
+        return self._build_info
+
+    @build_info.setter
+    def build_info(self, build_info: BuildInfo):
+        self._build_info = build_info
 
     def is_resolved(self) -> bool:
         """Check if all options are resolved."""
