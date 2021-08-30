@@ -51,7 +51,7 @@ class TestMakeParameterPassing(unittest.TestCase):
         ])
         cmd = self.exe.cmd_factory.build_make_command(mod)
         proc = self.exe.process_cmd(cmd)
-        print(proc.stdout)
+        # print(proc.stdout)
         output = proc.stdout.decode("UTF-8").split("\n")
         self.assertEqual("UDEFS=-DPara1=true -DPara2=true", output[0])
         self.assertEqual("UADEFS=-DPara1=true -DPara2=true", output[1])

@@ -17,6 +17,15 @@ class AmbigousOptionError(Exception):
 class BuildInfo:
     comp_proc: subprocess.CompletedProcess
     duration: float
+    def dump(self, builddir: Path):
+        """!Dump content to csv in build dir.
+        """
+        file = builddir.joinpath()
+        with file.open('w') as f:
+            f.write('Command:\n')
+            f.writelines(self.comp_proc.args)
+            f.write(self.comp_proc.stdout.decode('utf-8'))
+            f.write(self.comp_proc.stderr.decode('utf-8'))
 
 @dataclass(unsafe_hash=True)
 class AosModule:

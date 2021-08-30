@@ -27,7 +27,7 @@ class BuildExecutor(ABC):
         self.cmd_factory = cmd_factory(self.finder)
 
     @abstractmethod
-    def build(self, modules: list[AosModule], vis=False):
+    def build(self, modules: list[AosModule]):
         """!Build modules.
         """
 
@@ -44,19 +44,24 @@ class BuildExecutor(ABC):
         comp_proc = self.process_cmd(cmd)
         end = timer()
         bi = BuildInfo(comp_proc, end - start)
+        bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi
+
+    def cleanup(self, buildir: Path):
+        pass
 
 
 class SerialExecutor(BuildExecutor):
     """!Serial build.
     One module is build at a time with several cpus.
     """
-    def __init__(self, finder: ConfigFinder) -> None:
+    def __init__(self, finder: ConfigFinder, vis=False) -> None:
+        self.vis = vis
         super().__init__(finder, SerialMakeCommandFactory)
 
     @overrides
-    def build(self, modules: list[AosModule], vis=False):
-        for module in tqdm.tqdm(modules) if vis else modules:
+    def build(self, modules: list[AosModule]):
+        for module in tqdm.tqdm(modules) if self.vis else modules:
             self._build_module(module)
 
 class SerialExecutorFake(SerialExecutor):
@@ -65,7 +70,8 @@ class SerialExecutorFake(SerialExecutor):
     """
     @overrides
     def process_cmd(self, cmd) -> subprocess.CompletedProcess:
-        return subprocess.CompletedProcess(['Fake'], returncode=0)
+        # pass
+        return subprocess.CompletedProcess(['Fake123'], returncode=0)
         # return subprocess.run(cmd, capture_output=True)
 
 
@@ -75,10 +81,11 @@ class ParallelExecutor(BuildExecutor):
         super().__init__(finder, ParallelMakeCommandFactory)
 
     @overrides
-    def build(self, modules: list[AosModule], vis=False):
+    def build(self, modules: list[AosModule]):
         with Pool(cpu_count()*2) as p:
+            for _ in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
+                pass
             # for conf, duration in tqdm.tqdm(
-                    # p.imap_unordered(execute, confs), total=len(confs)
+            #         p.imap_unordered(execute, confs), total=len(confs)
             # ):
-            # print(getConfigString(conf), "--", duration)
-            raise NotImplementedError()
+            #     pass
