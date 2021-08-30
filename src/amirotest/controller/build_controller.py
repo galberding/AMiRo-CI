@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Type
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor
+from amirotest.controller.build_reporter import BuildReporter
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, ConfVariable
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
@@ -28,7 +29,8 @@ class BuildController:
     """
     def __init__(self, finder: ConfigFinder,
                  # repl_conf: ReplaceConfig,
-                 build_executor: BuildExecutor) -> None:
+                 build_executor: BuildExecutor,
+                 reporter: BuildReporter) -> None:
         """!# Initialize controller
         - Check if repl config exists
         - initialize conf matrix builder
@@ -47,10 +49,25 @@ class BuildController:
         self.b_dir = self.finder.get_build_dir()
         self.b_executor = build_executor
 
-    def execute_build_modules(self):
+
+    def execute_build_modules(self) -> list[AosModule]:
+        """!Generate configured modules from replacement config and invoke the
+        executor to build those modules.
+        @return List of AosModule with BuildInformation
+        @note
+        This is the entrypoint of the test pipeline. One can use the generated modules for
+        report creation.
+        """
+        c_modules = self.c_modules
+        self.b_executor.build(c_modules)
+        return c_modules
+
+    @property
+    def c_modules(self) -> list[AosModule]:
+        """!Construct configured modules based on replacement config.
+        """
         t_modules = self.generate_template_modules_from_repl_conf()
         c_modules = self.generate_configured_modules_from_templates(t_modules)
-        self.b_executor.build(c_modules)
         return c_modules
 
 
@@ -75,6 +92,7 @@ class BuildController:
             variables: list[AosOption] = []
             for col in conf_mat.columns:
                 variables.append(ConfVariable(col, conf_mat[col].iloc[i]))
+            # TODO generate copy inside the aos module and return the copy
             module = AosModule(t_module.path)
             module.add_options(t_module.get_option_copy())
             module.add_options(variables)

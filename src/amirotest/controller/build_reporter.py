@@ -1,0 +1,2 @@
+class BuildReporter:
+    pass

@@ -2,15 +2,13 @@ import os
 from pathlib import Path
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
-from amirotest.model.makefile_command_factory import SerialMakeCommandFactory
 from amirotest.model.option.aos_opt import AosOption
-from amirotest.tools.config_path_finder import AosModuleConfigFinder, AosPathManager
-from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
+from amirotest.tools.config_path_finder import AosPathManager
+from amirotest.tools.replace_config_builder import YamlReplConf
 from ..test_utils.module_creation_helper import AosModuleHelper
 import unittest
 
 from amirotest.controller.build_executer import SerialExecutorFake, SerialExecutor
-from amirotest.tools.aos_module_default_config_creatro import AosModuleLoader
 
 # @unittest.SkipTest
 class TestExecutor(unittest.TestCase):
@@ -18,22 +16,15 @@ class TestExecutor(unittest.TestCase):
         self.helper = AosModuleHelper()
         self.finder = AosPathManager(self.helper.helper.aos_path)
         self.repl_conf = YamlReplConf(self.finder.get_repl_conf_path())
-        self.bc = BuildController(self.finder, SerialExecutorFake)
+        self.bc = BuildController(self.finder, SerialExecutorFake(self.finder), None)
 
-    def test_executer_init(self):
+    def test_execution_results_passed_to_module(self):
         exe = SerialExecutorFake(self.finder)
         modules = self.get_configured_modules()
         exe.build(modules)
         for module in modules:
+            # print(module.build_info.duration)
             self.assertTrue(module.build_info)
-
-    # def test_build_info_passed_to_module(self):
-    #     mod = AosModule(Path("test"))
-    #     mod.add_options([
-    #         AosOption("Para1", "true"),
-    #         AosOption("Para2", "true"),
-    #     ])
-
 
     def get_configured_modules(self) -> list[AosModule]:
         tmpl = self.bc.generate_template_modules_from_repl_conf()

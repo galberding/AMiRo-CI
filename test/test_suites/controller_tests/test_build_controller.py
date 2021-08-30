@@ -14,7 +14,7 @@ class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
         self.module_helper = AosModuleHelper()
         self.finder = AosPathManager(self.module_helper.helper.aos_path)
-        self.bc = BuildController(self.finder, SerialExecutor(self.finder))
+        self.bc = BuildController(self.finder, SerialExecutor(self.finder), None)
 
     def test_build_generate_conf_matrix(self):
         config_mat = self.bc.generate_config_matrix()
@@ -35,7 +35,7 @@ class TestBuildController(unittest.TestCase):
     def test_pass_configured_modules_to_build_exe(self):
         executer_mock = MagicMock()
         executer_mock.build = MagicMock()
-        bc = BuildController(self.finder, executer_mock)
+        bc = BuildController(self.finder, executer_mock, None)
         # c_modules = self.get_configured_modules(bc)
         exe_modules = bc.execute_build_modules()
 
