@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 from pathlib import Path
+
+from overrides.overrides import overrides
 from amirotest.model.aos_module import AosModule
 import multiprocessing
 
@@ -67,6 +69,7 @@ class MakeCommandFactory(ABC):
             f'-j{cpu_count}',
             f'{MakeParameter.UDEFS.name}={opt_str}',
             f'{MakeParameter.UADEFS.name}={opt_str}',
+            'USE_OPT=-O2 -fstack-usage -Wl,--print-memory-usage -fdiagnostics-format=json',
             f'{MakeParameter.BUILDDIR.name}={module_build_dir}',
             f'{module.name}'
         ]
@@ -96,6 +99,7 @@ class SerialMakeCommandFactory(MakeCommandFactory):
         TestModule
     \endcode
     """
+    @overrides
     def build_make_command(self, module: AosModule) -> list[str]:
         cpu_count = multiprocessing.cpu_count() * 2
         return self._build_command_list(cpu_count, module)
@@ -111,5 +115,6 @@ class ParallelMakeCommandFactory(MakeCommandFactory):
         TestModule
     \endcode
     """
+    @overrides
     def build_make_command(self, module: AosModule) -> list[str]:
         return self._build_command_list(1, module)

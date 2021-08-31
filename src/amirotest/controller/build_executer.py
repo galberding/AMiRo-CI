@@ -8,6 +8,7 @@ available cpu cores.
 from abc import ABC, abstractmethod
 from overrides import overrides
 from pathlib import Path
+import shutil
 from typing import Type
 import subprocess
 from amirotest.model.aos_module import AosModule, BuildInfo
@@ -44,11 +45,13 @@ class BuildExecutor(ABC):
         comp_proc = self.process_cmd(cmd)
         end = timer()
         bi = BuildInfo(comp_proc, end - start)
+        self.cleanup(self.finder.get_build_dir().joinpath(module.uid))
         bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi
 
     def cleanup(self, buildir: Path):
-        pass
+        if buildir.exists():
+            shutil.rmtree(buildir)
 
 
 class SerialExecutor(BuildExecutor):
@@ -71,7 +74,12 @@ class SerialExecutorFake(SerialExecutor):
     @overrides
     def process_cmd(self, cmd) -> subprocess.CompletedProcess:
         # pass
-        return subprocess.CompletedProcess(['Fake123'], returncode=0)
+        return subprocess.CompletedProcess(
+            ['Fake123'],
+            returncode=0,
+            stdout=b'Std out',
+            stderr=b'Std err'
+        )
         # return subprocess.run(cmd, capture_output=True)
 
 

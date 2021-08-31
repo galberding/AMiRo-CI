@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import shutil
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption
@@ -17,6 +18,9 @@ class TestExecutor(unittest.TestCase):
         self.finder = AosPathManager(self.helper.helper.aos_path)
         self.repl_conf = YamlReplConf(self.finder.get_repl_conf_path())
         self.bc = BuildController(self.finder, SerialExecutorFake(self.finder), None)
+    def tearDown(self) -> None:
+        shutil.rmtree(self.finder.get_build_dir())
+        # pass
 
     def test_execution_results_passed_to_module(self):
         exe = SerialExecutorFake(self.finder)

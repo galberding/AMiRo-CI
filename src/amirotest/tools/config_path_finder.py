@@ -15,7 +15,8 @@ class CannotFindProjectRoot(Exception):
 class ConfigFinder(ABC):
     def __init__(self, module_path: Path, builddir=Path("/dev/shm/amiroCI")) -> None:
         self.module = module_path
-        self.b_dir = builddir
+        self.b_dir: Path = builddir
+        self.b_dir.mkdir(exist_ok=True)
         if not self.module.exists():
             raise CannotFindModuleError(f"Cannot find module at: {self.module}")
 
