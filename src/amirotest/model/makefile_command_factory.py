@@ -60,8 +60,6 @@ class MakeCommandFactory(ABC):
     def _build_command_list(self, cpu_count, module: AosModule) -> list[str]:
         opt_str = self._generate_option_str(module)
         module_build_dir = self.b_dir.joinpath(module.uid)
-        # print(module.uid)
-        # print(type(cpu_count))
         return [
             f'{MakeParameter.make.name}',
             '-f',
