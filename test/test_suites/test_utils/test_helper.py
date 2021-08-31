@@ -40,4 +40,4 @@ class PathHelper():
         return asset_conf
 
     def get_assets_stderr_log(self):
-        return self.assets.joinpath('stderr.log')
+        return self.assets.joinpath('stderr.txt')
