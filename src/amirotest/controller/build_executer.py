@@ -67,22 +67,6 @@ class SerialExecutor(BuildExecutor):
         for module in tqdm.tqdm(modules) if self.vis else modules:
             self._build_module(module)
 
-class SerialExecutorFake(SerialExecutor):
-    """Prevents actual execution.
-    Use for test purposes.
-    """
-    @overrides
-    def process_cmd(self, cmd) -> subprocess.CompletedProcess:
-        # pass
-        return subprocess.CompletedProcess(
-            ['Fake123'],
-            returncode=0,
-            stdout=b'Std out',
-            stderr=b'Std err'
-        )
-        # return subprocess.run(cmd, capture_output=True)
-
-
 
 class ParallelExecutor(BuildExecutor):
     def __init__(self, finder: ConfigFinder) -> None:

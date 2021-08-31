@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import shutil
+from ..test_utils.build_executer_fake import SerialExecutorFake
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption
@@ -9,7 +10,7 @@ from amirotest.tools.replace_config_builder import YamlReplConf
 from ..test_utils.module_creation_helper import AosModuleHelper
 import unittest
 
-from amirotest.controller.build_executer import SerialExecutorFake, SerialExecutor
+from amirotest.controller.build_executer import SerialExecutor
 
 # @unittest.SkipTest
 class TestExecutor(unittest.TestCase):

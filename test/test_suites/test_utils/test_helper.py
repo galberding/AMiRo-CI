@@ -4,6 +4,7 @@ class PathHelper():
 
     def __init__(self, aos_root=Path("/home/schorschi/hiwi/AMiRo-OS")):
         self.aos_path = aos_root
+        self.assets = Path('../assets').resolve()
         self.default_test_env = Path("/tmp/aos_test_env/")
         self.default_config_yml_path = self.default_test_env.joinpath("default_conf.yml")
 
@@ -33,7 +34,10 @@ class PathHelper():
         return self.default_config_yml_path
 
     def get_assets_default_config_path(self) -> Path:
-        asset_conf = Path("../assets/default_conf.yml").resolve()
+        asset_conf = self.assets.joinpath('default_conf.yml')
         if not asset_conf.exists():
             raise FileNotFoundError(f"Cannot find: {asset_conf}")
         return asset_conf
+
+    def get_assets_stderr_log(self):
+        return self.assets.joinpath('stderr.log')
