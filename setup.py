@@ -2,13 +2,19 @@ import setuptools
 
 setuptools.setup(
     name="confTester",
-    version="0.0.1",
+    version="0.1",
     author="Georg Alberding",
     author_email="galberding@uni-bielefeld.de",
     description="Package for extracting compile parameters from c source code in order to search for conditional compilation.",
-    long_description="The following major components are planned: Module Search, Configuration Builde, Automatic Tester, Visualizer (Results), CLI",
-    long_description_content_type="text/markdown",
-    # url="https://github.com/pypa/sampleproject",
+    # long_description="The following major components are planned: Module Search, Configuration Builde, Automatic Tester, Visualizer (Results), CLI",
+    # long_description_content_type="text/markdown",
+    install_requirements=[
+        'PyYAML',
+        'tqdm',
+        'overrides',
+        'pandas'
+    ],
+    # requires="https://github.com/pypa/sampleproject",
     # project_urls={
         # "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
     # },
