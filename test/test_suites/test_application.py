@@ -13,7 +13,7 @@ class TestApplication(unittest.TestCase):
         self.finder = AosPathManager(self.path_helper.aos_path)
         self.bc = BuildController(self.finder, ParallelExecutor(self.finder), None)
 
-    @SkipTest
+    # @SkipTest
     def test_compile_pipeline(self):
         modules = self.bc.execute_build_modules()
         print(modules[0].build_info)

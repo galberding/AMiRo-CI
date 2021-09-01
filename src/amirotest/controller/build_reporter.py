@@ -29,6 +29,8 @@ class BuildReporter:
         self.re = re.compile(r'^\[.+\]$')
         self.record = pd.DataFrame()
         self.record_init()
+        self.finder = finder
+
 
     def record_init(self):
         """!Set the first columns with Module and Duration.
@@ -44,7 +46,12 @@ class BuildReporter:
         self.record_set_tail_entry(RecordEntry.Duration.name, str(module.build_info.duration))
         self.record_options(module)
         self.record_compiler_state(module)
+        # self.record_save()
         # print(self.record)
+
+    def record_save(self):
+        self.record.to_csv(self.finder.get_report_config(), sep='\t')
+
 
     def record_options(self, module: AosModule):
         """!Iterate over module option and insert their values into the record.

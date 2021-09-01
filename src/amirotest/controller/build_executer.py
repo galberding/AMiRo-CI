@@ -48,7 +48,7 @@ class BuildExecutor(ABC):
         end = timer()
         bi = BuildInfo(comp_proc, end - start)
         self.cleanup(self.finder.get_build_dir().joinpath(module.uid))
-        bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
+        # bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi
         return module
 
@@ -70,6 +70,7 @@ class SerialExecutor(BuildExecutor):
         for module in tqdm.tqdm(modules) if self.vis else modules:
             self._build_module(module)
             self.reporter.record_module(module)
+            # self.reporter.record_save()
 
 
 class ParallelExecutor(BuildExecutor):
@@ -81,3 +82,4 @@ class ParallelExecutor(BuildExecutor):
         with Pool(cpu_count()*2) as p:
             for module in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
                 self.reporter.record_module(module)
+                self.reporter.record_save()
