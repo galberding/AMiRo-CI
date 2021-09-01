@@ -77,7 +77,3 @@ class ParallelExecutor(BuildExecutor):
         with Pool(cpu_count()*2) as p:
             for _ in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
                 pass
-            # for conf, duration in tqdm.tqdm(
-            #         p.imap_unordered(execute, confs), total=len(confs)
-            # ):
-            #     pass
