@@ -17,8 +17,8 @@ class ConfigFinder(ABC):
         self.module = module_path
         self.b_dir: Path = builddir
         self.b_dir.mkdir(exist_ok=True)
-        if not self.module.exists():
-            raise CannotFindModuleError(f"Cannot find module at: {self.module}")
+        # if not self.module.exists():
+        #     raise CannotFindModuleError(f"Cannot find module at: {self.module}")
 
     @abstractmethod
     def get_module_makefile(self, module_name: str) -> Path:
@@ -42,6 +42,9 @@ class ConfigFinder(ABC):
     def _ensure_config_exists(self, config: Path):
         if not config.exists():
             raise CannotFindConfigError(config)
+
+    def get_report_config(self):
+        pass
 
 class AosModuleConfigFinder(ConfigFinder):
     def __init__(self, module_path: Path) -> None:

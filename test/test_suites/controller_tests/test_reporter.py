@@ -2,7 +2,7 @@ from pathlib import Path
 from amirotest.controller.build_executer import SerialExecutor
 from amirotest.controller.build_reporter import BuildReporter, RecordEntry
 from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption
+from amirotest.model.option.aos_opt import AosOption, AosVariable
 from ..test_utils.test_helper import PathHelper
 import unittest
 
@@ -35,7 +35,7 @@ class TestReporter(unittest.TestCase):
     def test_get_compile_state_and_msg(self):
         compile_results = self.rep.convert_json_to_compile_results(
             self.rep.extract_json_str(self.stderr))
-        c_info = self.rep.get_state_with_msg(compile_results)
+        c_info = self.rep.get_state_with_msg_from_results(compile_results)
         self.assertEqual(
             [
                 ("error", "unknown type name 'SerialCANDriver'"),
@@ -67,11 +67,37 @@ class TestReporter(unittest.TestCase):
         col, value = 'Unknown Col', 'True'
         self.check_record_tail_set(col, value)
 
-    # def test_record_module(self):
-    #     self.module_stub.add_options([AosOption('PARAM1', 'True')])
-    #     self.rep.record_module(self.module_stub)
-    #     self.check_record_tail('PARAM1', 'True')
-    #     # self.assertEqual('True', self.rep.record['PARAM1'].iloc[-1])
+    def test_record_module_name_duration(self):
+        self.rep.record_module(self.module_stub)
+        self.check_record_tail(RecordEntry.Module.name, str(self.module_stub.name))
+        self.check_record_tail(RecordEntry.Duration.name, str(self.module_stub.build_info.duration))
+
+    def test_record_module_options(self):
+        self.module_stub.add_options([AosOption('PARAM1', 'True')])
+        self.rep.record_module(self.module_stub)
+        self.check_record_tail('PARAM1', 'True')
+
+    def test_record_module_exclude_variables(self):
+        self.module_stub.add_options([AosOption('PARAM1', '$(VAR)'), AosVariable('VAR', 'True')])
+        self.module_stub.resolve()
+        self.rep.record_module(self.module_stub)
+        self.check_record_tail('PARAM1', 'True')
+        self.assertNotIn('VAR', self.rep.record)
+
+    def test_record_compiler_state(self):
+        self.rep.record_module(self.module_stub)
+        self.check_record_tail(RecordEntry.CompilerState.name, 'error, error, error')
+
+    def test_record_compiler_messages(self):
+        self.rep.record_module(self.module_stub)
+        self.check_record_tail(RecordEntry.Message.name, ', '.join(
+            [
+                "unknown type name 'SerialCANDriver'",
+                "unknown type name 'SerialCANConfig'",
+                "unknown type name 'aos_fbcan_filter_t'",
+            ]
+        ))
+
 
     def check_record_tail_set(self, col, value):
         # print(self.rep.record)

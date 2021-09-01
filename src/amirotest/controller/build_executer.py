@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 from typing import Type
 import subprocess
+from amirotest.controller.build_reporter import BuildReporter
 from amirotest.model.aos_module import AosModule, BuildInfo
 from amirotest.model.makefile_command_factory import MakeCommandFactory, ParallelMakeCommandFactory, SerialMakeCommandFactory
 from multiprocessing import Pool, cpu_count
@@ -26,6 +27,7 @@ class BuildExecutor(ABC):
     def __init__(self, finder: ConfigFinder, cmd_factory: Type[MakeCommandFactory]=SerialMakeCommandFactory) -> None:
         self.finder = finder
         self.cmd_factory = cmd_factory(self.finder)
+        self.reporter = BuildReporter(self.finder)
 
     @abstractmethod
     def build(self, modules: list[AosModule]):
@@ -48,6 +50,7 @@ class BuildExecutor(ABC):
         self.cleanup(self.finder.get_build_dir().joinpath(module.uid))
         bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi
+        return module
 
     def cleanup(self, buildir: Path):
         if buildir.exists():
@@ -66,6 +69,7 @@ class SerialExecutor(BuildExecutor):
     def build(self, modules: list[AosModule]):
         for module in tqdm.tqdm(modules) if self.vis else modules:
             self._build_module(module)
+            self.reporter.record_module(module)
 
 
 class ParallelExecutor(BuildExecutor):
@@ -75,5 +79,5 @@ class ParallelExecutor(BuildExecutor):
     @overrides
     def build(self, modules: list[AosModule]):
         with Pool(cpu_count()*2) as p:
-            for _ in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
-                pass
+            for module in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
+                self.reporter.record_module(module)
