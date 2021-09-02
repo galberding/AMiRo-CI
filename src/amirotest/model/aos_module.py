@@ -50,6 +50,13 @@ class AosModule:
                 raise AmbigousOptionError(f"Option: {opt} already exists!")
         self.options += options
 
+    def copy(self):
+        """!Create copy.
+        """
+        module = AosModule(self.path)
+        module.add_options(self.get_option_copy())
+        return module
+
     def get_option_copy(self) -> list[AosOption]:
         return deepcopy(self.options)
 

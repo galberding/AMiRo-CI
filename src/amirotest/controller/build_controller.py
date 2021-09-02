@@ -9,6 +9,7 @@ from amirotest.controller.build_reporter import BuildReporter
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, ConfVariable
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
+from amirotest.tools.config.dependency_checker import DependencyChecker
 from amirotest.tools.config_path_finder import ConfigFinder
 from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 
@@ -48,6 +49,7 @@ class BuildController:
         self.mat_builder = ConfMatrixBuilder()
         self.b_dir = self.finder.get_build_dir()
         self.b_executor = build_executor
+        self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
 
 
     def execute_build_modules(self) -> list[AosModule]:
@@ -87,17 +89,15 @@ class BuildController:
         """
         conf_mat = self.generate_config_matrix()
         c_modules = []
-        # print(conf_mat.shape)
         for i in range(conf_mat.shape[0]):
             variables: list[AosOption] = []
             for col in conf_mat.columns:
                 variables.append(ConfVariable(col, conf_mat[col].iloc[i]))
-            # TODO generate copy inside the aos module and return the copy
-            module = AosModule(t_module.path)
-            module.add_options(t_module.get_option_copy())
+            module = t_module.copy()
             module.add_options(variables)
             module.resolve()
-            c_modules.append(module)
+            if self.dep_checker.is_valid(module):
+                c_modules.append(module)
         return c_modules
 
     def generate_config_matrix(self) -> pd.DataFrame:
