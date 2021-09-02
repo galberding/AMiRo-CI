@@ -22,6 +22,10 @@ class AosOption():
         self._reset_args_from_argumnet_str()
         self.extract_variables()
 
+    @property
+    def value(self) -> str:
+        return self.args[0].name
+
     def _reset_args_from_argumnet_str(self):
         self.args.clear()       # TODO: Is it required?
         splitted_args = self.argument_str.split(" ")

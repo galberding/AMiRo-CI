@@ -1,9 +1,10 @@
 import subprocess
+from amirotest.model.aos_module import AosModule
 
 from amirotest.tools.config_path_finder import ConfigFinder
 from ..test_utils.test_helper import PathHelper
 from overrides.overrides import overrides
-from amirotest.controller.build_executer import SerialExecutor
+from amirotest.controller.build_executer import BuildExecutor, SerialExecutor
 
 
 
@@ -27,3 +28,12 @@ class SerialExecutorFake(SerialExecutor):
             stderr=self.stderr
         )
         # return subprocess.run(cmd, capture_output=True)
+
+class BuildExecutorDummy(BuildExecutor):
+    def __init__(self) -> None:
+        # super().__init__(None, cmd_factory=None)
+        pass
+
+    @overrides
+    def build(self, modules: list[AosModule]):
+        pass

@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from warnings import catch_warnings
 
 from amirotest.tools.aos_module_default_config_creatro import ConfigYmlHandler
+from amirotest.tools.config.dependency_checker import DepTag
 
 class ConfigFormatError(Exception):
     pass
@@ -42,6 +43,11 @@ class ReplaceConfig(ABC):
 
     def get_options(self):
         return self.options
+
+    def get_dependencies(self) -> dict:
+        if DepTag.Dependencies.name in self.conf:
+            return self.conf[DepTag.Dependencies.name]
+        return {}
 
 class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
 

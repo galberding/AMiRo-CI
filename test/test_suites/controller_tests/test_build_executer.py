@@ -18,7 +18,7 @@ class TestExecutor(unittest.TestCase):
         self.helper = AosModuleHelper()
         self.finder = AosPathManager(self.helper.helper.aos_path)
         self.repl_conf = YamlReplConf(self.finder.get_repl_conf_path())
-        self.bc = BuildController(self.finder, SerialExecutorFake(self.finder), None)
+        self.bc = BuildController(self.finder, YamlReplConf(self.finder.get_repl_conf_path()), SerialExecutorFake(self.finder))
     def tearDown(self) -> None:
         shutil.rmtree(self.finder.get_build_dir())
         # pass

@@ -28,9 +28,8 @@ class BuildController:
     5. TODO: Call reporter on the build results
     """
     def __init__(self, finder: ConfigFinder,
-                 # repl_conf: ReplaceConfig,
-                 build_executor: BuildExecutor,
-                 reporter: BuildReporter) -> None:
+                 repl_conf: ReplaceConfig,
+                 build_executor: BuildExecutor) -> None:
         """!# Initialize controller
         - Check if repl config exists
         - initialize conf matrix builder
@@ -40,7 +39,8 @@ class BuildController:
         """
 
         self.finder = finder
-        self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
+        self.repl_conf = repl_conf
+        # self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
         # TODO: Better place would be in the repl_conf to not allow an
         # invalid config in the first place!
         if not self.repl_conf.is_valid():
