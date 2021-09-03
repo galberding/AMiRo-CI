@@ -18,7 +18,9 @@ class TestAosSearcher(unittest.TestCase):
 
     def test_get_options_returns_aosconf_result(self):
         res = self.searcher.search_options(self.conf_finder)
-        # print(res)
+        print(res)
+        for name, _, val in res.results:
+            print(f'{name}: [{val}]')
         self.assertEqual(AosconfResult, type(res))
 
     def test_search_aosconf(self):

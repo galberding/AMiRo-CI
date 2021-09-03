@@ -1,7 +1,7 @@
 from enum import Enum, auto
 import subprocess
 from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosVariable
+from amirotest.model.option.aos_opt import AosVariable, ConfVariable
 from amirotest.tools.config_path_finder import ConfigFinder
 import re
 import json
@@ -59,7 +59,8 @@ class BuildReporter:
         AosVariable is ignored ignored and not written to the record.
         """
         for option in module.options:
-            if isinstance(option, AosVariable):
+            # print(type(option))
+            if isinstance(option, ConfVariable):
                 continue
             if len(option.args) > 1:
                 raise NotImplementedError('Unclear what to do with multiple arguments!')
