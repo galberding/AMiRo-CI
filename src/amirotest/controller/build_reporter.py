@@ -51,10 +51,16 @@ class BuildReporter:
         """!Record all interesting values to the record.
         """
         self.record_create_empty_row()
-        self.record_set_tail_entry(RecordEntry.Module.name, module.name)
-        self.record_set_tail_entry(RecordEntry.Duration.name, str(module.build_info.duration))
+        self.record_general_infos(module)
         self.record_options(module)
         self.record_compiler_state(module)
+
+    def record_general_infos(self, module: AosModule):
+        """!Record module name, build and cpu time.
+        """
+        self.record_set_tail_entry(RecordEntry.Module.name, module.name)
+        self.record_set_tail_entry(RecordEntry.Duration.name, str(module.build_info.duration))
+        self.record_set_tail_entry(RecordEntry.CPU_Time.name, str(module.build_info.cpu_time))
 
     def record_create_empty_row(self):
         """!Insert row to record.
