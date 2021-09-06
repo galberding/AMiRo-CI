@@ -102,8 +102,8 @@ Options:
 
       # System shell options
 
-    OS_CFG_SHELL_ENABLE: [true]
-    OS_CFG_SHELL_STACKSIZE: [1024]
+      OS_CFG_SHELL_ENABLE: [true]
+      OS_CFG_SHELL_STACKSIZE: [1024]
 
       # Shell thread priority.
       # Thread priorities are specified as an integer value.

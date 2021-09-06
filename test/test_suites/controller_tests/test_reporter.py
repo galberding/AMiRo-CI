@@ -78,7 +78,9 @@ class TestReporter(unittest.TestCase):
         self.check_record_tail('PARAM1', 'True')
 
     def test_record_module_exclude_variables(self):
-        self.module_stub.add_options([AosOption('PARAM1', '$(VAR)'), AosVariable('VAR', 'True')])
+        self.module_stub.add_options(
+            [AosOption('PARAM1', '$(VAR)'),
+             AosVariable('VAR', 'True')])
         self.module_stub.resolve()
         self.rep.record_module(self.module_stub)
         self.check_record_tail('PARAM1', 'True')
@@ -107,8 +109,3 @@ class TestReporter(unittest.TestCase):
 
     def check_record_tail(self, col, value):
         self.assertEqual(value, self.rep.record[col].iloc[-1])
-    # a module should be reported and directly be written to a file in case of errors
-    # the flags are sorted alphabetically
-    # create tsv file for visualiaation
-    # the reporter reads the modules options, sorts them, creates a row for the header and one for the values
-    # Use a data

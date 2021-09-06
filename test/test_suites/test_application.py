@@ -14,7 +14,7 @@ class TestApplication(unittest.TestCase):
         self.finder = AosPathManager(self.path_helper.aos_path)
         self.bc = BuildController(self.finder,YamlReplConf(self.finder.get_repl_conf_path()), ParallelExecutor(self.finder))
 
-    # @skip('Takes up to am hour to complete')
+    @skip('Takes up to am hour to complete')
     def test_compile_pipeline(self):
         modules = self.bc.execute_build_modules()
         # print(modules[0].build_info)

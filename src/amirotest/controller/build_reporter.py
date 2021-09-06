@@ -10,6 +10,7 @@ import pandas as pd
 class RecordEntry(Enum):
     Module = auto()
     Duration = auto()
+    CPU_Time = auto()
     Default = '-'
     CompilerState = auto()
     Message = auto()
@@ -60,7 +61,7 @@ class BuildReporter:
         """
         for option in module.options:
             # print(type(option))
-            if isinstance(option, ConfVariable):
+            if isinstance(option, AosVariable):
                 continue
             if len(option.args) > 1:
                 raise NotImplementedError('Unclear what to do with multiple arguments!')

@@ -90,7 +90,7 @@ class AosVariable(AosOption):
         else:
             raise NotImplementedError()
 
-class ConfVariable(AosOption):
+class ConfVariable(AosVariable):
     def __init__(self, flag_name, arg_str):
         flag_name = f"{flag_name}_VAR"
         super().__init__(flag_name, arg_str)
