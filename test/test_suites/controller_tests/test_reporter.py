@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest.case import skip
 from amirotest.controller.build_executer import SerialExecutor
 from amirotest.controller.build_reporter import BuildReporter, RecordEntry
 from amirotest.model.aos_module import AosModule
@@ -20,17 +21,11 @@ class TestReporter(unittest.TestCase):
         self.excecutor.build([self.module_stub])
         self.stderr = self.module_stub.build_info.comp_proc.stderr.decode('utf-8')
 
-    def test_get_json_from_compile_str(self):
-        res = self.rep.extract_json_str(self.stderr)
-        self.assertEqual(
-            [self.stderr.split('\n')[113]],
-            res
-        )
 
     def test_convert_json_to_dicts(self):
         res = self.rep.convert_json_to_compile_results(
             self.rep.extract_json_str(self.stderr))
-        self.assertEqual('error', res[0]['kind'])
+        self.assertEqual('note', res[0]['kind'])
 
     def test_get_compile_state_and_msg(self):
         compile_results = self.rep.convert_json_to_compile_results(
@@ -38,6 +33,8 @@ class TestReporter(unittest.TestCase):
         c_info = self.rep.get_state_with_msg_from_results(compile_results)
         self.assertEqual(
             [
+                ('note', 'info'),
+                ('warning', 'warning'),
                 ("error", "unknown type name 'SerialCANDriver'"),
                 ("error", "unknown type name 'SerialCANConfig'"),
                 ("error", "unknown type name 'aos_fbcan_filter_t'"),
@@ -48,6 +45,7 @@ class TestReporter(unittest.TestCase):
     def test_record_init(self):
         self.assertIn(RecordEntry.Module.name, self.rep.record)
         self.assertIn(RecordEntry.Duration.name, self.rep.record)
+        self.assertIn(RecordEntry.CPU_Time.name, self.rep.record)
 
     def test_record_create_empty_entry(self):
         prelen = len(self.rep.record.index)
@@ -86,13 +84,18 @@ class TestReporter(unittest.TestCase):
         self.check_record_tail('PARAM1', 'True')
         self.assertNotIn('VAR', self.rep.record)
 
-    def test_record_compiler_state(self):
+    # @skip('Not implemented')
+    def test_record_state_state(self):
         self.rep.record_module(self.module_stub)
-        self.check_record_tail(RecordEntry.CompilerState.name, 'error, error, error')
+        self.check_record_tail(RecordEntry.Error.name, 3)
+        self.check_record_tail(RecordEntry.Warning.name, 1)
+        self.check_record_tail(RecordEntry.Info.name, 1)
 
-    def test_record_compiler_messages(self):
+
+    # @skip('Not implemented')
+    def test_record_error_messages(self):
         self.rep.record_module(self.module_stub)
-        self.check_record_tail(RecordEntry.Message.name, ', '.join(
+        self.check_record_tail(RecordEntry.ErrorMsg.name, ', '.join(
             [
                 "unknown type name 'SerialCANDriver'",
                 "unknown type name 'SerialCANConfig'",
@@ -100,6 +103,22 @@ class TestReporter(unittest.TestCase):
             ]
         ))
 
+        self.check_record_tail(RecordEntry.WarnMsg.name, ', '.join(['warning']))
+        self.check_record_tail(RecordEntry.InfoMsg.name, ', '.join(['info']))
+        # self.check_record_tail(RecordEntry.Error.name, str(3))
+
+    def test_reformat_compiler_state(self):
+        c_state_msg = [
+            (RecordEntry.Error.value, 'msg1'),
+            (RecordEntry.Error.value, 'msg2'),
+            (RecordEntry.Warning.value, 'msg3'),
+            (RecordEntry.Info.value, 'msg4'),
+        ]
+
+        msg_states = self.rep.build_compiler_state_dict(c_state_msg)
+        self.assertEqual(2, msg_states[RecordEntry.Error.value][RecordEntry.Error.value])
+        self.assertEqual(1, msg_states[RecordEntry.Warning.value][RecordEntry.Warning.value])
+        self.assertEqual(1, msg_states[RecordEntry.Info.value][RecordEntry.Info.value])
 
     def check_record_tail_set(self, col, value):
         # print(self.rep.record)

@@ -14,20 +14,26 @@ class SerialExecutorFake(SerialExecutor):
     """
     def __init__(self, finder: ConfigFinder, vis=False) -> None:
         self.helper = PathHelper()
-        with self.helper.get_assets_stderr_log().open() as stderr:
-            self.stderr = stderr.read().encode('utf-8')
+        self.stderr = """
+...
+[]
+[]
+[{"kind": "note","message": "info"}]
+[{"kind": "warning","message": "warning"}]
+[{"kind": "error", "message": "unknown type name 'SerialCANDriver'"}, {"kind": "error", "message": "unknown type name 'SerialCANConfig'"}, {"kind": "error", "message": "unknown type name 'aos_fbcan_filter_t'"}]
+make[1]: *** [clutter ... ] Error 1
+make: *** [other stuff] Error 2
+        """.encode('utf-8')
         super().__init__(finder, vis=vis)
 
     @overrides
     def process_cmd(self, cmd) -> subprocess.CompletedProcess:
-        # pass
-        # print(self.stderr)
         return subprocess.CompletedProcess(
             ['Fake123'],
             returncode=0,
             stderr=self.stderr
         )
-        # return subprocess.run(cmd, capture_output=True)
+
 
 class BuildExecutorDummy(BuildExecutor):
     def __init__(self) -> None:

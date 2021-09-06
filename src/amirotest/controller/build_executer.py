@@ -17,7 +17,7 @@ from amirotest.model.makefile_command_factory import MakeCommandFactory, Paralle
 from multiprocessing import Pool, cpu_count
 import tqdm
 from timeit import default_timer as timer
-
+from time import perf_counter as ptimer
 from amirotest.tools.config_path_finder import ConfigFinder
 
 
@@ -44,9 +44,11 @@ class BuildExecutor(ABC):
         """
         cmd = self.cmd_factory.build_make_command(module)
         start = timer()
+        cpu_time_start = ptimer()
         comp_proc = self.process_cmd(cmd)
+        cpu_time_end = ptimer()
         end = timer()
-        bi = BuildInfo(comp_proc, end - start)
+        bi = BuildInfo(comp_proc, end - start, cpu_time_end - cpu_time_start)
         self.cleanup(self.finder.get_build_dir().joinpath(module.uid))
         # bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi

@@ -17,6 +17,7 @@ class AmbigousOptionError(Exception):
 class BuildInfo:
     comp_proc: subprocess.CompletedProcess
     duration: float
+    cpu_time: float
     def dump(self, builddir: Path):
         """!Dump content to csv in build dir.
         """
