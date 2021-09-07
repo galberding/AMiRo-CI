@@ -7,7 +7,7 @@ from amirotest.model.option.aos_opt import AosOption, AosVariable
 from ..test_utils.test_helper import PathHelper
 import unittest
 
-from amirotest.tools.config_path_finder import AosModuleConfigFinder, AosPathManager
+from amirotest.tools.config_path_finder import  AosPathManager
 from ..test_utils.build_executer_fake import SerialExecutorFake
 
 class TestReporter(unittest.TestCase):

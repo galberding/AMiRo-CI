@@ -5,7 +5,7 @@ from amirotest.tools.replace_config_builder import YamlReplConf
 from .test_utils.test_helper import PathHelper
 import unittest
 
-from amirotest.tools.config_path_finder import AosModuleConfigFinder, AosPathManager
+from amirotest.tools.config_path_finder import  AosPathManager
 
 
 class TestApplication(unittest.TestCase):

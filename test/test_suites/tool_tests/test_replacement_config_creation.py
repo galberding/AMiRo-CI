@@ -1,6 +1,6 @@
 import unittest
 from unittest.case import skip
-from amirotest.tools.config_path_finder import AosModuleConfigFinder, AosPathManager
+from amirotest.tools.config_path_finder import  AosPathManager
 from amirotest.tools.replace_config_builder import YamlReplConf
 from ..test_utils.module_creation_helper import AosModuleHelper
 from ..test_utils import PathHelper

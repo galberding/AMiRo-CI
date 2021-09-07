@@ -1,19 +1,29 @@
 from abc import ABC, abstractmethod
 import os
 from pathlib import Path
-
+from enum import Enum, auto
 from overrides.overrides import overrides
+
+
+class AosEnv(Enum):
+    AOS_ROOT = auto()
+    AOS_APPS_ROOT = auto()
+    AOS_REPLACE_CONF = auto()
+
 
 class CannotFindConfigError(Exception):
     def __init__(self, config: Path) -> None:
         msg = f"Cannot find config at: {config}!"
         super().__init__(msg)
 
+
 class CannotFindRootDirectoryError(Exception):
     pass
 
+
 class CannotFindProjectRoot(Exception):
     pass
+
 
 class PathManager(ABC):
     def __init__(self, root: Path,
@@ -25,20 +35,15 @@ class PathManager(ABC):
             raise CannotFindProjectRoot(f"Cannot find module at: {self.root}")
 
     @abstractmethod
-    def get_module_makefile(self, module_name: str) -> Path:
-        pass
-
-    @abstractmethod
-    def get_aosconf(self, module_name: str) -> Path:
-        pass
-
-    @abstractmethod
     def get_project_makefile(self) -> Path:
         pass
 
+    @abstractmethod
     def get_repl_conf_path(self) -> Path:
+        """!Return path to replacement config
+        """
         # TODO: Point to correct path!
-        return Path("/home/schorschi/hiwi/amiroci/assets/repl_conf.yml")
+        # return Path("/home/schorschi/hiwi/amiroci/assets/repl_conf.yml")
 
     def get_build_dir(self) -> Path:
         return self.b_dir
@@ -50,49 +55,22 @@ class PathManager(ABC):
     def get_report_config(self):
         pass
 
-class AosModuleConfigFinder(PathManager):
-    def __init__(self, module_path: Path) -> None:
-        raise NotImplementedError('Do not use this!')
-        self.aos_root = module_path.parent.parent
-        if not self.aos_root.exists():
-            raise CannotFindProjectRoot(f"AmiroOS not at location: {self.aos_root}")
-        super().__init__(module_path)
-
-    def get_module_makefile(self, module_name: str) -> Path:
-        return self._get_module_config_by_name("Makefile")
-
-    def get_aosconf(self, module_name: str) -> Path:
-        return self._get_module_config_by_name("aosconf.h")
-
-    def get_project_makefile(self) -> Path:
-        return self.aos_root
-
-    def _get_module_config_by_name(self, name: str):
-        conf = self.root.joinpath(name)
-        self._ensure_config_exists(conf)
-        return conf
-
 class AosPathManager(PathManager):
-    def __init__(self, aos_root=Path('/home/schorschi/hiwi/AMiRo-OS'),
-                 config_root=Path('/home/schorschi/hiwi/amiroci/assets/')) -> None:
-        self.aos_root = aos_root
+    def __init__(self,
+                 aos_root: Path = None,
+                 config_root=Path('../assets/').resolve()) -> None:
+        self.aos_root: Path = aos_root or Path(os.environ[AosEnv.AOS_ROOT.name])
         self.modules = self.aos_root.joinpath("modules")
         self.config_root = config_root
 
         if not self.aos_root.exists():
             raise CannotFindProjectRoot(f"AmiroOS not at location: {self.aos_root}")
-        super().__init__(aos_root)
+        super().__init__(self.aos_root)
 
-    @overrides
-    def get_module_makefile(self, module_name: str) -> Path:
-        return self.modules.joinpath(module_name).joinpath("Makefile")
-
-    @overrides
-    def get_aosconf(self, module_name: str) -> Path:
-        return self._get_module_path(module_name, "aosconf.h")
 
     def _get_module_path(self, module_name: str, file: str) -> Path:
         return self.modules.joinpath(module_name).joinpath(file)
+
     @overrides
     def get_project_makefile(self) -> Path:
         return self.aos_root.joinpath("Makefile")
