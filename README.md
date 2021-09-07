@@ -7,26 +7,52 @@ All possible combinations are tested. The results are saved and compared to a us
 known errors and warnings.
 Therefore, changes that cause undesired behavior for specific builds can be detected.
 
-## Default Configuration
-The default configuration is stored in yaml format which is structured as follows:
+## Replacement Configuration
+The replacement config is intended to generate a configuration matrix.
+This matrix can be edited and passed on to `amiroCI` in order to build all configurations listed.
+The yaml config specifies what configurations to use for building the matrix.
+All tags allowed are listed in the example below:
+
 ```yaml
-NUCLEO-L476RG:
-  GlobalOption:
-    USE_COPT: [-std=c99, -fshort-enums]
-    USE_CPPOPT: [-fno-rtti, -std=c++17]
-    USE_EXCEPTIONS_STACKSIZE: ['0x400']
-    USE_FPU: [softfp]
-    USE_FPU_OPT: [-mfloat-abi=$(USE_FPU), -mfpu=fpv4-sp-d16]
-    USE_LDOPT: [-lm]
-    USE_LINK_GC: ['yes']
-    USE_LTO: ['yes']
-    USE_OPT: [-O2, -fstack-usage, '-Wl,--print-memory-usage']
-    USE_PROCESS_STACKSIZE: ['0x400']
-    USE_SMART_BUILD: ['no']
-    USE_VERBOSE_COMPILE: ['no']
-  UserOption:
-    UDEFS: [-DBOARD_MPU6050_CONNECTED=$(BOARD_MPU6050_CONNECTED)]
+Modules: [
+            'DiWheelDrive_1-1,
+        ]
+Apps:[
+
+]
+
+Options:
+    AosconfOptions:
+      # Flag to enable/disable debug API and logic.
+      OS_CFG_DBG: ['true', 'false']
+
+Dependencies:
+  OS_CFG_TESTS_ENABLE:
+    with_value: 'true'
+    requires:
+      OS_CFG_SHELL_ENABLE: 'true'
 ```
+### Modules
+* List of module names
+* Used as target for the `Makefile`
+* At least one Module is required
+
+### Apps
+* Used for Amiro-Apps build
+* Is combined with `Modules`
+
+### OptionGroups (e.g. AosconfOptions)
+* Contains option groups
+* Groups contain the configuration
+* Groups can be disabled when generating the config Matrix (TODO)
+
+### Option
+* Consist of name followed by list of strings
+* The values in the list are the configuration values used for the matrix
+
+### Dependencies
+* Basic filter to restrict matrix generation
+* See #2
 
 ## General Architecture
 <img src="assets/architecture.png"
