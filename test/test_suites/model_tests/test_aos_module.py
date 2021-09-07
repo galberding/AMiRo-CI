@@ -1,11 +1,10 @@
 from pathlib import Path
 from typing import Type
 from amirotest.model.aos_module import AosModule, AmbigousOptionError
-from amirotest.tools.search import MakefileGlobalOptSearcher
-from amirotest.tools.search.search_result import SearchResult
+from amirotest.tools.search.search_result.search_results import SearchResult
 from amirotest.model.option import MakeGlobalOption, AosOption
 from amirotest.model import OptionNotFoundException
-from amirotest.tools.search.search_result.search_results import GenericSearchResult
+
 
 from ..test_utils import AosModuleHelper, PathHelper
 import unittest
@@ -14,7 +13,7 @@ import unittest
 class TestAosModel(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.searcher = MakefileGlobalOptSearcher()
+
         self.helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()

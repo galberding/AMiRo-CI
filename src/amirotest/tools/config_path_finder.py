@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import os
 from pathlib import Path
 
 from overrides.overrides import overrides
@@ -8,20 +9,20 @@ class CannotFindConfigError(Exception):
         msg = f"Cannot find config at: {config}!"
         super().__init__(msg)
 
-class CannotFindModuleError(Exception):
+class CannotFindRootDirectoryError(Exception):
     pass
 
 class CannotFindProjectRoot(Exception):
     pass
 
-class ConfigFinder(ABC):
-    def __init__(self, module_path: Path,
+class PathManager(ABC):
+    def __init__(self, root: Path,
                  builddir=Path("/dev/shm/amiroCI")) -> None:
-        self.module = module_path
+        self.root = root
         self.b_dir: Path = builddir
         self.b_dir.mkdir(exist_ok=True)
-        # if not self.module.exists():
-        #     raise CannotFindModuleError(f"Cannot find module at: {self.module}")
+        if not self.root.exists():
+            raise CannotFindProjectRoot(f"Cannot find module at: {self.root}")
 
     @abstractmethod
     def get_module_makefile(self, module_name: str) -> Path:
@@ -49,8 +50,9 @@ class ConfigFinder(ABC):
     def get_report_config(self):
         pass
 
-class AosModuleConfigFinder(ConfigFinder):
+class AosModuleConfigFinder(PathManager):
     def __init__(self, module_path: Path) -> None:
+        raise NotImplementedError('Do not use this!')
         self.aos_root = module_path.parent.parent
         if not self.aos_root.exists():
             raise CannotFindProjectRoot(f"AmiroOS not at location: {self.aos_root}")
@@ -66,11 +68,11 @@ class AosModuleConfigFinder(ConfigFinder):
         return self.aos_root
 
     def _get_module_config_by_name(self, name: str):
-        conf = self.module.joinpath(name)
+        conf = self.root.joinpath(name)
         self._ensure_config_exists(conf)
         return conf
 
-class AosPathManager(ConfigFinder):
+class AosPathManager(PathManager):
     def __init__(self, aos_root=Path('/home/schorschi/hiwi/AMiRo-OS'),
                  config_root=Path('/home/schorschi/hiwi/amiroci/assets/')) -> None:
         self.aos_root = aos_root

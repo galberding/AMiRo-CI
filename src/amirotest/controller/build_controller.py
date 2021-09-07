@@ -10,7 +10,7 @@ from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, ConfVariable
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
 from amirotest.tools.config.dependency_checker import DependencyChecker
-from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.config_path_finder import PathManager
 from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 
 
@@ -28,7 +28,7 @@ class BuildController:
     4. TODO: Pass configured modules to BuildExecutor
     5. TODO: Call reporter on the build results
     """
-    def __init__(self, finder: ConfigFinder,
+    def __init__(self, finder: PathManager,
                  repl_conf: ReplaceConfig,
                  build_executor: BuildExecutor) -> None:
         """!# Initialize controller

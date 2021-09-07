@@ -1,6 +1,6 @@
 import unittest
 from unittest.case import skip
-from amirotest.tools.config_path_finder import AosModuleConfigFinder
+from amirotest.tools.config_path_finder import AosModuleConfigFinder, AosPathManager
 from amirotest.tools.replace_config_builder import YamlReplConf
 from ..test_utils.module_creation_helper import AosModuleHelper
 from ..test_utils import PathHelper
@@ -9,7 +9,7 @@ class TestReplacementConfigCreation(unittest.TestCase):
     def setUp(self) -> None:
         self.path_helper = PathHelper()
         self.module_helper = AosModuleHelper()
-        self.conf_finder = AosModuleConfigFinder(self.path_helper.aos_path)
+        self.conf_finder = AosPathManager(self.path_helper.aos_path)
         self.repl_conf = YamlReplConf(self.conf_finder.get_repl_conf_path())
 
     def test_check_if_config_exists(self):

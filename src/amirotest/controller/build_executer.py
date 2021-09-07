@@ -18,13 +18,13 @@ from multiprocessing import Pool, cpu_count
 import tqdm
 from timeit import default_timer as timer
 from time import perf_counter as ptimer
-from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.config_path_finder import PathManager
 
 
 class BuildExecutor(ABC):
     """!Interface for executing the build process.
     """
-    def __init__(self, finder: ConfigFinder, cmd_factory: Type[MakeCommandFactory]=SerialMakeCommandFactory) -> None:
+    def __init__(self, finder: PathManager, cmd_factory: Type[MakeCommandFactory]=SerialMakeCommandFactory) -> None:
         self.finder = finder
         self.cmd_factory = cmd_factory(self.finder)
         self.reporter = BuildReporter(self.finder)
@@ -63,7 +63,7 @@ class SerialExecutor(BuildExecutor):
     """!Serial build.
     One module is build at a time with several cpus.
     """
-    def __init__(self, finder: ConfigFinder, vis=False) -> None:
+    def __init__(self, finder: PathManager, vis=False) -> None:
         self.vis = vis
         super().__init__(finder, SerialMakeCommandFactory)
 
@@ -76,7 +76,7 @@ class SerialExecutor(BuildExecutor):
 
 
 class ParallelExecutor(BuildExecutor):
-    def __init__(self, finder: ConfigFinder) -> None:
+    def __init__(self, finder: PathManager) -> None:
         super().__init__(finder, ParallelMakeCommandFactory)
 
     @overrides

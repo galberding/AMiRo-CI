@@ -3,7 +3,7 @@ import subprocess
 from typing import Union
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosVariable, ConfVariable
-from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.config_path_finder import PathManager
 import re
 import json
 import pandas as pd
@@ -33,7 +33,7 @@ class BuildReporter:
     \note If the processed modules do not have a BuildInfo an
     exception is risen.
     """
-    def __init__(self, finder: ConfigFinder):
+    def __init__(self, finder: PathManager):
         self.re = re.compile(r'^\[.+\]$')
         self.record = pd.DataFrame()
         self.record_init()

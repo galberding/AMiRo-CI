@@ -6,7 +6,7 @@ from overrides.overrides import overrides
 from amirotest.model.aos_module import AosModule
 import multiprocessing
 
-from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.config_path_finder import PathManager
 
 
 class MakeParameter(Enum):
@@ -34,7 +34,7 @@ class MakeCommandFactory(ABC):
 
 
     """
-    def __init__(self, finder: ConfigFinder) -> None:
+    def __init__(self, finder: PathManager) -> None:
         self.finder = finder
         self.make_dir = finder.get_project_makefile()
         self.b_dir = finder.get_build_dir()

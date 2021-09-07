@@ -15,7 +15,7 @@ class TestReporter(unittest.TestCase):
         self.path_helper = PathHelper()
         self.finder = AosPathManager(self.path_helper.aos_path)
         self.excecutor = SerialExecutorFake(self.finder)
-        self.finder = AosModuleConfigFinder(self.path_helper.aos_path)
+        # self.finder = AosModuleConfigFinder(self.path_helper.aos_path)
         self.rep = BuildReporter(self.finder)
         self.module_stub = AosModule(Path('Stub'))
         self.excecutor.build([self.module_stub])

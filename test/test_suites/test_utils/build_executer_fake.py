@@ -1,7 +1,7 @@
 import subprocess
 from amirotest.model.aos_module import AosModule
 
-from amirotest.tools.config_path_finder import ConfigFinder
+from amirotest.tools.config_path_finder import PathManager
 from ..test_utils.test_helper import PathHelper
 from overrides.overrides import overrides
 from amirotest.controller.build_executer import BuildExecutor, SerialExecutor
@@ -12,7 +12,7 @@ class SerialExecutorFake(SerialExecutor):
     """Prevents actual execution.
     Use for test purposes.
     """
-    def __init__(self, finder: ConfigFinder, vis=False) -> None:
+    def __init__(self, finder: PathManager, vis=False) -> None:
         self.helper = PathHelper()
         self.stderr = """
 ...
