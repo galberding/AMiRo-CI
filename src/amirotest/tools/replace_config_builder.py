@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional
-from warnings import catch_warnings
 
 from amirotest.tools.aos_module_default_config_creatro import ConfigYmlHandler
-from amirotest.tools.config.dependency_checker import DepTag
+from amirotest.tools.config.dependency_checker import ConfTag
 
 class ConfigFormatError(Exception):
     pass
@@ -24,6 +22,7 @@ class ReplaceConfig(ABC):
         self.conf = {}
         self.module_names: list[str] = []
         self.options = []
+        self.apps = []
 
     @abstractmethod
     def load(self, path: Path):
@@ -41,12 +40,12 @@ class ReplaceConfig(ABC):
     def get_module_names(self) -> list[str]:
         return self.module_names
 
-    def get_options(self):
+    def get_option_groups(self):
         return self.options
 
     def get_dependencies(self) -> dict:
-        if DepTag.Dependencies.name in self.conf:
-            return self.conf[DepTag.Dependencies.name]
+        if ConfTag.Dependencies.name in self.conf:
+            return self.conf[ConfTag.Dependencies.name]
         return {}
 
 class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
@@ -62,20 +61,25 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         self.conf = self.get_config(path)
         self.valid &= self._set_module_names()
         self.valid &= self._set_options()
+        self._set_apps()
 
     def _set_module_names(self) -> bool:
         try:
-            self.module_names = self.conf["Modules"]
+            self.module_names = self.conf[ConfTag.Modules.name]
         except:
             raise ConfigFormatError("Cannot find module names!\nAdd \"Modules: [...]\" to the config!")
         return bool(self.module_names)
 
     def _set_options(self) -> bool:
         try:
-            self.options = self.conf["Options"]
+            self.options = self.conf[ConfTag.Options.name]
         except:
             raise ConfigFormatError("Cannot find Options!\nAdd \"Options: {...}\" to the config!")
         return bool(self.options)
+
+    def _set_apps(self):
+        if ConfTag.Apps.name in self.conf:
+            self.apps = self.conf[ConfTag.Apps.name]
 
     def get_flatten_config(self) -> dict[str, list]:
         """!Remove all config groups and join all underlying options.

@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional
 from overrides.overrides import overrides
-from amirotest.tools.config.dependency_checker import DepTag
+from amirotest.tools.config.dependency_checker import ConfTag
 from amirotest.tools.replace_config_builder import ReplaceConfig
 
 
@@ -35,21 +35,21 @@ class ReplaceConfigStub(ReplaceConfig):
     def get_dependencies(self) -> dict:
         return {
             'dep1':{
-                DepTag.with_value.name: 'True',
-                DepTag.requires.name: {
+                ConfTag.with_value.name: 'True',
+                ConfTag.requires.name: {
                     'dep2': 'True',
                 }
             },
             'dep3': {
-                DepTag.with_value.name: 'False',
-                DepTag.requires.name: {
+                ConfTag.with_value.name: 'False',
+                ConfTag.requires.name: {
                     'dep4': 'False'
                 }
             },
             'dep5': {
-                DepTag.with_value.name: 'False',
-                DepTag.requires_all.name: ['dep6', 'dep7', 'dep8'],
-                DepTag.to_be.name: 'False'
+                ConfTag.with_value.name: 'False',
+                ConfTag.requires_all.name: ['dep6', 'dep7', 'dep8'],
+                ConfTag.to_be.name: 'False'
             }
 
         }

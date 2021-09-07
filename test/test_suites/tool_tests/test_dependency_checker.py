@@ -8,7 +8,7 @@ from amirotest.tools.config_path_finder import AosPathManager
 from ..test_utils.replace_conf_stub import ReplaceConfigStub
 import unittest
 
-from amirotest.tools.config.dependency_checker import DependencyChecker, DepTag
+from amirotest.tools.config.dependency_checker import DependencyChecker, ConfTag
 
 
 

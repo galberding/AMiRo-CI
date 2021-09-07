@@ -1,7 +1,10 @@
 from enum import Enum, auto
 from amirotest.model.aos_module import AosModule
 
-class DepTag(Enum):
+class ConfTag(Enum):
+    Modules = auto()
+    Apps = auto()
+    Options = auto()
     Dependencies = auto()
     with_value = auto()
     requires = auto()
@@ -41,13 +44,13 @@ class DependencyChecker:
         """
         resolved_conf = {}
         for lead_opt, dep, in conf.items():
-            if DepTag.requires_all.name in dep:
+            if ConfTag.requires_all.name in dep:
              resolved_conf[lead_opt] = {
-                 DepTag.with_value.name: dep[DepTag.with_value.name],
-                 DepTag.requires.name: {}
+                 ConfTag.with_value.name: dep[ConfTag.with_value.name],
+                 ConfTag.requires.name: {}
              }
-             for opt in dep[DepTag.requires_all.name]:
-                 resolved_conf[lead_opt][DepTag.requires.name][opt] = dep[DepTag.to_be.name]
+             for opt in dep[ConfTag.requires_all.name]:
+                 resolved_conf[lead_opt][ConfTag.requires.name][opt] = dep[ConfTag.to_be.name]
             else:
                 resolved_conf[lead_opt] = dep
         return resolved_conf
@@ -76,8 +79,8 @@ class DependencyChecker:
         @return bool
         """
         for lead_opt, dep in self.dep.items():
-            if self.opt_in(lead_opt, dep[DepTag.with_value.name], module):
-                for dep_opt, value, in dep[DepTag.requires.name].items():
+            if self.opt_in(lead_opt, dep[ConfTag.with_value.name], module):
+                for dep_opt, value, in dep[ConfTag.requires.name].items():
                     if not self.opt_in(dep_opt, value, module):
                        return False
         return True
