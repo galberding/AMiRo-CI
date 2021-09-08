@@ -15,7 +15,7 @@ All tags allowed are listed in the example below:
 
 ```yaml
 Modules: [
-            'DiWheelDrive_1-1,
+            'DiWheelDrive_1-1',
          ]
 Apps: [
 
