@@ -9,25 +9,7 @@ from amirotest.tools.config_path_finder import  AosPathManager
 from amirotest.tools.replace_config_builder import YamlReplConf
 from ..test_utils.module_creation_helper import AosModuleHelper
 from ..test_utils import PathHelper
-
-
-class ReplacementConfStub(YamlReplConf):
-    @overrides
-    def get_config(self, conf_path: Path) -> Optional[dict]:
-        return {
-            ConfTag.Modules.name: ['TestModule'],
-            ConfTag.Apps.name: ['TestApp'],
-            ConfTag.Options.name: {
-                'OptionGroup1': {
-                    'opt1': ['true', 'false'],
-                    'opt2': ['true', 'false']
-                },
-                'OptionGroup2': {
-                    'opt3': ['true', 'false'],
-                    'opt4': ['true', 'false']
-                }
-            }
-        }
+from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub
 
 
 class TestReplacementConfig(unittest.TestCase):
@@ -35,7 +17,7 @@ class TestReplacementConfig(unittest.TestCase):
         self.path_helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.conf_finder = AosPathManager()
-        self.repl_conf = ReplacementConfStub(self.conf_finder.get_repl_conf_path())
+        self.repl_conf = ReplacementConfWithAppsStub(self.conf_finder.get_repl_conf_path())
 
     def test_check_if_config_exists(self):
         self.assertTrue(self.repl_conf.is_valid())

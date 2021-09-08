@@ -5,7 +5,7 @@ from ..test_utils.build_executer_fake import BuildExecutorDummy
 from ..test_utils.test_helper import PathHelper
 from amirotest.controller.build_controller import BuildController
 from amirotest.tools.config_path_finder import AosPathManager
-from ..test_utils.replace_conf_stub import ReplaceConfigStub
+from ..test_utils.replace_conf_stub import ReplaceConfigWithDependenciesStub
 import unittest
 
 from amirotest.tools.config.dependency_checker import DependencyChecker, ConfTag
@@ -16,7 +16,7 @@ class TestDependencyChecker(unittest.TestCase):
     def setUp(self):
         self.helper = PathHelper()
         self.finder = AosPathManager(self.helper.aos_path)
-        self.repl_conf = ReplaceConfigStub()
+        self.repl_conf = ReplaceConfigWithDependenciesStub(Path())
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
         self.bc = BuildController(self.finder, self.repl_conf, BuildExecutorDummy())
         self.modules = self.bc.c_modules
