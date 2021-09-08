@@ -1,53 +1,60 @@
-from typing import Type
-from unittest.case import skip
+from pathlib import Path
 from ..test_utils.module_creation_helper import AosModuleHelper
 import unittest
 from unittest.mock import MagicMock
-from pathlib import Path
 from amirotest.controller.build_controller import BuildController
-from amirotest.controller.build_executer import SerialExecutor
 from amirotest.model.aos_module import AosModule
 from amirotest.tools.config_path_finder import AosPathManager
-from amirotest.tools.replace_config_builder import YamlReplConf
+
+
+from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub
 
 
 class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
         self.module_helper = AosModuleHelper()
-        self.finder = AosPathManager(self.module_helper.helper.aos_path)
-        self.bc = BuildController(self.finder, YamlReplConf(self.finder.get_repl_conf_path()), SerialExecutor(self.finder))
+        self.p_man = AosPathManager(self.module_helper.helper.aos_path)
+        self.executer_mock = MagicMock()
+        self.executer_mock.build = MagicMock()
+        self.bc = BuildController(
+            self.p_man,
+            ReplacementConfWithAppsStub(list_apps=False),
+            self.executer_mock)
 
-    @skip('poor test design')
     def test_build_generate_conf_matrix(self):
         config_mat = self.bc.generate_config_matrix()
-        self.assertEqual(6, config_mat.shape[1])
+        # 4 option are provided
+        self.assertEqual(4, config_mat.shape[1])
 
     def test_generate_template_modules(self):
         modules = self.bc.generate_template_modules_from_repl_conf()
-        self.assertEqual(12, len(modules))
+        self.assertEqual(1, len(modules))
         [self.assertTrue(isinstance(module, AosModule)) for module in modules]
         [self.assertFalse(module.is_resolved()) for module in modules]
 
-    @skip('Not working when config entries change')
     def test_generate_configured_modules(self):
-        c_modules = self.get_configured_modules(self.bc)
-        # 6 Options with 2 arguments each
-        self.assertEqual(2**6, len(c_modules))
+        c_modules = self.bc.c_modules
+        # 4 Options with 2 arguments each
+        self.assertEqual(16, len(c_modules))
         [self.assertTrue(module.is_resolved()) for module in c_modules]
 
     def test_pass_configured_modules_to_build_exe(self):
-        executer_mock = MagicMock()
-        executer_mock.build = MagicMock()
-        bc = BuildController(self.finder, YamlReplConf(self.finder.get_repl_conf_path()), executer_mock)
-        # c_modules = self.get_configured_modules(bc)
-        exe_modules = bc.execute_build_modules()
-
+        exe_modules = self.bc.execute_build_modules()
         self.assertGreater(len(exe_modules), 0)
-        executer_mock.build.assert_called()
+        self.executer_mock.build.assert_called()
 
+    def test_module_name_generation_for_aos(self):
+        t_modules = self.bc.generate_template_modules_from_repl_conf()
+        self.assertEqual(1, len(t_modules))
 
-    def get_configured_modules(self, bc) -> list[AosModule]:
-        """Create template modules and configure them.
-        """
-        modules = bc.generate_template_modules_from_repl_conf()
-        return bc.generate_configured_modules_from_template(modules[0])
+    def test_module_name_generation_for_apps(self):
+        self.set_replace_conf_apps(True)
+        t_modules = self.bc.generate_template_modules_from_repl_conf()
+        self.assertEqual(2, len(t_modules))
+
+    def set_replace_conf_apps(self, list_apps):
+        self.bc.repl_conf.list_apps = list_apps
+        self.bc.repl_conf.load(Path())
+
+    # test external conf matrix and what happens if it is misconfigured
+    # test module name generation for aos and for apps

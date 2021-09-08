@@ -40,6 +40,7 @@ Dependencies:
 ### Apps
 * Used for Amiro-Apps build
 * Is combined with `Modules`
+* Leave it empty if the build only affects the `Amiro-OS`
 
 ### OptionGroups (e.g. AosconfOptions)
 * Contains option groups

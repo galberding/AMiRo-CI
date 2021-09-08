@@ -2,8 +2,9 @@
 """
 from copy import deepcopy
 from pathlib import Path
-from typing import Type
+from typing import Optional, Type
 import pandas as pd
+from pandas._config.config import OptionError
 from amirotest.controller.build_executer import BuildExecutor
 from amirotest.controller.build_reporter import BuildReporter
 from amirotest.model.aos_module import AosModule
@@ -30,7 +31,8 @@ class BuildController:
     """
     def __init__(self, finder: PathManager,
                  repl_conf: ReplaceConfig,
-                 build_executor: BuildExecutor) -> None:
+                 build_executor: BuildExecutor,
+                 prebuild_conf_matrix: Optional[pd.DataFrame] = None) -> None:
         """!# Initialize controller
         - Check if repl config exists
         - initialize conf matrix builder
@@ -39,7 +41,7 @@ class BuildController:
         @param builddir: directory to save build results
         """
 
-        self.finder = finder
+        self.p_man = finder
         self.repl_conf = repl_conf
         # self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
         # TODO: Better place would be in the repl_conf to not allow an
@@ -47,9 +49,10 @@ class BuildController:
         if not self.repl_conf.is_valid():
             raise ConfigInvalidError("Cannot use config!")
         self.mat_builder = ConfMatrixBuilder()
-        self.b_dir = self.finder.get_build_dir()
+        self.b_dir = self.p_man.get_build_dir()
         self.b_executor = build_executor
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
+        self.prebuild_conf_matrix = prebuild_conf_matrix
 
 
     def execute_build_modules(self) -> list[AosModule]:
@@ -73,6 +76,45 @@ class BuildController:
         return c_modules
 
 
+    def generate_template_modules_from_repl_conf(self) -> list[AosModule]:
+        """!Generate template modules from given module names and options
+        provided by replace config.
+        If apps are provided the module names are combined with those.
+        """
+        modules = []
+        options = self._generate_template_options()
+        m_names = self.repl_conf.module_names
+        apps = self.repl_conf.apps
+        for module_name in m_names:
+            if apps:
+                for app in apps:
+                    modules.append(
+                        self._generate_template_module(f'{app}/{module_name}', options))
+            else:
+                modules.append(self._generate_template_module(module_name, options))
+        return modules
+
+    def _generate_template_options(self) -> list[AosOption]:
+        """!Generate option from replacement config.
+        The replacement config proves the get_flatten_config() in order
+        to get all option.
+        TODO: Too many responsibilities!
+        Instead of manually adding the _VAR to the option this should
+        be done in a specific AosOption subclass.
+        """
+        options = []
+        for option, _ in self.repl_conf.get_flatten_config().items():
+            options.append(AosOption(option, f"$({option}_VAR)"))
+        return options
+
+
+    def _generate_template_module(self, name: str,
+                                  options: list[AosOption]) -> AosModule:
+        module = AosModule(Path(name))
+        module.add_options(options)
+        return module
+
+
     def generate_configured_modules_from_templates(self, t_modules: list[AosModule]) -> list[AosModule]:
         c_mods = []
         for tmod in t_modules:
@@ -87,7 +129,7 @@ class BuildController:
         @param t_module: Template AosModule
         @return list of configured AosModules
         """
-        conf_mat = self.generate_config_matrix()
+        conf_mat = self.prebuild_conf_matrix or self.generate_config_matrix()
         c_modules = []
         for i in range(conf_mat.shape[0]):
             variables: list[AosOption] = []
@@ -107,32 +149,6 @@ class BuildController:
         return self.mat_builder.build_dataframe_config(
             self.repl_conf.get_flatten_config())
 
-    def generate_template_modules_from_repl_conf(self) -> list[AosModule]:
-        """!Generate template modules from given module names and options
-        provided by replace config.
-        """
-        modules = []
-        options = self._generate_template_options()
-
-        for module_name in self.repl_conf.get_module_names():
-            # print(module_name)
-            module = AosModule(Path(module_name))
-            module.add_options(options)
-            modules.append(module)
-        return modules
-
-    def _generate_template_options(self) -> list[AosOption]:
-        """!Generate option from replacement config.
-        The replacement config proves the get_flatten_config() in order
-        to get all option.
-        TODO: Too many responsibilities!
-        Instead of manually adding the _VAR to the option this should
-        be done in a specific AosOption subclass.
-        """
-        options = []
-        for option, _ in self.repl_conf.get_flatten_config().items():
-            options.append(AosOption(option, f"$({option}_VAR)"))
-        return options
 
 
 # Build module from search

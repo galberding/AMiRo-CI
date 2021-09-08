@@ -6,12 +6,15 @@ from amirotest.tools.replace_config_builder import YamlReplConf
 
 
 class ReplacementConfWithAppsStub(YamlReplConf):
+    def __init__(self, list_apps=True) -> None:
+        self.list_apps = list_apps
+        super().__init__(Path())
 
     @overrides
     def get_config(self, conf_path: Path) -> Optional[dict]:
         return {
             ConfTag.Modules.name: ['TestModule'],
-            ConfTag.Apps.name: ['TestApp'],
+            ConfTag.Apps.name: ['TestApp1', 'TestApp2'] if self.list_apps else [],
             ConfTag.Options.name: {
                 'OptionGroup1': {
                     'opt1': ['true', 'false'],

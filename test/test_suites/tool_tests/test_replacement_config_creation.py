@@ -17,7 +17,7 @@ class TestReplacementConfig(unittest.TestCase):
         self.path_helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.conf_finder = AosPathManager()
-        self.repl_conf = ReplacementConfWithAppsStub(self.conf_finder.get_repl_conf_path())
+        self.repl_conf = ReplacementConfWithAppsStub(list_apps=True)
 
     def test_check_if_config_exists(self):
         self.assertTrue(self.repl_conf.is_valid())
@@ -32,7 +32,11 @@ class TestReplacementConfig(unittest.TestCase):
 
 
     def test_get_apps(self):
-        self.assertEqual(['TestApp'], self.repl_conf.apps)
+        self.assertEqual(['TestApp1', 'TestApp2'], self.repl_conf.apps)
+
+    def test_stub_exclude_apps(self):
+        rp_stub = ReplacementConfWithAppsStub(list_apps=False)
+        self.assertEqual([], rp_stub.apps)
 
     def test_get_flatten_config(self):
         self.repl_conf.load(self.conf_finder.get_repl_conf_path())
