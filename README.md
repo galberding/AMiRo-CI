@@ -7,6 +7,18 @@ All possible combinations are tested. The results are saved and compared to a us
 known errors and warnings.
 Therefore, changes that cause undesired behavior for specific builds can be detected.
 
+## Recommended Environment Setup
+In order to test the Amiro-OS or Amiro-Apps the root needs to be provided.
+This can be achieved on two different ways, with the CLI (TODO)
+or with environment variables:
+
+```bash
+export AOS_ROOT=path/to/Amiro-os
+export AOS_APPS_ROOT=path/to/Amiro-apps
+export AOS_REPLACE_CONF=path/to/replconf.yaml
+```
+The environment variables are interpreted as default but can be overwritten with the CLI.
+
 ## Replacement Configuration
 The replacement config is intended to generate a configuration matrix.
 This matrix can be edited and passed on to `amiroCI` in order to build all configurations listed.
