@@ -110,6 +110,8 @@ class BuildController:
 
     def _generate_template_module(self, name: str,
                                   options: list[AosOption]) -> AosModule:
+        """!Return AosModule, set options and
+        """
         module = AosModule(Path(name))
         module.add_options(options)
         return module
