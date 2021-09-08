@@ -17,7 +17,7 @@ class TestReporter(unittest.TestCase):
         self.excecutor = SerialExecutorFake(self.finder)
         # self.finder = AosModuleConfigFinder(self.path_helper.aos_path)
         self.rep = BuildReporter(self.finder)
-        self.module_stub = AosModule(Path('Stub'))
+        self.module_stub = AosModule(Path('DiWheelDrive_1-1'))
         self.excecutor.build([self.module_stub])
         self.stderr = self.module_stub.build_info.comp_proc.stderr.decode('utf-8')
 

@@ -7,10 +7,14 @@ from overrides.overrides import overrides
 
 
 class AosEnv(Enum):
-    AOS_ROOT = auto()
-    AOS_APPS_ROOT = auto()
-    AOS_REPLACE_CONF = auto()
+    AOS_ROOT = 'Amiro-OS'
+    AOS_APPS_ROOT = 'Amiro-Apps'
+    AOS_REPLACE_CONF = 'Replacement Config'
 
+
+class NoAosEnvVariableError(Exception):
+    def __init__(self, param: AosEnv) -> None:
+        super().__init__(f'Please provide: export {param.name}=path/to/{param.value}')
 
 class CannotFindConfigError(Exception):
     def __init__(self, config: Path) -> None:
@@ -52,6 +56,10 @@ class PathManager(ABC):
     def get_repl_conf_path(self) -> Path:
         """!Return path to replacement config
         """
+        if AosEnv.AOS_REPLACE_CONF.name in os.environ:
+            repl = self.get_env_path(AosEnv.AOS_REPLACE_CONF)
+            if repl and repl.exists():
+                return repl
         return self.config_root.joinpath('repl_conf.yml')
 
     def get_build_dir(self) -> Path:
@@ -64,16 +72,24 @@ class PathManager(ABC):
     def get_report_config(self) -> Path:
          return self.config_root.joinpath('report.tsv')
 
+    def get_env_path(self, param: AosEnv) -> Optional[Path]:
+        if param.name in os.environ:
+            return Path(os.environ[param.name])
+
+
 
 class AosPathManager(PathManager):
     def __init__(self,
                  root: Path = None) -> None:
-        aos_root: Path = root or Path(os.environ[AosEnv.AOS_ROOT.name])
+        try:
+            aos_root: Path = root or Path(os.environ[AosEnv.AOS_ROOT.name])
+        except:
+            raise NoAosEnvVariableError(AosEnv.AOS_ROOT)
         super().__init__(aos_root)
 
     @overrides
     def get_module_makefile(self, module_name: Path) -> Path:
-        makepath = self.root.joinpath('modules').joinpath(module_name).joinpath('Makefile')
+        makepath = self.root.joinpath('modules').joinpath('Makefile')
         if not makepath.exists():
             raise CannotFindMakefile(makepath)
         return makepath
@@ -81,18 +97,18 @@ class AosPathManager(PathManager):
 
 class AppsPathManager(PathManager):
     def __init__(self, root: Path = None) -> None:
-        apps_root: Path = root or Path(os.environ[AosEnv.AOS_APPS_ROOT.name])
+        try:
+            apps_root: Path = root or Path(os.environ[AosEnv.AOS_APPS_ROOT.name])
+        except:
+            raise NoAosEnvVariableError(AosEnv.AOS_APPS_ROOT)
         super().__init__(apps_root)
 
     @overrides
     def get_module_makefile(self, module_name: Path) -> Path:
         path_content = module_name.parts
-        name = path_content[-1]
         app = path_content[0]
         makepath = self.root.joinpath('configurations')\
                                 .joinpath(app)\
-                                .joinpath('modules')\
-                                .joinpath(name)\
                                 .joinpath('Makefile')
         if not makepath.exists():
             raise CannotFindMakefile(makepath)

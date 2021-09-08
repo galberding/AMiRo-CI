@@ -34,30 +34,3 @@ class TestExecutor(unittest.TestCase):
     def get_configured_modules(self) -> list[AosModule]:
         tmpl = self.bc.generate_template_modules_from_repl_conf()
         return self.bc.generate_configured_modules_from_template(tmpl[0])
-
-
-
-proj_path = Path("/home/schorschi/hiwi/amiroci/test/test_suites/controller_tests/")
-
-@unittest.skipIf(not proj_path.exists(), "Path not found!")
-class TestMakeParameterPassing(unittest.TestCase):
-    def setUp(self) -> None:
-        self.helper = AosModuleHelper()
-        # TODO: Fix absolute import!
-        self.finder = AosPathManager(proj_path)
-        self.exe = SerialExecutor(self.finder)
-
-
-    def test_pass_command_read_output(self):
-        mod = AosModule(Path("test"))
-        mod.add_options([
-            AosOption("Para1", "true"),
-            AosOption("Para2", "true"),
-        ])
-        cmd = self.exe.cmd_factory.build_make_command(mod)
-        proc = self.exe.process_cmd(cmd)
-        # print(proc.stdout)
-        output = proc.stdout.decode("UTF-8").split("\n")
-        self.assertEqual("UDEFS=-DPara1=true -DPara2=true", output[0])
-        self.assertEqual("UADEFS=-DPara1=true -DPara2=true", output[1])
-        # print(proc)

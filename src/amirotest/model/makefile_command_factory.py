@@ -34,10 +34,10 @@ class MakeCommandFactory(ABC):
 
 
     """
-    def __init__(self, finder: PathManager) -> None:
-        self.finder = finder
-        self.make_dir = finder.get_project_makefile()
-        self.b_dir = finder.get_build_dir()
+    def __init__(self, p_man: PathManager) -> None:
+        self.p_man = p_man
+        self.make_dir = p_man.get_project_makefile()
+        self.b_dir = p_man.get_build_dir()
 
     def build_make_commands(self, modules: list[AosModule]) -> list[list[str]]:
         """!Build make command for all modules.
@@ -63,14 +63,14 @@ class MakeCommandFactory(ABC):
         return [
             f'{MakeParameter.make.name}',
             '-f',
-            f'{self.make_dir}',
+            f'{self.p_man.get_module_makefile(module.path)}',
             f'-j{cpu_count}',
             f'{MakeParameter.UDEFS.name}={opt_str}',
             f'{MakeParameter.UADEFS.name}={opt_str}',
             'USE_OPT=-O2 -fstack-usage -Wl,--print-memory-usage -fdiagnostics-format=json',
             f'{MakeParameter.BUILDDIR.name}={module_build_dir}',
             f'{module.name}'
-        ]
+            ]
 
 
     def _generate_option_str(self, module):
