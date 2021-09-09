@@ -20,8 +20,8 @@ class NoAosEnvVariableError(Exception):
         ''')
 
 class AosEnvPathNotFound(Exception):
-    def __init__(self, param: AosEnv) -> None:
-        super().__init__(f'Cannot find path set by: {param.name}')
+    def __init__(self, param: AosEnv, path: Path) -> None:
+        super().__init__(f'Cannot find {path} set by: {param.name}')
 
 
 class CannotFindConfigError(Exception):
@@ -88,9 +88,8 @@ class PathManager(ABC):
         if param.name in os.environ:
             path = Path(os.environ[param.name])
             if not path.exists():
-                raise AosEnvPathNotFound(param)
+                raise AosEnvPathNotFound(param, path)
             return path
-
         else:
             raise NoAosEnvVariableError(param)
 

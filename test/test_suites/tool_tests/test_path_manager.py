@@ -4,27 +4,19 @@ from amirotest.tools.config_path_finder import AosEnv, AosPathManager, AppsPathM
 import unittest
 
 
-def set_env_entry(name: str, value: str):
-    if name not in os.environ \
-       or not Path(os.environ[name]).exists():
-        os.environ[name] = value
-
-
-def set_env_if_not_existing():
-    set_env_entry(AosEnv.AOS_ROOT.name, '/home/schorschi/hiwi/AMiRo-OS')
-    set_env_entry(AosEnv.AOS_APPS_ROOT.name, '/home/schorschi/hiwi/AMiRo-Apps')
-    set_env_entry(AosEnv.AOS_REPLACE_CONF.name, '/home/schorschi/hiwi/amiroci/assets/repl_conf.yml')
-
-
 class TestAosConfigManager(unittest.TestCase):
     def setUp(self) -> None:
-        set_env_if_not_existing()
+        # set_env_if_not_existing()
+        self.aos_root = os.environ[AosEnv.AOS_ROOT.name]
         self.p_man = AosPathManager()
+
+    def tearDown(self) -> None:
+        os.environ[AosEnv.AOS_ROOT.name] = self.aos_root
 
     def test_read_aos_root_from_environmen_without_default(self):
         # os.environ[AosEnv.AOS_ROOT.name] = ''
         p_man = AosPathManager()
-        self.assertEqual(Path(os.environ[AosEnv.AOS_ROOT.name]), p_man.root)
+        self.assertEqual(Path(self.aos_root), p_man.root)
 
     def test_aos_set_path_directly(self):
         test_path = os.environ[AosEnv.AOS_ROOT.name]
@@ -44,7 +36,7 @@ class TestAosConfigManager(unittest.TestCase):
 
 class TestAppsManager(unittest.TestCase):
     def setUp(self) -> None:
-        set_env_if_not_existing()
+        # set_env_if_not_existing()
         # self.aos_finder = AosModuleConfigFinder(self.nucleo.path)
         self.p_man = AppsPathManager()
 

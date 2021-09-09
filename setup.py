@@ -13,7 +13,7 @@ setuptools.setup(
         'tqdm',
         'overrides',
         'pandas'
-    ],
+    ]
     # requires="https://github.com/pypa/sampleproject",
     # project_urls={
         # "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
