@@ -9,7 +9,7 @@ Therefore, changes that cause undesired behavior for specific builds can be dete
 
 ## Recommended Environment Setup
 In order to test the Amiro-OS or Amiro-Apps the root needs to be provided.
-This can be achieved on two different ways, with the CLI (TODO)
+This can be achieved on two different ways, with the CLI
 or with environment variables:
 
 ```bash

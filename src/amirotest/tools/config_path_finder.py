@@ -13,10 +13,10 @@ class AosEnv(Enum):
 
 
 class NoAosEnvVariableError(Exception):
-    def __init__(self, param: AosEnv) -> None:
+    def __init__(self, param: AosEnv, option: str = '--project-root') -> None:
         super().__init__(f'''
         Please provide a project root with:
-        \t--project-root path/to/{param.value}
+        \t{option} path/to/{param.value}
         or set an environment variable with:
         \texport {param.name}=path/to/{param.value}
         ''')
@@ -46,7 +46,10 @@ class PathManager(ABC):
         self.root = root
         self.b_dir: Path = builddir
         self.b_dir.mkdir(exist_ok=True)
-        self.config_root = config_root
+        try:
+            self.config_root = config_root or os.environ[AosEnv.AOS_REPLACE_CONF.name]
+        except:
+            raise NoAosEnvVariableError(AosEnv.AOS_REPLACE_CONF, option='--repl-conf')
         if not self.root.exists():
             raise CannotFindProjectRoot(f"Cannot find module at: {self.root}")
 

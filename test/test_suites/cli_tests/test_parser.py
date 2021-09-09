@@ -66,6 +66,9 @@ class TestParser(unittest.TestCase):
         self.assertRaises(NoAosEnvVariableError, self.parser.parse_args, ['--apps'])
         self.assertRaises(NoAosEnvVariableError, self.parser.parse_args, ['--aos'])
 
+    def test_load_replacement_config(self):
+        pass
+
     def unset_env(self):
         del os.environ[AosEnv.AOS_ROOT.name]
         del os.environ[AosEnv.AOS_APPS_ROOT.name]

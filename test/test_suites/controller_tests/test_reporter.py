@@ -4,7 +4,6 @@ from amirotest.controller.build_executer import SerialExecutor
 from amirotest.controller.build_reporter import BuildReporter, RecordEntry
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, AosVariable
-from ..test_utils.test_helper import PathHelper
 import unittest
 
 from amirotest.tools.config_path_finder import  AosPathManager
@@ -12,15 +11,12 @@ from ..test_utils.build_executer_fake import SerialExecutorFake
 
 class TestReporter(unittest.TestCase):
     def setUp(self):
-        self.path_helper = PathHelper()
-        self.finder = AosPathManager(self.path_helper.aos_path)
-        self.excecutor = SerialExecutorFake(self.finder)
-        # self.finder = AosModuleConfigFinder(self.path_helper.aos_path)
-        self.rep = BuildReporter(self.finder)
+        self.p_man = AosPathManager()
+        self.excecutor = SerialExecutorFake(self.p_man)
+        self.rep = BuildReporter(self.p_man)
         self.module_stub = AosModule(Path('DiWheelDrive_1-1'))
         self.excecutor.build([self.module_stub])
         self.stderr = self.module_stub.build_info.comp_proc.stderr.decode('utf-8')
-
 
     def test_convert_json_to_dicts(self):
         res = self.rep.convert_json_to_compile_results(

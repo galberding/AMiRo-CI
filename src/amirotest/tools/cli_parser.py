@@ -15,11 +15,12 @@ class AmiroParser:
 
     def add_project_group(self):
         group = self.parser.add_mutually_exclusive_group(required=True)
-        group.add_argument('--aos', action='store_true', help='Test Amiro-OS')
+        group.add_argument('--aos', action='store_true', help=f'Test Amiro-OS ()')
         group.add_argument('--apps', action='store_true', help='Test Amiro-Apps')
 
     def add_config_args(self):
-        self.parser.add_argument('--project-root')
+        self.parser.add_argument('--project-root', help='Set path to project root')
+        self.parser.add_argument('--repl-conf', help='Set path to replacement config')
 
     def parse_args(self, args: list[str]) -> Namespace:
         res: Namespace = self.parser.parse_args(args)

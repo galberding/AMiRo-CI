@@ -1,32 +1,25 @@
 import os
 from pathlib import Path
-from unittest.case import skip
-
-from amirotest.tools.config_path_finder import AosEnv, AosPathManager, AppsPathManager, CannotFindConfigError
-from ..test_utils import PathHelper, AosModuleHelper
+from amirotest.tools.config_path_finder import AosEnv, AosPathManager, AppsPathManager
 import unittest
 
 
-def set_env_if_not_existing():
-        if AosEnv.AOS_ROOT.name not in os.environ \
-           or not Path(os.environ[AosEnv.AOS_ROOT.name]).exists():
-            os.environ[AosEnv.AOS_ROOT.name] = '/home/schorschi/hiwi/AMiRo-OS'
+def set_env_entry(name: str, value: str):
+    if name not in os.environ \
+       or not Path(os.environ[name]).exists():
+        os.environ[name] = value
 
-        if AosEnv.AOS_APPS_ROOT.name not in os.environ \
-           or not Path(os.environ[AosEnv.AOS_APPS_ROOT.name]).exists():
-            os.environ[AosEnv.AOS_APPS_ROOT.name] = '/home/schorschi/hiwi/AMiRo-Apps'
+
+def set_env_if_not_existing():
+    set_env_entry(AosEnv.AOS_ROOT.name, '/home/schorschi/hiwi/AMiRo-OS')
+    set_env_entry(AosEnv.AOS_APPS_ROOT.name, '/home/schorschi/hiwi/AMiRo-Apps')
+    set_env_entry(AosEnv.AOS_REPLACE_CONF.name, '/home/schorschi/hiwi/amiroci/assets/repl_conf.yml')
 
 
 class TestAosConfigManager(unittest.TestCase):
     def setUp(self) -> None:
-        self.path_helper = PathHelper()
-        self.module_helper = AosModuleHelper()
-        self.nucleo = self.module_helper.get_aos_module()
         set_env_if_not_existing()
-        # self.aos_finder = AosModuleConfigFinder(self.nucleo.path)
         self.p_man = AosPathManager()
-
-
 
     def test_read_aos_root_from_environmen_without_default(self):
         # os.environ[AosEnv.AOS_ROOT.name] = ''

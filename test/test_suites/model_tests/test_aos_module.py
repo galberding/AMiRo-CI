@@ -1,20 +1,17 @@
 from pathlib import Path
 from typing import Type
 from amirotest.model.aos_module import AosModule, AmbigousOptionError
+import unittest
+
+from ..test_utils import AosModuleHelper
 from amirotest.tools.search.search_result.search_results import SearchResult
 from amirotest.model.option import MakeGlobalOption, AosOption
 from amirotest.model import OptionNotFoundException
 
 
-from ..test_utils import AosModuleHelper, PathHelper
-import unittest
-
-
 class TestAosModel(unittest.TestCase):
 
     def setUp(self) -> None:
-
-        self.helper = PathHelper()
         self.module_helper = AosModuleHelper()
         self.aos_module = self.module_helper.get_aos_module()
         self.module_name = "NUCLEO-L476RG"

@@ -1,8 +1,6 @@
-
 import multiprocessing
 from pathlib import Path
 from unittest.case import skip
-from ..test_utils.test_helper import PathHelper
 from typing import Type
 import unittest
 
@@ -14,10 +12,9 @@ from amirotest.tools.config_path_finder import AosPathManager, AppsPathManager
 
 class TestMakeCommand(unittest.TestCase):
     def setUp(self) -> None:
-        self.path_helper = PathHelper()
         self.module_name = "DiWheelDrive_1-1"
         self.builddir = Path("/dev/shm/amiroCI")
-        self.p_man = AosPathManager(self.path_helper.aos_path)
+        self.p_man = AosPathManager()
         self.make_factory = SerialMakeCommandFactory(self.p_man)
 
     def test_make_command_make_at_first_place(self):
