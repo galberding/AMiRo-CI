@@ -68,7 +68,7 @@ class TestMakeCommand(unittest.TestCase):
         modules = [self.generate_module() for _ in range(module_count)]
         self.assertEqual(module_count, len(fac.build_make_commands(modules)))
 
-
+    @skip('Visual inspection -- needs more firm testing')
     def test_apps_make_command(self):
         smc = SerialMakeCommandFactory(AppsPathManager())
         cmd = smc.build_make_command(self.generate_module('HelloWorld/DiWheelDrive_1-1'))
