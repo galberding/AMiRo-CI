@@ -67,10 +67,25 @@ Dependencies:
 * Basic filter to restrict matrix generation
 * See #2
 
-## General Architecture
-<img src="assets/architecture.png"
-     alt="Architecture"
-     style="float: left; margin-right: 10px;" />
+## Development
+### Install
+```bash
+cd amiroci
+pip install -e .
+```
+* This will fetch all required dependencies
+
+### Test execution
+```bash
+# change to test directory
+cd amiroci/test
+# execute all tests
+python test.py
+```
+<!-- ## General Architecture -->
+<!-- <img src="assets/architecture.png" -->
+<!--      alt="Architecture" -->
+<!--      style="float: left; margin-right: 10px;" /> -->
 
 <!-- ## Search Module -->
 <!-- ## Configuration Module -->
