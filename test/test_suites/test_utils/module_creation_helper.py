@@ -37,9 +37,3 @@ class AosModuleHelper:
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16') # Needs to be substituted
         ]
-
-
-    def get_aos_module(self, module_name="NUCLEO-L476RG") -> AosModule:
-        # nucleo_path = self.helper.get_aos_module_path(module_name=module_name)
-        nucleo_path = self.helper.root.joinpath('modules').joinpath(module_name)
-        return AosModule(nucleo_path)

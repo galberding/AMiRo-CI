@@ -13,8 +13,8 @@ class TestAosModel(unittest.TestCase):
 
     def setUp(self) -> None:
         self.module_helper = AosModuleHelper()
-        self.aos_module = self.module_helper.get_aos_module()
         self.module_name = "NUCLEO-L476RG"
+        self.aos_module = AosModule(Path(self.module_name))
         self.search_results = self.module_helper.nucleo_search_results
 
     def test_create_module(self):

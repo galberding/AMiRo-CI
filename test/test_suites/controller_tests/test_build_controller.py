@@ -1,18 +1,16 @@
 from pathlib import Path
-from ..test_utils.module_creation_helper import AosModuleHelper
+
 import unittest
 from unittest.mock import MagicMock
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
 from amirotest.tools.config_path_finder import AosPathManager
 
-
 from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub
 
 
 class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
-        self.module_helper = AosModuleHelper()
         self.p_man = AosPathManager()
         self.executer_mock = MagicMock()
         self.executer_mock.build = MagicMock()
