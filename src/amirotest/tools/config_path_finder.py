@@ -14,7 +14,12 @@ class AosEnv(Enum):
 
 class NoAosEnvVariableError(Exception):
     def __init__(self, param: AosEnv) -> None:
-        super().__init__(f'Please provide: export {param.name}=path/to/{param.value}')
+        super().__init__(f'''
+        Please provide a project root with:
+        \t--project-root path/to/{param.value}
+        or set an environment variable with:
+        \texport {param.name}=path/to/{param.value}
+        ''')
 
 class CannotFindConfigError(Exception):
     def __init__(self, config: Path) -> None:
@@ -83,7 +88,7 @@ class AosPathManager(PathManager):
                  root: Path = None) -> None:
         try:
             aos_root: Path = root or Path(os.environ[AosEnv.AOS_ROOT.name])
-        except:
+        except KeyError:
             raise NoAosEnvVariableError(AosEnv.AOS_ROOT)
         super().__init__(aos_root)
 
