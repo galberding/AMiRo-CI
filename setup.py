@@ -8,7 +8,7 @@ setuptools.setup(
     description="Package for extracting compile parameters from c source code in order to search for conditional compilation.",
     # long_description="The following major components are planned: Module Search, Configuration Builde, Automatic Tester, Visualizer (Results), CLI",
     # long_description_content_type="text/markdown",
-    install_requirements=[
+    install_requires=[
         'PyYAML',
         'tqdm',
         'overrides',
