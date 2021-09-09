@@ -13,7 +13,7 @@ from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub
 class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
         self.module_helper = AosModuleHelper()
-        self.p_man = AosPathManager(self.module_helper.helper.aos_path)
+        self.p_man = AosPathManager()
         self.executer_mock = MagicMock()
         self.executer_mock.build = MagicMock()
         self.bc = BuildController(

@@ -16,7 +16,7 @@ from amirotest.controller.build_executer import SerialExecutor
 class TestExecutor(unittest.TestCase):
     def setUp(self) -> None:
         self.helper = AosModuleHelper()
-        self.finder = AosPathManager(self.helper.helper.aos_path)
+        self.finder = AosPathManager()
         self.repl_conf = YamlReplConf(self.finder.get_repl_conf_path())
         self.bc = BuildController(self.finder, YamlReplConf(self.finder.get_repl_conf_path()), SerialExecutorFake(self.finder))
     def tearDown(self) -> None:

@@ -1,4 +1,5 @@
 from amirotest.model import AosModule
+from amirotest.tools.config_path_finder import AosPathManager
 from .test_helper import PathHelper
 
 class UnknownModuleNameException(Exception):
@@ -6,7 +7,7 @@ class UnknownModuleNameException(Exception):
 
 class AosModuleHelper:
     def __init__(self) -> None:
-        self.helper = PathHelper()
+        self.helper = AosPathManager()
         self.module_names = [
             "DiWheelDrive_1-1",
             "DiWheelDrive_1-2",
@@ -39,5 +40,6 @@ class AosModuleHelper:
 
 
     def get_aos_module(self, module_name="NUCLEO-L476RG") -> AosModule:
-        nucleo_path = self.helper.get_aos_module_path(module_name=module_name)
+        # nucleo_path = self.helper.get_aos_module_path(module_name=module_name)
+        nucleo_path = self.helper.root.joinpath('modules').joinpath(module_name)
         return AosModule(nucleo_path)
