@@ -24,10 +24,10 @@ from amirotest.tools.config_path_finder import PathManager
 class BuildExecutor(ABC):
     """!Interface for executing the build process.
     """
-    def __init__(self, finder: PathManager, cmd_factory: Type[MakeCommandFactory]=SerialMakeCommandFactory) -> None:
-        self.finder = finder
-        self.cmd_factory = cmd_factory(self.finder)
-        self.reporter = BuildReporter(self.finder)
+    def __init__(self, p_man: PathManager, cmd_factory: Type[MakeCommandFactory]=SerialMakeCommandFactory) -> None:
+        self.p_man = p_man
+        self.cmd_factory = cmd_factory(self.p_man)
+        self.reporter = BuildReporter(self.p_man)
 
     @abstractmethod
     def build(self, modules: list[AosModule]):
@@ -49,7 +49,7 @@ class BuildExecutor(ABC):
         cpu_time_end = ptimer()
         end = timer()
         bi = BuildInfo(comp_proc, end - start, cpu_time_end - cpu_time_start)
-        self.cleanup(self.finder.get_build_dir().joinpath(module.uid))
+        self.cleanup(self.p_man.get_build_dir().joinpath(module.uid))
         # bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi
         return module
@@ -63,9 +63,9 @@ class SerialExecutor(BuildExecutor):
     """!Serial build.
     One module is build at a time with several cpus.
     """
-    def __init__(self, finder: PathManager, vis=False) -> None:
+    def __init__(self, p_man: PathManager, vis=False) -> None:
         self.vis = vis
-        super().__init__(finder, SerialMakeCommandFactory)
+        super().__init__(p_man, SerialMakeCommandFactory)
 
     @overrides
     def build(self, modules: list[AosModule]):
@@ -76,8 +76,8 @@ class SerialExecutor(BuildExecutor):
 
 
 class ParallelExecutor(BuildExecutor):
-    def __init__(self, finder: PathManager) -> None:
-        super().__init__(finder, ParallelMakeCommandFactory)
+    def __init__(self, p_man: PathManager) -> None:
+        super().__init__(p_man, ParallelMakeCommandFactory)
 
     @overrides
     def build(self, modules: list[AosModule]):

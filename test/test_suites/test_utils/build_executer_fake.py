@@ -10,7 +10,8 @@ class SerialExecutorFake(SerialExecutor):
     """Prevents actual execution.
     Use for test purposes.
     """
-    def __init__(self, finder: PathManager, vis=False) -> None:
+    def __init__(self, p_man: PathManager, vis=False) -> None:
+        self.executions = 0
         self.stderr = """
 ...
 []
@@ -21,10 +22,11 @@ class SerialExecutorFake(SerialExecutor):
 make[1]: *** [clutter ... ] Error 1
 make: *** [other stuff] Error 2
         """.encode('utf-8')
-        super().__init__(finder, vis=vis)
+        super().__init__(p_man, vis=vis)
 
     @overrides
     def process_cmd(self, cmd) -> subprocess.CompletedProcess:
+        self.executions += 1
         return subprocess.CompletedProcess(
             ['Fake123'],
             returncode=0,

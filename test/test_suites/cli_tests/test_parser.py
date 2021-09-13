@@ -2,6 +2,8 @@ from argparse import Namespace
 import os
 from pathlib import Path
 from shutil import copyfile, rmtree
+from unittest.case import skip
+from ..test_utils.build_executer_fake import SerialExecutorFake
 import unittest
 from unittest.mock import patch
 from io import StringIO
@@ -11,7 +13,7 @@ import pandas as pd
 
 class TestParser(unittest.TestCase):
     def setUp(self) -> None:
-        self.parser = AmiroParser()
+        self.parser = AmiroParser(executor=SerialExecutorFake)
         self.aos_root = os.environ[AosEnv.AOS_ROOT.name]
         self.apps_root = os.environ[AosEnv.AOS_APPS_ROOT.name]
         self.aos_repl_root = os.environ[AosEnv.AOS_REPLACE_CONF.name]
@@ -111,6 +113,15 @@ class TestParser(unittest.TestCase):
         mat_name = 'testmat.tsv'
         parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
         return mat_name
+
+    def test_execute_none_if_not_used(self):
+        self.parser.parse_args(['--aos'])
+        self.assertIsInstance(self.parser.executor, SerialExecutorFake)
+
+    @skip('Take time for module generation')
+    def test_execute(self):
+        self.parser.parse_args(['--aos', '-e'])
+        self.assertGreater(self.parser.executor.executions, 0) # type: ignore
 
 
     def unset_env(self):
