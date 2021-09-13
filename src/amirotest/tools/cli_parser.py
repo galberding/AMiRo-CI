@@ -39,7 +39,7 @@ class AmiroParser:
         """
         self.parser.add_argument('--project-root', help='Set path to project root, (Default: AOS_ROOT | AOS_APPS_ROOT)')
         self.parser.add_argument('--repl-conf', help='Set path to replacement config. (Default: AOS_REPLACE_CONF)')
-        self.parser.add_argument('--gen-mat', nargs='?', help='Generate configuration matrix (Default: conf_mat.tsv). It is saved to the same directory as the replacement config.')
+        self.parser.add_argument('--mat-name', help='Set name for config matrix (Default: conf_mat.tsv). It is saved to the same directory as the replacement config.')
 
     def parse_args(self, args: list[str]) -> Namespace:
         """!Wires all together and creates all required objects for further processing.
@@ -74,13 +74,13 @@ class AmiroParser:
             Path(conf.repl_conf) if conf.repl_conf else self.p_man.repl_conf)
 
     def create_build_controller(self):
+        """!Create the Build controller.
+        """
         self.bc = BuildController(self.repl_conf, None, prebuild_conf_matrix=None)
 
     def save_conf_matrix(self, conf: Namespace):
-        # cmat_path = self.p_man.get_repl_conf_path().parent
-        # cmat_path = cmat_path.joinpath(conf.gen_mat or 'conf_mat.tsv')
-        cmat_path = self.p_man.get_conf_mat(conf.gen_mat)
-        # print(cmat_path)
+        """!Generate the conf matrix and save it.
+        """
+        cmat_path = self.p_man.get_conf_mat_path(conf.mat_name)
         cmat = self.bc.generate_config_matrix()
-        # print(cmat)
         cmat.to_csv(cmat_path, sep='\t')

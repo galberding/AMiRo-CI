@@ -14,16 +14,14 @@ class TestParser(unittest.TestCase):
         self.parser = AmiroParser()
         self.aos_root = os.environ[AosEnv.AOS_ROOT.name]
         self.apps_root = os.environ[AosEnv.AOS_APPS_ROOT.name]
-        # Project dir /home/schoschi/hiwi/amiroci
-        self.tmp_dir = Path('/home/schorschi/hiwi')
-        # self.tmp_dir = Path('/dev/shm/amiroCI')
+        self.tmp_dir = Path('/dev/shm/amiroCI')
         self.tmp_dir.mkdir(parents=True, exist_ok=True)
         repl_path = Path(os.environ[AosEnv.AOS_REPLACE_CONF.name])
         self.repl_path = self.tmp_dir.joinpath(repl_path.name)
         copyfile(repl_path, self.repl_path)
 
     def tearDown(self) -> None:
-        # rmtree(self.tmp_dir)
+        rmtree(self.tmp_dir)
         self.set_env()
 
     def test_display_help(self):
@@ -87,9 +85,14 @@ class TestParser(unittest.TestCase):
         self.parser.parse_args(['--aos'])
         self.assertTrue(self.parser.bc)
 
-    def test_dump_conf_matrix(self):
-        self.parser.parse_args(['--aos', '--gen-mat', '--repl-conf', str(self.repl_path)])
-        self.assertTrue(self.parser.p_man.get_conf_mat().exists())
+    def test_always_dump_conf_matrix(self):
+        self.parser.parse_args(['--aos', '--repl-conf', str(self.repl_path)])
+        self.assertTrue(self.parser.p_man.get_conf_mat_path().exists())
+
+    def test_dump_conf_matrix_different_name(self):
+        mat_name = 'testmat.tsv'
+        self.parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
+        self.assertTrue(self.parser.p_man.get_conf_mat_path(mat_name).exists())
 
     def unset_env(self):
         del os.environ[AosEnv.AOS_ROOT.name]
