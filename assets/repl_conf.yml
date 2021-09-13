@@ -1,16 +1,16 @@
 Modules: [
             "DiWheelDrive_1-1",
-            "DiWheelDrive_1-2",
-            "LightRing_1-0",
-            "LightRing_1-2",
-            "NUCLEO-F103RB",
-            "NUCLEO-F401RE",
-            "NUCLEO-F767ZI",
-            "NUCLEO-G071RB",
-            "NUCLEO-L476RG",
-            "PowerManagement_1-1",
-            "PowerManagement_1-2",
-            "STM32F407G-DISC1",
+            # "DiWheelDrive_1-2",
+            # "LightRing_1-0",
+            # "LightRing_1-2",
+            # "NUCLEO-F103RB",
+            # "NUCLEO-F401RE",
+            # "NUCLEO-F767ZI",
+            # "NUCLEO-G071RB",
+            # "NUCLEO-L476RG",
+            # "PowerManagement_1-1",
+            # "PowerManagement_1-2",
+            # "STM32F407G-DISC1",
         ]
 Options:
     AosconfOption:
@@ -51,25 +51,25 @@ Options:
 
       # Flag to enable SSSP.
       # If disables all other flags are disabled too
-      OS_CFG_SSSP_ENABLE: [false]
+      OS_CFG_SSSP_ENABLE: ['false']
 
       # Flag to indicate, whether the SSSP startup sequence shall be
       # executed by AMiRo-OS.
-      # This setting must be false in case another software (e.g. a
+      # This setting must be 'false' in case another software (e.g. a
       # bootloader) handles the initial stages of the SSSP startup phase.
-      OS_CFG_SSSP_STARTUP: [false]
+      OS_CFG_SSSP_STARTUP: ['false']
 
       # Flag to indicate, whether the SSSP shutdown sequence shall be
       # executed by AMiRo-OS.
       # This setting should be false in case another software (e.g. a
       # bootloader) handles the final stages of the SSSP shutdown phase.
-      OS_CFG_SSSP_SHUTDOWN: [false]
+      OS_CFG_SSSP_SHUTDOWN: ['false']
 
       # Flag to indicate, whether the module stack initialization (MSI;
       # stage 3 of the SSSP startup phase) shall be executed.
       # In order to execute MSI, a broadcast bus (BCB) and according
       # interfaces must be defined.
-      OS_CFG_SSSP_MSI: [false]
+      OS_CFG_SSSP_MSI: ['false']
 
       # Width of the @p aos_sssp_moduleid_t type.
       # Possible settings are 8, 16, 32 and 64.
@@ -78,17 +78,17 @@ Options:
       # Flag to set the module as SSSP master.
       # There must be only one module with this flag set to true in a
       # system.
-      OS_CFG_SSSP_MASTER: [false]
+      OS_CFG_SSSP_MASTER: ['false']
 
       # Flag to set the module to be the first in the stack.
       # There must be only one module with this flag set to true in a
       # system.
-      OS_CFG_SSSP_STACK_START: [false]
+      OS_CFG_SSSP_STACK_START: ['false']
 
       # Flag to set the module to be the last in the stack.
       # There must be only one module with this flag set to true in a
       # system.
-      OS_CFG_SSSP_STACK_END: [false]
+      OS_CFG_SSSP_STACK_END: ['false']
 
       # Delay time (in microseconds) how long a SSSP signal must be active.
       OS_CFG_SSSP_SIGNALDELAY: [1000]
@@ -102,7 +102,7 @@ Options:
 
       # System shell options
 
-      OS_CFG_SHELL_ENABLE: [true]
+      OS_CFG_SHELL_ENABLE: ['true']
       OS_CFG_SHELL_STACKSIZE: [1024]
 
       # Shell thread priority.
@@ -120,7 +120,7 @@ Options:
                 # ┌ THD_RTPRIO_MIN
                 # │ ...
         # highest └ THD_RTPRIO_MAX
-      OS_CFG_SHELL_THREADPRIO: [AOS_THD_NORMALPRIO_MIN]
+      # OS_CFG_SHELL_THREADPRIO: [AOS_THD_NORMALPRIO_MIN]
 
       # Shell maximum input line length.
       OS_CFG_SHELL_LINEWIDTH: [64]
@@ -134,7 +134,7 @@ Options:
 
       # Shell remote access enable flag.
       # If enabled, AMiRo-OS shells support remote access.
-      OS_CFG_SHELL_REMOTE_ENABLE: [false]
+      # OS_CFG_SHELL_REMOTE_ENABLE: ['false']
 
 
 Dependencies:

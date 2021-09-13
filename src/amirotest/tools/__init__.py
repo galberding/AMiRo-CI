@@ -1,5 +1,6 @@
 from yaml import dump as yml_dump
 from yaml import load as yml_load
+# TODO: Change to BaseLoader to treat everything as string
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:

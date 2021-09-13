@@ -72,7 +72,7 @@ class SerialExecutor(BuildExecutor):
         for module in tqdm.tqdm(modules) if self.vis else modules:
             self._build_module(module)
             self.reporter.record_module(module)
-            # self.reporter.record_save()
+            self.reporter.record_save()
 
 
 class ParallelExecutor(BuildExecutor):
