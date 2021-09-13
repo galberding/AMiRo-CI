@@ -3,7 +3,7 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Optional
 from amirotest.controller.build_controller import BuildController
-
+import pandas as pd
 from amirotest.tools.config_path_finder import AosPathManager, AppsPathManager, PathManager
 from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 
@@ -40,6 +40,7 @@ class AmiroParser:
         self.parser.add_argument('--project-root', help='Set path to project root, (Default: AOS_ROOT | AOS_APPS_ROOT)')
         self.parser.add_argument('--repl-conf', help='Set path to replacement config. (Default: AOS_REPLACE_CONF)')
         self.parser.add_argument('--mat-name', help='Set name for config matrix (Default: conf_mat.tsv). It is saved to the same directory as the replacement config.')
+        self.parser.add_argument('--use-mat','-m', help='Provide name for matrix to use.')
 
     def parse_args(self, args: list[str]) -> Namespace:
         """!Wires all together and creates all required objects for further processing.
@@ -47,7 +48,7 @@ class AmiroParser:
         res: Namespace = self.parser.parse_args(args)
         self.create_path_manager(res)
         self.load_repl_conf(res)
-        self.create_build_controller()
+        self.create_build_controller(res)
         self.save_conf_matrix(res)
         return res
 
@@ -57,7 +58,6 @@ class AmiroParser:
         """
         proj_path = Path(conf.project_root) if conf.project_root else None
         repl_conf = Path(conf.repl_conf) if conf.repl_conf else None
-        # print(repl_conf)
         if conf.aos:
             self.p_man = AosPathManager(proj_path, repl_conf=repl_conf)
         elif conf.apps:
@@ -73,14 +73,17 @@ class AmiroParser:
         self.repl_conf = YamlReplConf(
             Path(conf.repl_conf) if conf.repl_conf else self.p_man.repl_conf)
 
-    def create_build_controller(self):
+    def create_build_controller(self, conf: Namespace):
         """!Create the Build controller.
         """
-        self.bc = BuildController(self.repl_conf, None, prebuild_conf_matrix=None)
+        mat = None
+        if conf.use_mat:
+            mat = pd.read_csv(self.p_man.get_conf_mat_path(conf.use_mat), sep='\t', dtype=str)
+        self.bc = BuildController(self.repl_conf, None, prebuild_conf_matrix=mat) # type: ignore
 
     def save_conf_matrix(self, conf: Namespace):
         """!Generate the conf matrix and save it.
         """
         cmat_path = self.p_man.get_conf_mat_path(conf.mat_name)
         cmat = self.bc.generate_config_matrix()
-        cmat.to_csv(cmat_path, sep='\t')
+        cmat.to_csv(cmat_path, sep='\t', index=False)

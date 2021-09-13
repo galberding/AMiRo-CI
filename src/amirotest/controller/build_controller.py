@@ -25,6 +25,7 @@ class BuildController:
     3. Configure template modules
     4. TODO: Pass configured modules to BuildExecutor
     5. TODO: Call reporter on the build results
+    @warning: The prebuild conf matrix is not validated right now!
     """
     def __init__(self,
                  repl_conf: ReplaceConfig,
@@ -127,7 +128,7 @@ class BuildController:
         @param t_module: Template AosModule
         @return list of configured AosModules
         """
-        conf_mat = self.prebuild_conf_matrix or self.generate_config_matrix()
+        conf_mat = self.prebuild_conf_matrix if self.prebuild_conf_matrix is not None else self.generate_config_matrix()
         c_modules = []
         for i in range(conf_mat.shape[0]):
             variables: list[AosOption] = []

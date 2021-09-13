@@ -7,13 +7,14 @@ from unittest.mock import patch
 from io import StringIO
 from amirotest.tools.cli_parser import AmiroParser
 from amirotest.tools.config_path_finder import AosEnv, AosPathManager, AppsPathManager, NoAosEnvVariableError
-
+import pandas as pd
 
 class TestParser(unittest.TestCase):
     def setUp(self) -> None:
         self.parser = AmiroParser()
         self.aos_root = os.environ[AosEnv.AOS_ROOT.name]
         self.apps_root = os.environ[AosEnv.AOS_APPS_ROOT.name]
+        self.aos_repl_root = os.environ[AosEnv.AOS_REPLACE_CONF.name]
         self.tmp_dir = Path('/dev/shm/amiroCI')
         self.tmp_dir.mkdir(parents=True, exist_ok=True)
         repl_path = Path(os.environ[AosEnv.AOS_REPLACE_CONF.name])
@@ -94,10 +95,30 @@ class TestParser(unittest.TestCase):
         self.parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
         self.assertTrue(self.parser.p_man.get_conf_mat_path(mat_name).exists())
 
+    def test_provide_alternative_matrix(self):
+        os.environ[AosEnv.AOS_REPLACE_CONF.name] = str(self.repl_path)
+        mat_name = self.create_matrix()
+        self.parser.parse_args(['--aos', '--use-mat', mat_name])
+        self.assertIsNotNone(self.parser.bc.prebuild_conf_matrix)
+        self.parser.bc.c_modules
+
+
+    def create_matrix(self) -> str:
+        """!Use a new parser to create a conf martix in self.tmp_dir.
+        return the name of that matrix (testmat.tsv)
+        """
+        parser = AmiroParser()
+        mat_name = 'testmat.tsv'
+        parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
+        return mat_name
+
+
     def unset_env(self):
         del os.environ[AosEnv.AOS_ROOT.name]
         del os.environ[AosEnv.AOS_APPS_ROOT.name]
+        # del os.environ[AosEnv.AOS_REPLACE_CONF.name]
 
     def set_env(self):
         os.environ[AosEnv.AOS_APPS_ROOT.name] = self.apps_root
         os.environ[AosEnv.AOS_ROOT.name] = self.aos_root
+        os.environ[AosEnv.AOS_REPLACE_CONF.name] = self.aos_repl_root
