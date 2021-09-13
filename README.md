@@ -68,6 +68,31 @@ Dependencies:
 * See #2
 
 ## Development
+
+### Generate Documentation
+The program is documented with Doxygen.
+* Switch to the `doc` directory
+* Generate documentation with `doxygen` or `doxywizard`
+```bash
+cd doc
+doxygen Doxyfile
+```
+In order to use Doxygen commands inside the docstring it is required to
+**place an exclamation mark** at the beginning of each comment.
+Otherwise the commands are ignored.
+```python
+def myfunc(name: str) -> None:
+	"""!Describe stuff here.
+	@param name some fancy name
+
+	@note
+	Someting worth noting
+
+	@return Nothing
+	"""
+```
+All special command are listed [here](https://www.doxygen.nl/manual/commands.html#cmddef).
+
 ### Install
 ```bash
 cd amiroci
