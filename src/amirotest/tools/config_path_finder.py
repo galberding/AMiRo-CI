@@ -44,7 +44,7 @@ class CannotFindMakefile(Exception):
 
 class PathManager(ABC):
     def __init__(self, root: Path,
-                 repl_conf: Optional[Path] = Path('../assets/repl_conf.yaml').resolve(),
+                 repl_conf: Optional[Path],
                  builddir=Path("/dev/shm/amiroCI")) -> None:
         self.root = root
         self.b_dir: Path = builddir
@@ -65,11 +65,7 @@ class PathManager(ABC):
     def get_repl_conf_path(self) -> Path:
         """!Return path to replacement config
         """
-        if AosEnv.AOS_REPLACE_CONF.name in os.environ:
-            repl = self.get_env_path(AosEnv.AOS_REPLACE_CONF)
-            if repl and repl.exists():
-                return repl
-        return self.repl_conf.joinpath('repl_conf.yml')
+        return self.repl_conf
 
     def get_build_dir(self) -> Path:
         return self.b_dir

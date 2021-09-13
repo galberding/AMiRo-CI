@@ -1,3 +1,4 @@
+from argparse import Namespace
 import os
 from pathlib import Path
 from shutil import copyfile, rmtree

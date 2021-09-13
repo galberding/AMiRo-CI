@@ -56,15 +56,20 @@ class AmiroParser:
         default path if provided.
         """
         proj_path = Path(conf.project_root) if conf.project_root else None
+        repl_conf = Path(conf.repl_conf) if conf.repl_conf else None
+        # print(repl_conf)
         if conf.aos:
-            self.p_man = AosPathManager(proj_path)
+            self.p_man = AosPathManager(proj_path, repl_conf=repl_conf)
         elif conf.apps:
-            self.p_man = AppsPathManager(proj_path)
+            self.p_man = AppsPathManager(proj_path, repl_conf=repl_conf)
+
+
 
     def load_repl_conf(self, conf: Namespace):
         """!Load replacement config from given path.
         If no path is provided the default path set by the environment is used.
         """
+
         self.repl_conf = YamlReplConf(
             Path(conf.repl_conf) if conf.repl_conf else self.p_man.repl_conf)
 
@@ -75,7 +80,7 @@ class AmiroParser:
         # cmat_path = self.p_man.get_repl_conf_path().parent
         # cmat_path = cmat_path.joinpath(conf.gen_mat or 'conf_mat.tsv')
         cmat_path = self.p_man.get_conf_mat(conf.gen_mat)
-        print(cmat_path)
+        # print(cmat_path)
         cmat = self.bc.generate_config_matrix()
         # print(cmat)
         cmat.to_csv(cmat_path, sep='\t')
