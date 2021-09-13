@@ -81,8 +81,8 @@ class PathManager(ABC):
     def get_report_config(self) -> Path:
          return self.repl_conf.parent.joinpath('report.tsv')
 
-    def get_conf_mat(self) -> Path:
-        return self.repl_conf.parent.joinpath('conf_mat.tsv')
+    def get_conf_mat(self, name=None) -> Path:
+        return self.repl_conf.parent.joinpath(name or 'conf_mat.tsv')
 
     def get_env_path(self, param: AosEnv) -> Path:
         if param.name in os.environ:

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from shutil import copyfile, rmtree
 import unittest
 from unittest.mock import patch
 from io import StringIO
@@ -12,10 +13,17 @@ class TestParser(unittest.TestCase):
         self.parser = AmiroParser()
         self.aos_root = os.environ[AosEnv.AOS_ROOT.name]
         self.apps_root = os.environ[AosEnv.AOS_APPS_ROOT.name]
+        # Project dir /home/schoschi/hiwi/amiroci
+        self.tmp_dir = Path('/home/schorschi/hiwi')
+        # self.tmp_dir = Path('/dev/shm/amiroCI')
+        self.tmp_dir.mkdir(parents=True, exist_ok=True)
+        repl_path = Path(os.environ[AosEnv.AOS_REPLACE_CONF.name])
+        self.repl_path = self.tmp_dir.joinpath(repl_path.name)
+        copyfile(repl_path, self.repl_path)
 
     def tearDown(self) -> None:
+        # rmtree(self.tmp_dir)
         self.set_env()
-
 
     def test_display_help(self):
         self.assertRaises(SystemExit, self.parser.parse_args, ['-h'])
@@ -67,7 +75,20 @@ class TestParser(unittest.TestCase):
         self.assertRaises(NoAosEnvVariableError, self.parser.parse_args, ['--aos'])
 
     def test_load_replacement_config(self):
-        pass
+        self.parser.parse_args(['--aos'])
+        self.assertTrue(self.parser.repl_conf.is_valid())
+
+    def test_set_repl_conf_path(self):
+        self.parser.parse_args(['--aos', '--repl-conf', str(self.repl_path)])
+        self.assertEqual(self.repl_path, self.parser.p_man.get_repl_conf_path())
+
+    def test_create_build_controller(self):
+        self.parser.parse_args(['--aos'])
+        self.assertTrue(self.parser.bc)
+
+    def test_dump_conf_matrix(self):
+        self.parser.parse_args(['--aos', '--gen-mat', '--repl-conf', str(self.repl_path)])
+        self.assertTrue(self.parser.p_man.get_conf_mat().exists())
 
     def unset_env(self):
         del os.environ[AosEnv.AOS_ROOT.name]

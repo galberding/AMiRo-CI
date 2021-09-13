@@ -2,8 +2,10 @@ import argparse
 from argparse import Namespace
 from pathlib import Path
 from typing import Optional
+from amirotest.controller.build_controller import BuildController
 
 from amirotest.tools.config_path_finder import AosPathManager, AppsPathManager, PathManager
+from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 
 
 class AmiroParser:
@@ -12,6 +14,8 @@ class AmiroParser:
 
     def __init__(self) -> None:
         self.p_man: Optional[PathManager] = None
+        self.repl_conf: Optional[ReplaceConfig] = None
+        self.bc: Optional[BuildController] = None
         self.parser = argparse.ArgumentParser(prog='AmiroCI')
         self.add_project_group()
         self.add_config_args()
@@ -33,16 +37,18 @@ class AmiroParser:
         * Using a provided conf matrix
         * Use the replacement conf for execution
         """
-        self.parser.add_argument('--project-root', help='Set path to project root')
-        self.parser.add_argument('--repl-conf', help='Set path to replacement config')
-        self.parser.add_argument('--gen-mat', help='Generate configuration matrix')
+        self.parser.add_argument('--project-root', help='Set path to project root, (Default: AOS_ROOT | AOS_APPS_ROOT)')
+        self.parser.add_argument('--repl-conf', help='Set path to replacement config. (Default: AOS_REPLACE_CONF)')
+        self.parser.add_argument('--gen-mat', nargs='?', help='Generate configuration matrix (Default: conf_mat.tsv). It is saved to the same directory as the replacement config.')
 
     def parse_args(self, args: list[str]) -> Namespace:
         """!Wires all together and creates all required objects for further processing.
         """
         res: Namespace = self.parser.parse_args(args)
         self.create_path_manager(res)
-
+        self.load_repl_conf(res)
+        self.create_build_controller()
+        self.save_conf_matrix(res)
         return res
 
     def create_path_manager(self, conf: Namespace):
@@ -54,3 +60,22 @@ class AmiroParser:
             self.p_man = AosPathManager(proj_path)
         elif conf.apps:
             self.p_man = AppsPathManager(proj_path)
+
+    def load_repl_conf(self, conf: Namespace):
+        """!Load replacement config from given path.
+        If no path is provided the default path set by the environment is used.
+        """
+        self.repl_conf = YamlReplConf(
+            Path(conf.repl_conf) if conf.repl_conf else self.p_man.repl_conf)
+
+    def create_build_controller(self):
+        self.bc = BuildController(self.repl_conf, None, prebuild_conf_matrix=None)
+
+    def save_conf_matrix(self, conf: Namespace):
+        # cmat_path = self.p_man.get_repl_conf_path().parent
+        # cmat_path = cmat_path.joinpath(conf.gen_mat or 'conf_mat.tsv')
+        cmat_path = self.p_man.get_conf_mat(conf.gen_mat)
+        print(cmat_path)
+        cmat = self.bc.generate_config_matrix()
+        # print(cmat)
+        cmat.to_csv(cmat_path, sep='\t')

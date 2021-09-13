@@ -13,10 +13,10 @@ from amirotest.tools.config.dependency_checker import DependencyChecker
 
 class TestDependencyChecker(unittest.TestCase):
     def setUp(self):
-        self.finder = AosPathManager()
+        self.p_man = AosPathManager()
         self.repl_conf = ReplaceConfigWithDependenciesStub(Path())
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
-        self.bc = BuildController(self.finder, self.repl_conf, BuildExecutorDummy())
+        self.bc = BuildController(self.repl_conf, BuildExecutorDummy())
         self.modules = self.bc.c_modules
 
     def test_init(self):

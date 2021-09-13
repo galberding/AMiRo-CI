@@ -37,7 +37,7 @@ class BuildReporter:
         self.re = re.compile(r'^\[.+\]$')
         self.record = pd.DataFrame()
         self.record_init()
-        self.finder = finder
+        self.p_man = finder
 
 
     def record_init(self):
@@ -70,7 +70,7 @@ class BuildReporter:
             [RecordEntry.Default.value] * len(self.record.columns)
 
     def record_save(self):
-        self.record.to_csv(self.finder.get_report_config(), sep='\t')
+        self.record.to_csv(self.p_man.get_report_config(), sep='\t')
 
 
     def record_options(self, module: AosModule):

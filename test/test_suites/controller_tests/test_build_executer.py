@@ -14,7 +14,6 @@ class TestExecutor(unittest.TestCase):
     def setUp(self) -> None:
         self.p_man = AosPathManager()
         self.bc = BuildController(
-            self.p_man,
             YamlReplConf(self.p_man.get_repl_conf_path()), SerialExecutorFake(self.p_man))
 
     def tearDown(self) -> None:

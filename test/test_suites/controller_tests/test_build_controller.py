@@ -15,7 +15,6 @@ class TestBuildController(unittest.TestCase):
         self.executer_mock = MagicMock()
         self.executer_mock.build = MagicMock()
         self.bc = BuildController(
-            self.p_man,
             ReplacementConfWithAppsStub(list_apps=False),
             self.executer_mock)
 

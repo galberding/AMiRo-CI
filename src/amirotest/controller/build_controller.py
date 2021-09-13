@@ -1,18 +1,15 @@
 """Control the module creation and build process.
 """
-from copy import deepcopy
+
 from pathlib import Path
-from typing import Optional, Type
+from typing import Optional
 import pandas as pd
-from pandas._config.config import OptionError
 from amirotest.controller.build_executer import BuildExecutor
-from amirotest.controller.build_reporter import BuildReporter
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, ConfVariable
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
 from amirotest.tools.config.dependency_checker import DependencyChecker
-from amirotest.tools.config_path_finder import PathManager
-from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
+from amirotest.tools.replace_config_builder import ReplaceConfig
 
 
 class ConfigInvalidError(Exception):
@@ -29,7 +26,7 @@ class BuildController:
     4. TODO: Pass configured modules to BuildExecutor
     5. TODO: Call reporter on the build results
     """
-    def __init__(self, finder: PathManager,
+    def __init__(self,
                  repl_conf: ReplaceConfig,
                  build_executor: BuildExecutor,
                  prebuild_conf_matrix: Optional[pd.DataFrame] = None) -> None:
@@ -41,7 +38,6 @@ class BuildController:
         @param builddir: directory to save build results
         """
 
-        self.p_man = finder
         self.repl_conf = repl_conf
         # self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
         # TODO: Better place would be in the repl_conf to not allow an
@@ -49,7 +45,7 @@ class BuildController:
         if not self.repl_conf.is_valid():
             raise ConfigInvalidError("Cannot use config!")
         self.mat_builder = ConfMatrixBuilder()
-        self.b_dir = self.p_man.get_build_dir()
+
         self.b_executor = build_executor
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
         self.prebuild_conf_matrix = prebuild_conf_matrix
