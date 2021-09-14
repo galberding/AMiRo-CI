@@ -74,7 +74,7 @@ class PathManager(ABC):
         if not config.exists():
             raise CannotFindConfigError(config)
 
-    def get_report_config(self) -> Path:
+    def get_report_path(self) -> Path:
          return self.repl_conf.parent.joinpath('report.tsv')
 
     def get_conf_mat_path(self, name=None) -> Path:

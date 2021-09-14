@@ -3,21 +3,21 @@ import re
 import subprocess
 
 
-class GccVersion(Enum):
+class Version(Enum):
     major = 0
     minor = 1
-    bug = 2
+    fix = 2
 
 class WrongGccVersion(Exception):
-    def __init__(self, major, minor, bug, msg) -> None:
-        super().__init__(f'Detected version: {major}.{minor}.{bug}\n{msg}')
+    def __init__(self, major, minor, fix, msg) -> None:
+        super().__init__(f'Detected version: {major}.{minor}.{fix}\n{msg}')
 
 class GccVersionChecker:
     """!Extract the current arm gcc version and raise an error if
     the detected version is too low.
     """
     def __init__(self) -> None:
-        self.regex = re.compile(fr'gcc\sversion\s(?P<major>\d+)\.(?P<minor>\d+)\.(?P<bug>\d+)')
+        self.regex = re.compile(fr'gcc\sversion\s(?P<{Version.major.name}>\d+)\.(?P<{Version.minor.name}>\d+)\.(?P<{Version.fix.name}>\d+)')
 
     def validate(self) -> bool:
         """!Perform the version check.
@@ -39,17 +39,17 @@ class GccVersionChecker:
         """!Extract the version number from the provided version string
         with regex.
         @param version_str
-        @return version number (major, minor, bug)
+        @return version number (major, minor, fix)
         """
         version = self.regex.search(version_str)
-        return int(version.group(GccVersion.major.name)), \
-            int(version.group(GccVersion.minor.name)),\
-            int(version.group(GccVersion.bug.name))
+        return int(version.group(Version.major.name)), \
+            int(version.group(Version.minor.name)),\
+            int(version.group(Version.fix.name))
 
     def check_version(self, version: tuple[int, int, int]):
         """!Check if current version matches the requirements.
         Raise error if any condition fails.
         @param version number
         """
-        if version[GccVersion.major.value] < 9:
+        if version[Version.major.value] < 9:
             raise WrongGccVersion(*version, f'Version to low requires at least 9 or higher!')

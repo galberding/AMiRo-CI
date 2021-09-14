@@ -1,2 +1,0 @@
-	Module	Duration	CPU_Time	Error	ErrorMsg	Warning	WarnMsg	Info	InfoMsg
-0	DiWheelDrive_1-1	6.076999852666631e-06	5.765999958384782e-06	3	unknown type name 'SerialCANDriver', unknown type name 'SerialCANConfig', unknown type name 'aos_fbcan_filter_t'	1	warning	1	info

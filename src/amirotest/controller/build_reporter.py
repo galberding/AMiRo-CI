@@ -70,7 +70,7 @@ class BuildReporter:
             [RecordEntry.Default.value] * len(self.record.columns)
 
     def record_save(self):
-        self.record.to_csv(self.p_man.get_report_config(), sep='\t')
+        self.record.to_csv(self.p_man.get_report_path(), sep='\t')
 
 
     def record_options(self, module: AosModule):

@@ -1,3 +1,7 @@
+# Assets
+assets/report.tsv
+
+
 # Documentation
 doc/*
 !doc/Doxyfile
