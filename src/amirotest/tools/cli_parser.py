@@ -6,6 +6,7 @@ from amirotest.controller.build_controller import BuildController
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor, ParallelExecutor
 from amirotest.tools.config_path_finder import AosPathManager, AppsPathManager, PathManager
+from amirotest.tools.gcc_version_checker import GccVersionChecker
 from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 
 
@@ -22,6 +23,7 @@ class AmiroParser:
         self.parser = argparse.ArgumentParser(prog='AmiroCI')
         self.add_project_group()
         self.add_config_args()
+        self.gcc_version_checker = GccVersionChecker()
 
     def add_project_group(self):
         """!Add the project type.
@@ -98,5 +100,6 @@ class AmiroParser:
     def execute_pipeline(self, conf: Namespace):
         if not conf.execute:
             return
+        self.gcc_version_checker.validate()
         modules = self.bc.c_modules
         self.executor.build(modules)
