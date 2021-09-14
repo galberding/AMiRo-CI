@@ -52,4 +52,4 @@ class GccVersionChecker:
         @param version number
         """
         if version[Version.major.value] < 9:
-            raise WrongGccVersion(*version, f'Version too low requires at least 9 or higher!')
+            raise WrongGccVersion(*version, f'Major version too low requires at least 9 or higher!')
