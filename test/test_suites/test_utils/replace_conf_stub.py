@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 from overrides.overrides import overrides
 from amirotest.tools.config.dependency_checker import ConfTag
 from amirotest.tools.replace_config_builder import YamlReplConf
@@ -11,7 +11,7 @@ class ReplacementConfWithAppsStub(YamlReplConf):
         super().__init__(Path())
 
     @overrides
-    def get_config(self, conf_path: Path) -> Optional[dict]:
+    def get_config(self, conf_path: Path) -> dict[str, Any]:
         return {
             ConfTag.Modules.name: ['TestModule'],
             ConfTag.Apps.name: ['TestApp1', 'TestApp2'] if self.list_apps else [],
@@ -29,14 +29,14 @@ class ReplacementConfWithAppsStub(YamlReplConf):
 
 
 class ReplacementConfWithSubgroupsStub(YamlReplConf):
-    def __init__(self) -> None:
+    def __init__(self, extend={}) -> None:
+        self.extend = extend
         super().__init__(Path())
 
     @overrides
-    def get_config(self, conf_path: Path) -> Optional[dict]:
-        return {
+    def get_config(self, conf_path: Path) -> dict[str, Any]:
+        conf = {
             ConfTag.Modules.name: ['TestModule'],
-            ConfTag.ExcludeOptions.name: [],
             ConfTag.Options.name: {
                 'Opt1': {
                     'opt11': ['true', 'false'],
@@ -48,7 +48,7 @@ class ReplacementConfWithSubgroupsStub(YamlReplConf):
                 },
                 'Opt2': {
                     'opt21': ['true', 'false'],
-                    'opt21': ['true', 'false'],
+                    'opt22': ['true', 'false'],
                     'Sub2': {
                         'sopt21': ['true', 'false'],
                         'sopt22': ['true', 'false'],
@@ -65,18 +65,21 @@ class ReplacementConfWithSubgroupsStub(YamlReplConf):
                 'Empty_Opt3': {
                     'Sub4': {
                         'sub41': ['true', 'false'],
-                        'sub41': ['true', 'false'],
+                        'sub42': ['true', 'false'],
                     }
                 }
             }
         }
+        conf.update(self.extend)
+        return conf
+
 
 
 
 class ReplaceConfigWithDependenciesStub(YamlReplConf):
 
     @overrides
-    def get_config(self, conf_path: Path) -> Optional[dict]:
+    def get_config(self, conf_path: Path) -> dict[str, Any]:
         return {
             ConfTag.Modules.name: ['TestModule'],
             ConfTag.Apps.name: ['TestApp'],

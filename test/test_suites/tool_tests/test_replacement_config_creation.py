@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Optional
 import unittest
+from amirotest.tools.config.config_tags import ConfTag
 from amirotest.tools.config_path_finder import  AosPathManager
 from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
 
@@ -32,15 +33,9 @@ class TestReplacementConfig(unittest.TestCase):
         self.assertAlmostEqual(4, len(self.repl_conf.get_flatten_config()))
 
 
-    # def test
-    # TODO:
-    # - Check malformat exceptions
-    # - Check invalid path
-
-
 class TestReplacementConfigSuboptions(unittest.TestCase):
     def setUp(self) -> None:
-        # self.conf_finder = AosPathManager()
+
         self.repl_conf = ReplacementConfWithSubgroupsStub()
 
     def test_detect_option_groups(self):
@@ -73,4 +68,52 @@ class TestReplacementConfigSuboptions(unittest.TestCase):
 
 
 class TestReplacementConfigReadExcludeIncludeTagStub(unittest.TestCase):
-    pass
+    def setUp(self) -> None:
+        self.exclude = {
+            ConfTag.ExcludeOptions.name: [
+                'Opt1', 'Empty_Opt3', 'Sub2', 'Sub3'
+            ]
+        }
+        self.include = {
+            ConfTag.IncludeOptions.name: [
+                'Opt1', 'Opt2', 'Sub2'
+            ]
+        }
+
+    def test_return_all_flattened(self):
+        repl_conf = ReplacementConfWithSubgroupsStub()
+        self.assertEqual(
+            {
+                'sopt11',
+                'sopt22',
+                'sub42',
+                'opt22',
+                'subsub1',
+                'opt11',
+                'sopt21',
+                'opt12',
+                'sopt31',
+                'subsub2',
+                'sopt12',
+                'sub41',
+                'sopt32',
+                'opt21'
+            }, repl_conf.get_flatten_config().keys()
+        )
+
+    def test_exclude_with_tag(self):
+        repl_conf = ReplacementConfWithSubgroupsStub(self.exclude)
+        conf = repl_conf.get_flatten_config()
+        self.assertEqual({'opt21', 'opt22'}, set(conf.keys()))
+
+    def test_include_with_tag(self):
+        repl_conf = ReplacementConfWithSubgroupsStub(self.include)
+        conf = repl_conf.get_flatten_config()
+        self.assertEqual({'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'}, set(conf.keys()))
+
+
+    def test_include_exclude_combined_include_wins(self):
+        self.include.update(self.exclude)
+        repl_conf = ReplacementConfWithSubgroupsStub(self.include)
+        conf = repl_conf.get_flatten_config()
+        self.assertEqual({'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'}, set(conf.keys()))

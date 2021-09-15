@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Any
 
 from overrides.overrides import overrides
 
@@ -24,8 +25,10 @@ class ReplaceConfig(ABC):
         self.valid = False
         self.conf = {}
         self.module_names: list[str] = []
-        self.options = []
+        self.options = {}
         self.apps = []
+        self.exclude = []
+        self.include = []
 
     @abstractmethod
     def load(self, path: Path):
@@ -57,32 +60,31 @@ class ReplaceConfig(ABC):
         @note Subgroups are excluded if the parent is excluded.
         @return dict of option groups with no subgroups (the dict is not nested)
         """
-        options = self.conf[ConfTag.Options.name]
         filtered_groups = {}
-        for group_name, group_members in options.items():
+        for group_name, group_members in self.options.items():
             if self.ignore_group(group_name, include, exclude):
                 continue
             filtered_groups.update(
                 self.apply_to_nested_groups(
-                    group_name, group_members, exclude=exclude))
+                    group_name, group_members, exclude=exclude, include=include))
         return filtered_groups
 
-    def apply_to_nested_groups(self,opt_group_name: str,
-                                 group: dict,
+    def apply_to_nested_groups(self,parent_group_name: str,
+                                 parent_group: dict,
                                  exclude: list[str] = [],
                                  include: list[str] = []) -> dict[str,dict[str,list[str]]]:
         """!Applies the include and exclude filter to all subgroups if existing.
         Furthermore all subgroups are removed such that the resulting dict is not
         nested.
         """
-        opt_group = {opt_group_name: {}}
-        for name, val in group.items():
-            if self.ignore_group(name, include, exclude):
-                continue
-            if isinstance(val, dict):
+        opt_group = {parent_group_name: {}}
+        for name, val in parent_group.items():
+            if isinstance(val, dict): # group detected
+                if self.ignore_group(name, include, exclude):
+                    continue
                 opt_group.update(self.apply_to_nested_groups(name, val))
             else:
-                opt_group[opt_group_name][name] = val
+                opt_group[parent_group_name][name] = val
         return opt_group
 
     def ignore_group(self, name:str, include: list[str], exclude: list[str]) -> bool:
@@ -117,8 +119,13 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         self.valid &= self._set_module_names()
         self.valid &= self._set_options()
         self._set_apps()
+        self._set_filter()
 
     def _set_module_names(self) -> bool:
+        """!Set module names.
+        * Required tag, ConfigFormatException raised if not existing
+        * Used to set target for build
+        """
         try:
             self.module_names = self.conf[ConfTag.Modules.name]
         except:
@@ -126,6 +133,9 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         return bool(self.module_names)
 
     def _set_options(self) -> bool:
+        """!Set unfiltered option groups.
+        * Required tag, ConfigFormatException raised if not existing
+        """
         try:
             self.options = self.conf[ConfTag.Options.name]
         except:
@@ -133,8 +143,23 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         return bool(self.options)
 
     def _set_apps(self):
+        """!Set Apps that should be tested.
+        * Optional tag
+        * Only works in combination with Amiro Apps
+        """
         if ConfTag.Apps.name in self.conf:
             self.apps = self.conf[ConfTag.Apps.name]
+
+    def _set_filter(self):
+        """!Set exclude and include filter.
+        * Optional tags
+        * Include dominates Exclude (see filter_option_groups())
+        """
+        if ConfTag.ExcludeOptions.name in self.conf:
+            self.exclude = self.conf[ConfTag.ExcludeOptions.name]
+
+        if ConfTag.IncludeOptions.name in self.conf:
+            self.include = self.conf[ConfTag.IncludeOptions.name]
 
     def get_flatten_config(self) -> dict[str, list]:
         """!Remove all config groups and join all underlying options.
@@ -145,6 +170,6 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         @return dict with all options as keys and lists as values.
         """
         flattened = {}
-        for _, opt in self.options.items():
+        for _, opt in self.filter_option_groups(exclude=self.exclude, include=self.include).items():
             flattened.update(opt)
         return flattened
