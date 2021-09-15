@@ -18,7 +18,7 @@ class TestReplacementConfig(unittest.TestCase):
                          ['TestModule'])
 
     def test_get_option_groups(self):
-        self.assertEqual(2, len(self.repl_conf.get_option_groups()))
+        self.assertEqual(2, len(self.repl_conf.filter_option_groups()))
 
     def test_get_apps(self):
         self.assertEqual(['TestApp1', 'TestApp2'], self.repl_conf.apps)
@@ -44,10 +44,29 @@ class TestReplacementConfigSuboptions(unittest.TestCase):
         self.repl_conf = ReplacementConfWithSubgroupsStub()
 
     def test_detect_option_groups(self):
-        groups = self.repl_conf.get_option_groups()
+        groups = self.repl_conf.filter_option_groups()
         self.assertEqual(8, len(groups))
+        self.check_group_contains(
+            groups,
+            ['Opt1','Sub1', 'Opt2', 'Sub2', 'Sub3', 'SubSub1', 'Empty_Opt3', 'Sub4'])
 
-    # def test_exclude_options(self):
-    #     groups = self.repl_conf.get_option_groups(exclude=['OptionGroup1', 'Sub3'])
+    def test_exclude_options(self):
+        """Opt1: -- exclude
+               Sub1: -- exclude
+           Opt2:
+               Sub2:
+               Sub3: -- exclude
+                    SubSub1 -- exclude
+           Empty_Opt3:
+               Sub4:
+        """
+        groups = self.repl_conf.filter_option_groups(exclude=['Opt1', 'Sub3'])
+        self.check_group_contains(groups, ['Opt2', 'Sub2', 'Empty_Opt3', 'Sub4'])
 
-    #     self.assertEqual(2, len(groups))
+    def test_include_options(self):
+        groups = self.repl_conf.filter_option_groups(include=['Opt1'])
+        self.check_group_contains(groups, ['Opt1', 'Sub1'])
+
+    def check_group_contains(self, group, names):
+        for name, _ in group.items():
+            self.assertIn(name, names)

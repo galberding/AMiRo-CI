@@ -43,22 +43,41 @@ class ReplaceConfig(ABC):
     def get_module_names(self) -> list[str]:
         return self.module_names
 
-    def get_option_groups(self):
+    def filter_option_groups(self, exclude: list[str] = [], include: list[str] = []) -> dict[str, dict[str, list[str]]]:
         options = self.conf[ConfTag.Options.name]
-        tmp = {}
-        for group_name, group in options.items():
-            tmp.update(self.merge_to_flat_dict(group_name, group))
+        filtered_groups = {}
+        for group_name, group_members in options.items():
+            if self.ignore_group(group_name, include, exclude):
+                continue
+            filtered_groups.update(
+                self.apply_to_nested_groups(
+                    group_name, group_members, exclude=exclude))
+        return filtered_groups
 
-        return tmp
-
-    def merge_to_flat_dict(self,opt_group_name: str, group: dict):
+    def apply_to_nested_groups(self,opt_group_name: str,
+                                 group: dict,
+                                 exclude: list[str] = [],
+                                 include: list[str] = []) -> dict[str,dict[str,list[str]]]:
         opt_group = {opt_group_name: {}}
         for name, val in group.items():
+            if self.ignore_group(name, include, exclude):
+                continue
             if isinstance(val, dict):
-                opt_group.update(self.merge_to_flat_dict(name, val))
+                opt_group.update(self.apply_to_nested_groups(name, val))
             else:
                 opt_group[opt_group_name][name] = val
         return opt_group
+
+    def ignore_group(self, name:str, include: list[str], exclude: list[str]) -> bool:
+        """!Is true when name is not listed in include or contained in exclude.
+        The include path is checked before the exclude path, in case both lists are provided
+        """
+        if include:
+            return name not in include
+        elif exclude:
+            return name in exclude
+        return False
+
 
     def get_dependencies(self) -> dict:
         if ConfTag.Dependencies.name in self.conf:
