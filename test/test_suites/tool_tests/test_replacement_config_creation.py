@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional
 import unittest
 from amirotest.tools.config_path_finder import  AosPathManager
-from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub
+from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
 
 
 class TestReplacementConfig(unittest.TestCase):
@@ -31,6 +31,23 @@ class TestReplacementConfig(unittest.TestCase):
         self.repl_conf.load(self.conf_finder.get_repl_conf_path())
         self.assertAlmostEqual(4, len(self.repl_conf.get_flatten_config()))
 
+
+    # def test
     # TODO:
     # - Check malformat exceptions
     # - Check invalid path
+
+
+class TestReplacementConfigSuboptions(unittest.TestCase):
+    def setUp(self) -> None:
+        # self.conf_finder = AosPathManager()
+        self.repl_conf = ReplacementConfWithSubgroupsStub()
+
+    def test_detect_option_groups(self):
+        groups = self.repl_conf.get_option_groups()
+        self.assertEqual(8, len(groups))
+
+    # def test_exclude_options(self):
+    #     groups = self.repl_conf.get_option_groups(exclude=['OptionGroup1', 'Sub3'])
+
+    #     self.assertEqual(2, len(groups))

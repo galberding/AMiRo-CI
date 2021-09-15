@@ -11,6 +11,7 @@ from amirotest.tools.cli_parser import AmiroParser
 from amirotest.tools.config_path_finder import AosEnv, AosPathManager, AppsPathManager, NoAosEnvVariableError
 import pandas as pd
 
+
 class TestParser(unittest.TestCase):
     def setUp(self) -> None:
         self.parser = AmiroParser(executor=SerialExecutorFake)
@@ -27,6 +28,7 @@ class TestParser(unittest.TestCase):
         rmtree(self.tmp_dir)
         self.set_env()
 
+    @skip('Visualize help command')
     def test_display_help(self):
         self.assertRaises(SystemExit, self.parser.parse_args, ['-h'])
 

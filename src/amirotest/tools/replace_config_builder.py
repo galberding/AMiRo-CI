@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 
+from overrides.overrides import overrides
+
 from amirotest.tools.aos_module_default_config_creatro import ConfigYmlHandler
-from amirotest.tools.config.dependency_checker import ConfTag
+from amirotest.tools.config.config_tags import ConfTag
+
 
 class ConfigFormatError(Exception):
     pass
@@ -41,12 +44,27 @@ class ReplaceConfig(ABC):
         return self.module_names
 
     def get_option_groups(self):
-        return self.options
+        options = self.conf[ConfTag.Options.name]
+        tmp = {}
+        for group_name, group in options.items():
+            tmp.update(self.merge_to_flat_dict(group_name, group))
+
+        return tmp
+
+    def merge_to_flat_dict(self,opt_group_name: str, group: dict):
+        opt_group = {opt_group_name: {}}
+        for name, val in group.items():
+            if isinstance(val, dict):
+                opt_group.update(self.merge_to_flat_dict(name, val))
+            else:
+                opt_group[opt_group_name][name] = val
+        return opt_group
 
     def get_dependencies(self) -> dict:
         if ConfTag.Dependencies.name in self.conf:
             return self.conf[ConfTag.Dependencies.name]
         return {}
+
 
 class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
 
@@ -54,6 +72,7 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         super().__init__()
         self.load(path)
 
+    @overrides
     def load(self, path: Path):
         if not path.exists():
             raise ReplaceConfigNotFound(path)

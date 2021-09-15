@@ -28,6 +28,51 @@ class ReplacementConfWithAppsStub(YamlReplConf):
         }
 
 
+class ReplacementConfWithSubgroupsStub(YamlReplConf):
+    def __init__(self) -> None:
+        super().__init__(Path())
+
+    @overrides
+    def get_config(self, conf_path: Path) -> Optional[dict]:
+        return {
+            ConfTag.Modules.name: ['TestModule'],
+            ConfTag.ExcludeOptions.name: [],
+            ConfTag.Options.name: {
+                'Opt1': {
+                    'opt11': ['true', 'false'],
+                    'opt12': ['true', 'false'],
+                    'Sub1': {
+                        'sopt11': ['true', 'false'],
+                        'sopt12': ['true', 'false'],
+                    }
+                },
+                'Opt2': {
+                    'opt21': ['true', 'false'],
+                    'opt21': ['true', 'false'],
+                    'Sub2': {
+                        'sopt21': ['true', 'false'],
+                        'sopt22': ['true', 'false'],
+                    },
+                    'Sub3': {
+                        'sopt31': ['true', 'false'],
+                        'sopt32': ['true', 'false'],
+                        'SubSub1': {
+                            'subsub1': ['true', 'false'],
+                            'subsub2': ['true', 'false'],
+                        }
+                    }
+                },
+                'Empty_Opt3': {
+                    'Sub4': {
+                        'sub41': ['true', 'false'],
+                        'sub41': ['true', 'false'],
+                    }
+                }
+            }
+        }
+
+
+
 class ReplaceConfigWithDependenciesStub(YamlReplConf):
 
     @overrides

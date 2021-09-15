@@ -16,8 +16,6 @@ class ConfMatrixBuilder:
     def augment_config(self, config: dict[str, list[Any]]) -> list[list]:
         """Combine all config values with each other
         """
-        row, _ = self._get_conf_mat_size(config)
-        tmp_conf = {}
         mat: list[list] = []
         for opt, args in config.items():
             mat = self._insert_in_config_mat(args, mat)
@@ -40,7 +38,6 @@ class ConfMatrixBuilder:
         """
         new_mat = []
         for i in col:
-                # print(i)
                 new_mat.append([i])
         return new_mat
 
