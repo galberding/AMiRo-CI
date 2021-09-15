@@ -70,3 +70,7 @@ class TestReplacementConfigSuboptions(unittest.TestCase):
     def check_group_contains(self, group, names):
         for name, _ in group.items():
             self.assertIn(name, names)
+
+
+class TestReplacementConfigReadExcludeIncludeTagStub(unittest.TestCase):
+    pass

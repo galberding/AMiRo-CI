@@ -43,7 +43,20 @@ class ReplaceConfig(ABC):
     def get_module_names(self) -> list[str]:
         return self.module_names
 
-    def filter_option_groups(self, exclude: list[str] = [], include: list[str] = []) -> dict[str, dict[str, list[str]]]:
+    def filter_option_groups(
+            self,
+            exclude: list[str] = [],
+            include: list[str] = []) -> dict[str, dict[str, list[str]]]:
+        """!Applies filter in for of name matching.
+        The exclude and include filter hold names of options groups listed in the
+        replacement config. In case a name appears in one if those lists the
+        option group is either ignored or listed in the resulting options.
+        @param exclude list instructing which groups to exclude
+        @param include list which options to include
+        @note If a name matches both filters it will be included.
+        @note Subgroups are excluded if the parent is excluded.
+        @return dict of option groups with no subgroups (the dict is not nested)
+        """
         options = self.conf[ConfTag.Options.name]
         filtered_groups = {}
         for group_name, group_members in options.items():
@@ -58,6 +71,10 @@ class ReplaceConfig(ABC):
                                  group: dict,
                                  exclude: list[str] = [],
                                  include: list[str] = []) -> dict[str,dict[str,list[str]]]:
+        """!Applies the include and exclude filter to all subgroups if existing.
+        Furthermore all subgroups are removed such that the resulting dict is not
+        nested.
+        """
         opt_group = {opt_group_name: {}}
         for name, val in group.items():
             if self.ignore_group(name, include, exclude):
