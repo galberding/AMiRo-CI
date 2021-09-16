@@ -33,10 +33,20 @@ Apps: [
 
       ]
 
+# Option Filter:
+IncludeOptions: []
+ExcludeOptions: []
+
+
 Options:
-    AosconfOptions:
+    AosconfOptionGroup:
       # Flag to enable/disable debug API and logic.
       OS_CFG_DBG: ['true', 'false']
+    UrtOptionGroup:
+		ENABLE_TEST_MODE: ['true']
+		TEST_SETUP:
+			TEST_VLA1: [42, 100]
+			TEST_VAL2: [1, 2]
 
 Dependencies:
   OS_CFG_TESTS_ENABLE:
@@ -54,10 +64,17 @@ Dependencies:
 * Is combined with `Modules`
 * Leave it empty if the build only affects the `Amiro-OS`
 
+### Option Filter
+With the `IncludeOptions` and `ExcludeOptions` tags it is possible to
+activate or deactivate Option groups listed in `Options`
+* `IncludeOptions` is always preferred
+* Excluding a parent group that contains other groups automatically disables them, too
+*
+
 ### OptionGroups (e.g. AosconfOptions)
 * Contains option groups
 * Groups contain the configuration
-* Groups can be disabled when generating the config Matrix (TODO)
+* Groups can be disabled when generating the config Matrix
 
 ### Option
 * Consist of name followed by list of strings
