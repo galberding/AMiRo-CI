@@ -26,33 +26,37 @@ The yaml config specifies what configurations to use for building the matrix.
 All tags allowed are listed in the example below:
 
 ```yaml
-Modules: [
-            'DiWheelDrive_1-1',
-         ]
-Apps: [
-
-      ]
+# List of module names used for the test pipeline
+Modules: ['DiWheelDrive_1-1']
+# List of apps used for the pipeline
+Apps: []
 
 # Option Filter:
-IncludeOptions: []
-ExcludeOptions: []
+# Include or exclude specific groups
+# Both take the hierarchy into account:
+#   Include a subgroup requires including its parent
+#   Excluding a parent means excluding its subgroups  
+IncludeGroups: []
+ExcludeGroups: []
 
-
-Options:
-    AosconfOptionGroup:
-      # Flag to enable/disable debug API and logic.
-      OS_CFG_DBG: ['true', 'false']
-    UrtOptionGroup:
-		ENABLE_TEST_MODE: ['true']
-		TEST_SETUP:
-			TEST_VLA1: [42, 100]
-			TEST_VAL2: [1, 2]
-
+# Exclude combinations not matching the requirements
 Dependencies:
   OS_CFG_TESTS_ENABLE:
     with_value: 'true'
     requires:
       OS_CFG_SHELL_ENABLE: 'true'
+
+# Contains all option groups
+Options:
+    # Option or parent group
+    AosconfOptionGroup: 
+        # Flag/Option passed to the compiler
+        OS_CFG_DBG: ['true', 'false']
+    UrtOptionGroup:
+        ENABLE_TEST_MODE: ['true']
+        # Subgroup or childgroup
+        TestSetup:
+            TEST_VLA1: [42, 100]
 ```
 ### Modules
 * List of module names
@@ -64,17 +68,11 @@ Dependencies:
 * Is combined with `Modules`
 * Leave it empty if the build only affects the `Amiro-OS`
 
-### Option Filter
-With the `IncludeOptions` and `ExcludeOptions` tags it is possible to
-activate or deactivate Option groups listed in `Options`
-* `IncludeOptions` is always preferred
-* Excluding a parent group that contains other groups automatically disables them, too
-*
 
 ### OptionGroups (e.g. AosconfOptions)
 * Contains option groups
 * Groups contain the configuration
-* Groups can be disabled when generating the config Matrix
+* Groups can contain subgroups
 
 ### Option
 * Consist of name followed by list of strings
@@ -108,7 +106,7 @@ def myfunc(name: str) -> None:
 	@return Nothing
 	"""
 ```
-All special command are listed [here](https://www.doxygen.nl/manual/commands.html#cmddef).
+All special commands are listed [here](https://www.doxygen.nl/manual/commands.html#cmddef).
 
 ### Install
 ```bash
