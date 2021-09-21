@@ -24,6 +24,7 @@ class MakeParameter(Enum):
     make = auto()
     BUILDDIR = auto()
 
+
 class MakeCommandFactory(ABC):
     """! Abstract class to create make commands.
     A basic structure is provided by _build_command() which can be
@@ -73,7 +74,7 @@ class MakeCommandFactory(ABC):
             ]
 
 
-    def _generate_option_str(self, module):
+    def _generate_option_str(self, module: AosModule):
         """!Convert AosOption to string.
         Each AosOption provides a get_build_option() which creates the
         desired format for the make command:

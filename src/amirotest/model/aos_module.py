@@ -42,6 +42,13 @@ class AosModule:
         self.options = []
         self.uid = str(uuid.uuid1())
 
+    def copy(self):
+        """!Create copy.
+        """
+        module = AosModule(self.path)
+        module.add_options(self.get_option_copy())
+        return module
+
     def add_options(self, options: list[AosOption]):
         opt_set = set(self.options)
         for opt in options:
@@ -50,13 +57,6 @@ class AosModule:
             else:
                 raise AmbigousOptionError(f"Option: {opt} already exists!")
         self.options += options
-
-    def copy(self):
-        """!Create copy.
-        """
-        module = AosModule(self.path)
-        module.add_options(self.get_option_copy())
-        return module
 
     def get_option_copy(self) -> list[AosOption]:
         return deepcopy(self.options)
@@ -69,18 +69,10 @@ class AosModule:
     def build_info(self, build_info: BuildInfo):
         self._build_info = build_info
 
-    def is_resolved(self) -> bool:
-        """Check if all options are resolved."""
-        if not self.options:
-            return True
-
-        for option in self.options:
-            if not option.is_resolved():
-                return False
-        return True
-
     def resolve(self):
-        """Try to resolve all containing options.
+        """!Check if there are unresolved options and resolve it.
+
+        Try to resolve all containing options.
         All substitution options needs to be provided
         in order to fully resolve all options.
         """
@@ -89,22 +81,27 @@ class AosModule:
 
         u_opts = self.get_unresolved_options()
         sub_opts = self.get_substitution_options()
-        # get substitution options
-
         for u_opt in u_opts:
             for s_opt in sub_opts:
                 u_opt.resolve(s_opt)
 
-    def get_unresolved_options(self) -> list[AosOption]:
-        """Get all options with unresolved arguments"""
-        u_options = []
+    def is_resolved(self) -> bool:
+        """!Check whether all options in the module are resolved.
+        An option is unresolved if at least one of its arguments
+        contains a `$(OPTION_NAME)` pattern.
+        With resolve() the module searches in its options
+        for `OPTION_NAME` and places its content in the unresolved option argument.
+        """
+        if not self.options:
+            return True
+
         for option in self.options:
             if not option.is_resolved():
-                u_options.append(option)
-        return u_options
+                return False
+        return True
 
     def get_substitution_options(self) -> list[AosOption]:
-        """Get Option contained in unresolved arguments.
+        """!Get Option contained in unresolved arguments.
         Also referred to as substitution option because their
         content is substituted into the argument"""
         sub_option_names = []
@@ -114,35 +111,33 @@ class AosModule:
         sub_options = self.find_options_by_names(sub_option_names)
         return sub_options
 
+    def get_unresolved_options(self) -> list[AosOption]:
+        """Get all options with unresolved arguments"""
+        u_options = []
+        for option in self.options:
+            if not option.is_resolved():
+                u_options.append(option)
+        return u_options
+
     def find_options_by_names(self, option_names: list[str]) -> list[AosOption]:
+        """!Find all options to the given option names.
+        """
         options = []
         for option_name in option_names:
             options.append(self.find_option_by_name(option_name))
         return options
 
     def find_option_by_name(self, option_name: str) -> AosOption:
+        """!Find option that matches the option_name.
+        The first match is returned.
+        @note it is save to return the first option because
+        no duplicate options are allowed.
+        @param option_name
+        """
         for option in self.options:
             if option.name == option_name:
                 return option
         raise OptionNotFoundException(f"Cannot find {option_name}!")
-
-    def dict_factory(self):
-        return {self.name: 42}
-
-    def to_default_config_dict(self) -> dict:
-        conf = {}
-        conf[self.name] = {}
-        for option in self.options:
-            if option.get_type() not in conf[self.name]:
-                conf[self.name][option.get_type()] = {}
-            if isinstance(option, DefaultOpiton):
-                conf[self.name][option.get_type()][option.name] = \
-                    [option.default]
-            else:
-                conf[self.name][option.get_type()][option.name] = \
-                    [arg.name for arg in option.args]
-        return conf
-
 
     def __str__(self) -> str:
         return f'{self.name}: {self.options}'
