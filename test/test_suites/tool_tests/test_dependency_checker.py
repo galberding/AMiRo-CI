@@ -7,7 +7,7 @@ from ..test_utils.replace_conf_stub import ReplaceConfigWithDependenciesStub
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption
 from amirotest.controller.build_controller import BuildController
-from amirotest.tools.config_path_finder import AosPathManager
+from amirotest.tools.path_manager import AosPathManager
 from amirotest.tools.config.dependency_checker import DependencyChecker
 
 

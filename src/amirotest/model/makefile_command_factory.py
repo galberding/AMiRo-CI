@@ -6,7 +6,7 @@ from overrides.overrides import overrides
 from amirotest.model.aos_module import AosModule
 import multiprocessing
 
-from amirotest.tools.config_path_finder import PathManager
+from amirotest.tools.path_manager import PathManager
 
 
 class MakeParameter(Enum):

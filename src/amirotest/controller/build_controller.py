@@ -6,10 +6,10 @@ from typing import Optional
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor
 from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption, ConfVariable
+from amirotest.model.option.aos_opt import AosOption, ConfVariable, MakeOption
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
 from amirotest.tools.config.dependency_checker import DependencyChecker
-from amirotest.tools.replace_config_builder import ReplaceConfig
+from amirotest.tools.config.replace_config_builder import ReplaceConfig
 
 
 class ConfigInvalidError(Exception):
@@ -102,8 +102,15 @@ class BuildController:
         options = []
         for option, _ in self.repl_conf.get_flatten_config().items():
             options.append(AosOption(option, f"$({option}_VAR)"))
+
+        options += self._generate_make_options()
         return options
 
+    def _generate_make_options(self):
+        make_opts = []
+        for name, args in self.repl_conf.make_options.items():
+            make_opts.append(MakeOption(name, ' '.join(args)))
+        return make_opts
 
     def _generate_template_module(self, name: str,
                                   options: list[AosOption]) -> AosModule:
@@ -130,13 +137,15 @@ class BuildController:
         """
         conf_mat = self.prebuild_conf_matrix if self.prebuild_conf_matrix is not None else self.generate_config_matrix()
         c_modules = []
-        for i in range(conf_mat.shape[0]):
+        for row in range(conf_mat.shape[0]):
             variables: list[AosOption] = []
-            for col in conf_mat.columns:
-                variables.append(ConfVariable(col, conf_mat[col].iloc[i]))
+            for col in conf_mat.columns: # type: ignore
+                variables.append(ConfVariable(col, conf_mat[col].iloc[row]))
+            # create module and add options
             module = t_module.copy()
             module.add_options(variables)
             module.resolve()
+            # exclude non matching options
             if self.dep_checker.is_valid(module):
                 c_modules.append(module)
         return c_modules

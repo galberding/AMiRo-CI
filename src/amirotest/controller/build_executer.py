@@ -18,7 +18,7 @@ from multiprocessing import Pool, cpu_count
 import tqdm
 from timeit import default_timer as timer
 from time import perf_counter as ptimer
-from amirotest.tools.config_path_finder import PathManager
+from amirotest.tools.path_manager import PathManager
 
 
 class BuildExecutor(ABC):

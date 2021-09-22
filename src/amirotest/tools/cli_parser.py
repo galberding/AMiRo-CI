@@ -5,7 +5,7 @@ from typing import Optional, Type
 from amirotest.controller.build_controller import BuildController
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor, ParallelExecutor
-from amirotest.tools.config_path_finder import AosPathManager, AppsPathManager, PathManager
+from amirotest.tools.path_manager import AosPathManager, AppsPathManager, PathManager
 from amirotest.tools.gcc_version_checker import GccVersionChecker
 from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
 

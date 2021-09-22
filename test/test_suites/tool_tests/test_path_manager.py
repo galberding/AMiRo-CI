@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from amirotest.tools.config_path_finder import AosEnv, AosPathManager, AppsPathManager
+from amirotest.tools.path_manager import AosEnv, AosPathManager, AppsPathManager
 import unittest
 
 

@@ -3,7 +3,7 @@ import subprocess
 from typing import Union
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosVariable, ConfVariable
-from amirotest.tools.config_path_finder import PathManager
+from amirotest.tools.path_manager import PathManager
 import re
 import json
 import pandas as pd

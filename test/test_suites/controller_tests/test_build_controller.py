@@ -4,9 +4,11 @@ import unittest
 from unittest.mock import MagicMock
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
-from amirotest.tools.config_path_finder import AosPathManager
+from amirotest.model.option.aos_opt import MakeOption
+from amirotest.tools.config.config_tags import ConfTag
+from amirotest.tools.path_manager import AosPathManager
 
-from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub
+from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
 
 
 class TestBuildController(unittest.TestCase):
@@ -55,3 +57,18 @@ class TestBuildController(unittest.TestCase):
 
     # test external conf matrix and what happens if it is misconfigured
     # test module name generation for aos and for apps
+
+
+class TestMakeOptionCreation(unittest.TestCase):
+    def setUp(self) -> None:
+        repl_conf = ReplacementConfWithSubgroupsStub(extend={
+            ConfTag.MakeOptions.name: {
+                'USE_OPT': ['-1', '-2', '-3=4']
+            }
+        })
+
+        self.bc = BuildController(repl_conf, None)
+
+    def test_make_option_generation(self):
+        opts = self.bc._generate_template_options()
+        self.assertIn(MakeOption('USE_OPT', ' '.join(['-1', '-2', '-3=4'])), opts)

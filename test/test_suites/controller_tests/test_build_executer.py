@@ -4,7 +4,7 @@ import unittest
 from ..test_utils.build_executer_fake import SerialExecutorFake
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
-from amirotest.tools.config_path_finder import AosPathManager
+from amirotest.tools.path_manager import AosPathManager
 from amirotest.tools.replace_config_builder import YamlReplConf
 
 

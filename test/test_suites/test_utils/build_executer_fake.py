@@ -2,7 +2,7 @@ import subprocess
 from overrides.overrides import overrides
 
 from amirotest.model.aos_module import AosModule
-from amirotest.tools.config_path_finder import PathManager
+from amirotest.tools.path_manager import PathManager
 from amirotest.controller.build_executer import BuildExecutor, SerialExecutor
 
 
