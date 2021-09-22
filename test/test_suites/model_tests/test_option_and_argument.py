@@ -1,7 +1,7 @@
 import unittest
 from amirotest.model.option import AosOption, MakeUserOption, MakeOption
 from amirotest.model.argument import AosArgument
-from amirotest.model.option.aos_opt import AosVariable, DefaultOpiton
+from amirotest.model.option.aos_opt import AosVariable, CfgOption, DefaultOpiton
 from amirotest.model.option.aosconf_opt import AosconfOption
 
 
@@ -58,7 +58,7 @@ class TestOptions(unittest.TestCase):
         )
 
     def test_create_global_option(self):
-        u_opt = MakeOption("UDEFS", "-DBOARD_TOF_CONNECTED")
+        u_opt = CfgOption("UDEFS", "-DBOARD_TOF_CONNECTED")
         self.assertEqual(len(u_opt.args), 1)
         self.assertEqual(
             u_opt.args[0].name,
@@ -143,6 +143,12 @@ class TestOptions(unittest.TestCase):
     def test_aos_variable_returns_no_build_option(self):
         var = AosVariable("OPT", "Value")
         self.assertEqual("", var.get_build_option())
+
+    def test_make_option_fomrat(self):
+        name = 'OPT_NAME'
+        args = ['-opt1', '-opt2']
+        make_opt = MakeOption(name, args)
+        self.assertEqual(f'{name}={args[0]} {args[1]}', make_opt.get_build_option())
 
     def check_resolution_reset(self,option: AosOption,
                                before: str,

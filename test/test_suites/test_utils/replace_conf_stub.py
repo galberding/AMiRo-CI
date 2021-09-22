@@ -68,6 +68,9 @@ class ReplacementConfWithSubgroupsStub(YamlReplConf):
                         'sub42': ['true', 'false'],
                     }
                 }
+            },
+            ConfTag.MakeOptions.name: {
+                'USE_OPT': ['-1', '-2', '-3=4']
             }
         }
         conf.update(self.extend)

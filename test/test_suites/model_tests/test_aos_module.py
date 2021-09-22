@@ -3,6 +3,8 @@ from typing import Type
 from amirotest.model.aos_module import AosModule, AmbigousOptionError
 import unittest
 
+from amirotest.model.option.aos_opt import CfgOption
+
 from ..test_utils import AosModuleHelper
 from amirotest.tools.search.search_result.search_results import SearchResult
 from amirotest.model.option import MakeOption, AosOption
@@ -36,7 +38,7 @@ class TestAosModel(unittest.TestCase):
         result = SearchResult([
             ('USE_FPU', 'softfp'),
             ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
-        ], MakeOption)
+        ], CfgOption)
         self.aos_module.add_options(result.get_options())
         self.assertFalse(self.aos_module.is_resolved())
 
@@ -83,7 +85,7 @@ class TestAosModel(unittest.TestCase):
         # therefore raise exception if resolution fails
         self.search_results.append(("USE_RANDOM_VALUE", "-set-seed=$(USE_UNKNOWN_OPTION)"))
         self.aos_module.add_options(
-            SearchResult(self.search_results, MakeOption).get_options())
+            SearchResult(self.search_results, CfgOption).get_options())
         self.assertRaises(OptionNotFoundException, self.aos_module.resolve)
 
     def test_module_resolve_multiple_args_with_same_sub_option(self):
@@ -93,7 +95,7 @@ class TestAosModel(unittest.TestCase):
             (("USE_CASE2", "-case2=$(USE_THIS_SUB)")),
             (("USE_CASE3", "-case3=$(USE_THIS_SUB)"))
         ]
-        self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=MakeOption)
+        self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=CfgOption)
         self.assertTrue(self.aos_module.is_resolved())
 
 
@@ -106,7 +108,7 @@ class TestAosModel(unittest.TestCase):
         ]
         # self.build_options_and_resolve_module(search_res, self.aos_module, opt_type=MakeGlobalOption)
         # self.assertTrue(self.aos_module.is_resolved())
-        self.assertRaises(AmbigousOptionError, self.build_options_and_resolve_module, search_res, self.aos_module, opt_type=MakeOption)
+        self.assertRaises(AmbigousOptionError, self.build_options_and_resolve_module, search_res, self.aos_module, opt_type=CfgOption)
 
 
     def build_options_and_resolve_module(self, search_res,

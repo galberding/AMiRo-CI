@@ -2,6 +2,8 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Any
 
+from overrides.overrides import overrides
+
 from amirotest.model.argument import UserArgument, AosArgument
 
 class WrongArgumentCount(Exception):
@@ -95,8 +97,22 @@ class ConfVariable(AosVariable):
         flag_name = f"{flag_name}_VAR"
         super().__init__(flag_name, arg_str)
 
-class MakeOption(AosOption):
+
+class CfgOption(AosOption):
+    """!Used to describe Configuration options only.
+    This options are included when generating the make command
+    and report.
+    """
     pass
+
+
+class MakeOption(AosOption):
+    def __init__(self, flag_name, arg_str):
+        super().__init__(flag_name, ' '.join(arg_str))
+
+    @overrides
+    def get_build_option(self) -> str:
+        return f'{self.name}={self.argument_str}'
 
 
 class MakeUserOption(AosOption):

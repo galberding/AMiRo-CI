@@ -5,6 +5,7 @@ from pathlib import Path
 from overrides.overrides import overrides
 from amirotest.model.aos_module import AosModule
 import multiprocessing
+from amirotest.model.option.aos_opt import CfgOption
 
 from amirotest.tools.path_manager import PathManager
 
@@ -84,7 +85,8 @@ class MakeCommandFactory(ABC):
         """
         options = []
         for opt in module.options:
-            options.append(opt.get_build_option())
+            if isinstance(opt, CfgOption):
+                options.append(opt.get_build_option())
         return ' '.join(options)
 
 

@@ -6,7 +6,7 @@ import unittest
 
 from amirotest.model.aos_module import AosModule
 from amirotest.model.makefile_command_factory import MakeCommandFactory, MakeParameter, ParallelMakeCommandFactory, SerialMakeCommandFactory
-from amirotest.model.option.aos_opt import AosOption
+from amirotest.model.option.aos_opt import AosOption, CfgOption, MakeOption
 from amirotest.tools.path_manager import AosPathManager, AppsPathManager
 
 
@@ -82,9 +82,10 @@ class TestMakeCommand(unittest.TestCase):
     def generate_module(self, module_name=None) -> AosModule:
         module = AosModule(Path(module_name or self.module_name))
         options = [
-            AosOption("HELLO", "true"),
-            AosOption("WORLD", "false"),
-            AosOption("STACK_SIZE", "42"),
+            CfgOption("HELLO", "true"),
+            CfgOption("WORLD", "false"),
+            CfgOption("STACK_SIZE", "42"),
+            MakeOption('USE_OPT', '-O2')
         ]
         module.add_options(options)
         return module

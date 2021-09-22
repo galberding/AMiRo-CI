@@ -61,12 +61,7 @@ class TestBuildController(unittest.TestCase):
 
 class TestMakeOptionCreation(unittest.TestCase):
     def setUp(self) -> None:
-        repl_conf = ReplacementConfWithSubgroupsStub(extend={
-            ConfTag.MakeOptions.name: {
-                'USE_OPT': ['-1', '-2', '-3=4']
-            }
-        })
-
+        repl_conf = ReplacementConfWithSubgroupsStub()
         self.bc = BuildController(repl_conf, None)
 
     def test_make_option_generation(self):
