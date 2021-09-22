@@ -1,4 +1,5 @@
 import multiprocessing
+from os import cpu_count
 from pathlib import Path
 from unittest.case import skip
 from typing import Type
@@ -65,13 +66,22 @@ class TestMakeCommand(unittest.TestCase):
         modules = [self.generate_module() for _ in range(module_count)]
         self.assertEqual(module_count, len(fac.build_make_commands(modules)))
 
-    @skip('Visual inspection -- needs more firm testing')
     def test_apps_make_command(self):
-        smc = SerialMakeCommandFactory(AppsPathManager())
-        cmd = smc.build_make_command(self.generate_module('HelloWorld/DiWheelDrive_1-1'))
-        print()
-        print(cmd)
-        print()
+        p_man = AppsPathManager()
+        module = self.generate_module('HelloWorld/DiWheelDrive_1-1')
+        final = ['make',
+                 '-f',
+                 f'{p_man.get_module_makefile(module.path)}',
+                 f'-j{2*cpu_count()}',
+                 'UDEFS=-DHELLO=true -DWORLD=false -DSTACK_SIZE=42',
+                 'UADEFS=-DHELLO=true -DWORLD=false -DSTACK_SIZE=42',
+                 'USE_OPT=-O2 -fdiagnostics-format=json',
+                 f'BUILDDIR={p_man.b_dir.joinpath(module.uid)}',
+                 module.name
+                 ]
+        smc = SerialMakeCommandFactory(p_man)
+        cmd = smc.build_make_command(module)
+        self.assertEqual(final, cmd)
 
     def generate_command(self, factory: Type[MakeCommandFactory] = SerialMakeCommandFactory):
         make_factory = factory(self.p_man)
@@ -85,7 +95,7 @@ class TestMakeCommand(unittest.TestCase):
             CfgOption("HELLO", "true"),
             CfgOption("WORLD", "false"),
             CfgOption("STACK_SIZE", "42"),
-            MakeOption('USE_OPT', '-O2')
+            MakeOption('USE_OPT', ['-O2', '-fdiagnostics-format=json']),
         ]
         module.add_options(options)
         return module

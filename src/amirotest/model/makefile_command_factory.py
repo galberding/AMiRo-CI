@@ -5,7 +5,7 @@ from pathlib import Path
 from overrides.overrides import overrides
 from amirotest.model.aos_module import AosModule
 import multiprocessing
-from amirotest.model.option.aos_opt import CfgOption
+from amirotest.model.option.aos_opt import CfgOption, MakeOption
 
 from amirotest.tools.path_manager import PathManager
 
@@ -60,22 +60,35 @@ class MakeCommandFactory(ABC):
         """
 
     def _build_command_list(self, cpu_count, module: AosModule) -> list[str]:
-        opt_str = self._generate_option_str(module)
-        module_build_dir = self.b_dir.joinpath(module.uid)
+        make_command = []
+        make_command += self._cmd_add_make_command(module)
+        make_command += self._cmd_add_cpu_count(cpu_count)
+        make_command += self._cmd_add_cfg_options(module)
+        make_command += self._cmd_add_make_optios(module)
+        make_command += self._cmd_add_builddir(module)
+        make_command += self._cmd_add_module_name(module)
+        return make_command
+
+    def _cmd_add_make_command(self, module: AosModule) -> list[str]:
+        """!Create the make command pointing to the correct Makefile.
+        """
         return [
             f'{MakeParameter.make.name}',
             '-f',
             f'{self.p_man.get_module_makefile(module.path)}',
-            f'-j{cpu_count}',
+        ]
+
+    def _cmd_add_cpu_count(self, cpu_count: int) -> list[str]:
+        return [f'-j{cpu_count}']
+
+    def _cmd_add_cfg_options(self, module: AosModule) -> list[str]:
+        opt_str = self._generate_cfg_option_str(module)
+        return [
             f'{MakeParameter.UDEFS.name}={opt_str}',
             f'{MakeParameter.UADEFS.name}={opt_str}',
-            'USE_OPT=-O2 -fstack-usage -Wl,--print-memory-usage -fdiagnostics-format=json',
-            f'{MakeParameter.BUILDDIR.name}={module_build_dir}',
-            f'{module.name}'
-            ]
+        ]
 
-
-    def _generate_option_str(self, module: AosModule):
+    def _generate_cfg_option_str(self, module: AosModule):
         """!Convert AosOption to string.
         Each AosOption provides a get_build_option() which creates the
         desired format for the make command:
@@ -88,6 +101,20 @@ class MakeCommandFactory(ABC):
             if isinstance(opt, CfgOption):
                 options.append(opt.get_build_option())
         return ' '.join(options)
+
+    def _cmd_add_make_optios(self, module: AosModule) -> list[str]:
+        opts = []
+        for opt in module.options:
+            if isinstance(opt, MakeOption):
+                opts.append(opt.get_build_option())
+        return opts
+
+    def _cmd_add_builddir(self, module: AosModule) -> list[str]:
+        module_build_dir = self.p_man.get_build_dir().joinpath(module.uid)
+        return [f'{MakeParameter.BUILDDIR.name}={module_build_dir}']
+
+    def _cmd_add_module_name(self, module: AosModule) -> list[str]:
+        return [module.name]
 
 
 class SerialMakeCommandFactory(MakeCommandFactory):

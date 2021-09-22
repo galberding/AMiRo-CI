@@ -107,7 +107,7 @@ class CfgOption(AosOption):
 
 
 class MakeOption(AosOption):
-    def __init__(self, flag_name, arg_str):
+    def __init__(self, flag_name: str, arg_str: list[str]):
         super().__init__(flag_name, ' '.join(arg_str))
 
     @overrides

@@ -62,8 +62,8 @@ class TestBuildController(unittest.TestCase):
 class TestMakeOptionCreation(unittest.TestCase):
     def setUp(self) -> None:
         repl_conf = ReplacementConfWithSubgroupsStub()
-        self.bc = BuildController(repl_conf, None)
+        self.bc = BuildController(repl_conf, None) # type: ignore
 
     def test_make_option_generation(self):
         opts = self.bc._generate_template_options()
-        self.assertIn(MakeOption('USE_OPT', ' '.join(['-1', '-2', '-3=4'])), opts)
+        self.assertIn(MakeOption('USE_OPT', ['-1', '-2', '-3=4']), opts)
