@@ -1,5 +1,5 @@
 import unittest
-from amirotest.model.option import AosOption, MakeUserOption, MakeGlobalOption
+from amirotest.model.option import AosOption, MakeUserOption, MakeOption
 from amirotest.model.argument import AosArgument
 from amirotest.model.option.aos_opt import AosVariable, DefaultOpiton
 from amirotest.model.option.aosconf_opt import AosconfOption
@@ -58,7 +58,7 @@ class TestOptions(unittest.TestCase):
         )
 
     def test_create_global_option(self):
-        u_opt = MakeGlobalOption("UDEFS", "-DBOARD_TOF_CONNECTED")
+        u_opt = MakeOption("UDEFS", "-DBOARD_TOF_CONNECTED")
         self.assertEqual(len(u_opt.args), 1)
         self.assertEqual(
             u_opt.args[0].name,

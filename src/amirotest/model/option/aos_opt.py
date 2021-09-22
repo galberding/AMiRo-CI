@@ -95,7 +95,7 @@ class ConfVariable(AosVariable):
         flag_name = f"{flag_name}_VAR"
         super().__init__(flag_name, arg_str)
 
-class MakeGlobalOption(AosOption):
+class MakeOption(AosOption):
     pass
 
 

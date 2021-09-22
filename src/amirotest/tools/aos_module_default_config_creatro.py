@@ -6,7 +6,7 @@ import amirotest.model.aos_module as aos_module
 import amirotest.model.option as aos_opt
 import amirotest.model.option as aos_opt
 
-GlobalOption = aos_opt.MakeGlobalOption
+GlobalOption = aos_opt.MakeOption
 UserOption = aos_opt.MakeUserOption
 AosModule = aos_module.AosModule
 
