@@ -1,14 +1,7 @@
-from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional
-from . import yml_load, yml_dump, Loader, Dumper
-import amirotest.model.aos_module as aos_module
-import amirotest.model.option as aos_opt
-import amirotest.model.option as aos_opt
+from typing import Any
+from .. import yml_load, yml_dump, Loader, Dumper
 
-GlobalOption = aos_opt.MakeOption
-UserOption = aos_opt.MakeUserOption
-AosModule = aos_module.AosModule
 
 class ConfigYmlHandler:
     def get_config(self, conf_path: Path) -> dict[str, Any]:
