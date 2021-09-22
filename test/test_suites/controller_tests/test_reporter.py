@@ -1,6 +1,5 @@
 from pathlib import Path
 from unittest.case import skip
-from amirotest.controller.build_executer import SerialExecutor
 from amirotest.controller.build_reporter import BuildReporter, RecordEntry
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, AosVariable

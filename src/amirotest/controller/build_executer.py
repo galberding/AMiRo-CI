@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from overrides import overrides
 from pathlib import Path
 import shutil
-from typing import Type
+from typing import Iterator, Type
 import subprocess
 from amirotest.controller.build_reporter import BuildReporter
 from amirotest.model.aos_module import AosModule, BuildInfo
@@ -30,7 +30,7 @@ class BuildExecutor(ABC):
         self.reporter = BuildReporter(self.p_man)
 
     @abstractmethod
-    def build(self, modules: list[AosModule]):
+    def build(self, modules: Iterator[AosModule]):
         """!Build modules.
         """
 
@@ -50,7 +50,6 @@ class BuildExecutor(ABC):
         end = timer()
         bi = BuildInfo(comp_proc, end - start, cpu_time_end - cpu_time_start)
         self.cleanup(self.p_man.get_build_dir().joinpath(module.uid))
-        # bi.dump(self.finder.get_build_dir().joinpath(f'{module.uid}.log'))
         module.build_info = bi
         return module
 
@@ -68,20 +67,25 @@ class SerialExecutor(BuildExecutor):
         super().__init__(p_man, SerialMakeCommandFactory)
 
     @overrides
-    def build(self, modules: list[AosModule]):
+    def build(self, modules: Iterator[AosModule]):
         for module in tqdm.tqdm(modules) if self.vis else modules:
             self._build_module(module)
             self.reporter.record_module(module)
-            self.reporter.record_save()
+        self.reporter.record_save()
 
 
 class ParallelExecutor(BuildExecutor):
-    def __init__(self, p_man: PathManager) -> None:
+    def __init__(self, p_man: PathManager, save_report_every=100 ) -> None:
+        self.save_report_every = save_report_every
         super().__init__(p_man, ParallelMakeCommandFactory)
 
     @overrides
-    def build(self, modules: list[AosModule]):
+    def build(self, modules: Iterator[AosModule]):
+        build_count = 0
         with Pool(cpu_count()*2) as p:
             for module in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
-                self.reporter.record_module(module)
-                self.reporter.record_save()
+                build_count += 1
+                if build_count % self.save_report_every:
+                    self.reporter.record_module(module)
+
+            self.reporter.record_save()

@@ -101,5 +101,5 @@ class AmiroParser:
         if not conf.execute:
             return
         self.gcc_version_checker.validate()
-        modules = self.bc.c_modules
+        modules = self.bc.iter_c_modules()
         self.executor.build(modules)

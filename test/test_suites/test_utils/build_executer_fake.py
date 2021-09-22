@@ -1,4 +1,5 @@
 import subprocess
+from typing import Iterator
 from overrides.overrides import overrides
 
 from amirotest.model.aos_module import AosModule
@@ -40,5 +41,5 @@ class BuildExecutorDummy(BuildExecutor):
         pass
 
     @overrides
-    def build(self, modules: list[AosModule]):
+    def build(self, modules: Iterator[AosModule]):
         pass
