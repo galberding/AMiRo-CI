@@ -3,7 +3,7 @@ import unittest
 
 from amirotest.controller.build_controller import BuildController
 from amirotest.controller.build_executer import ParallelExecutor
-from amirotest.tools.replace_config_builder import YamlReplConf
+from amirotest.tools.config.replace_config_builder import YamlReplConf
 from amirotest.tools.path_manager import AosPathManager
 
 class TestApplication(unittest.TestCase):

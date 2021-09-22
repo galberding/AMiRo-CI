@@ -1,15 +1,14 @@
 import shutil
 import unittest
+from unittest.case import skip
 
 from ..test_utils.build_executer_fake import SerialExecutorFake
 from amirotest.controller.build_controller import BuildController
 from amirotest.model.aos_module import AosModule
 from amirotest.tools.path_manager import AosPathManager
-from amirotest.tools.replace_config_builder import YamlReplConf
+from amirotest.tools.config.replace_config_builder import YamlReplConf
 
-
-
-# @unittest.SkipTest
+@skip('Takes too long')
 class TestExecutor(unittest.TestCase):
     def setUp(self) -> None:
         self.p_man = AosPathManager()

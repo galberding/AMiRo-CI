@@ -2,7 +2,7 @@
 """
 
 from pathlib import Path
-from typing import Optional
+from typing import Iterator, Optional
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor
 from amirotest.model.aos_module import AosModule
@@ -15,6 +15,43 @@ from amirotest.tools.config.replace_config_builder import ReplaceConfig
 class ConfigInvalidError(Exception):
     pass
 
+class CModuleBuilder:
+    """!Construct configured modules and wrap them in an iterator.
+    """
+    def __init__(self,t_modules: list[AosModule], conf_mat: pd.DataFrame) -> None:
+        self.conf_mat = conf_mat
+        self.t_modules = t_modules
+        self.t_mod = 0
+        self.row = 0
+        self.col = 0
+
+    def __iter__(self):
+        self.row = 0
+        self.t_mod = 0
+        return self
+
+    def __next__(self) -> AosModule:
+        if self.t_mod >= len(self.t_modules):
+            raise StopIteration
+        module = self.generate_configured_module()
+        self.inc_row()
+        return module
+
+    def generate_configured_module(self) -> AosModule:
+        variables: list[AosOption] = []
+        for col in self.conf_mat.columns: # type: ignore
+                variables.append(ConfVariable(col, self.conf_mat[col].iloc[self.row]))
+        # create module and add options
+        module = self.t_modules[self.t_mod].copy()
+        module.add_options(variables)
+        module.resolve()
+        return module
+
+    def inc_row(self):
+        self.row += 1
+        if self.row == self.conf_mat.shape[0]:
+            self.row = 0
+            self.t_mod += 1
 
 class BuildController:
     """!# Build Controller
@@ -64,14 +101,20 @@ class BuildController:
         self.b_executor.build(c_modules)
         return c_modules
 
+    def iter_c_modules(self) -> Iterator[AosModule]:
+        conf_mat = self.prebuild_conf_matrix \
+            if self.prebuild_conf_matrix is not None \
+            else self.generate_config_matrix()
+        t_modules = self.generate_template_modules_from_repl_conf()
+        builder = CModuleBuilder(t_modules, conf_mat)
+        return iter(builder)
+
+
     @property
     def c_modules(self) -> list[AosModule]:
         """!Construct configured modules based on replacement config.
         """
-        t_modules = self.generate_template_modules_from_repl_conf()
-        c_modules = self.generate_configured_modules_from_templates(t_modules)
-        return c_modules
-
+        return list(self.iter_c_modules())
 
     def generate_template_modules_from_repl_conf(self) -> list[AosModule]:
         """!Generate template modules from given module names and options

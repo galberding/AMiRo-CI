@@ -7,7 +7,7 @@ import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor, ParallelExecutor
 from amirotest.tools.path_manager import AosPathManager, AppsPathManager, PathManager
 from amirotest.tools.gcc_version_checker import GccVersionChecker
-from amirotest.tools.replace_config_builder import ReplaceConfig, YamlReplConf
+from amirotest.tools.config.replace_config_builder import ReplaceConfig, YamlReplConf
 
 
 class AmiroParser:

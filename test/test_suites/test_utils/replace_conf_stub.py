@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any, Optional
 from overrides.overrides import overrides
 from amirotest.tools.config.dependency_checker import ConfTag
-from amirotest.tools.replace_config_builder import YamlReplConf
+from amirotest.tools.config.replace_config_builder import YamlReplConf
 
 
 class ReplacementConfWithAppsStub(YamlReplConf):

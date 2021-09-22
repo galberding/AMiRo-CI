@@ -2,6 +2,7 @@ from argparse import Namespace
 import os
 from pathlib import Path
 from shutil import copyfile, rmtree
+from time import time
 from unittest.case import skip
 from ..test_utils.build_executer_fake import SerialExecutorFake
 import unittest
@@ -10,6 +11,7 @@ from io import StringIO
 from amirotest.tools.cli_parser import AmiroParser
 from amirotest.tools.path_manager import AosEnv, AosPathManager, AppsPathManager, NoAosEnvVariableError
 import pandas as pd
+import time
 
 
 class TestParser(unittest.TestCase):
@@ -99,12 +101,16 @@ class TestParser(unittest.TestCase):
         self.parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
         self.assertTrue(self.parser.p_man.get_conf_mat_path(mat_name).exists())
 
+    # @skip('take too long')
     def test_provide_alternative_matrix(self):
         os.environ[AosEnv.AOS_REPLACE_CONF.name] = str(self.repl_path)
         mat_name = self.create_matrix()
         self.parser.parse_args(['--aos', '--use-mat', mat_name])
         self.assertIsNotNone(self.parser.bc.prebuild_conf_matrix)
+        print(self.parser.bc.prebuild_conf_matrix.shape)
+        start = time.time()
         self.parser.bc.c_modules
+        print('Elapsed time:', time.time() - start)
 
 
     def create_matrix(self) -> str:
