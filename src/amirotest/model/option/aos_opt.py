@@ -113,18 +113,3 @@ class MakeOption(AosOption):
     @overrides
     def get_build_option(self) -> str:
         return f'{self.name}={self.argument_str}'
-
-
-class MakeUserOption(AosOption):
-    def __init__(self, flag_name, arg_str):
-        """Add substitution flag to argument"""
-        flag_args = arg_str.split(" ")
-        if len(flag_args) != 1:
-            raise WrongArgumentCount(f"Cannot process {len(flag_args)} arguments!\nGiven arguments:{flag_args}")
-        u_arg = UserArgument(arg_str)
-        super().__init__(flag_name, u_arg.name)
-
-class DefaultOpiton(AosOption):
-    def __init__(self, name: str, arg_str: str, default: Any):
-        self.default = default
-        super().__init__(name, arg_str)

@@ -5,7 +5,7 @@ import subprocess
 import uuid
 
 from amirotest.model.option import AosOption
-from amirotest.model.option.aos_opt import DefaultOpiton
+# from amirotest.model.option.aos_opt import DefaultOpiton
 
 class OptionNotFoundException(Exception):
     pass

@@ -1,8 +1,7 @@
 import unittest
-from amirotest.model.option import AosOption, MakeUserOption, MakeOption
+from amirotest.model.option import AosOption, MakeOption
 from amirotest.model.argument import AosArgument
-from amirotest.model.option.aos_opt import AosVariable, CfgOption, DefaultOpiton
-from amirotest.model.option.aosconf_opt import AosconfOption
+from amirotest.model.option.aos_opt import AosVariable, CfgOption
 
 
 class TestOptions(unittest.TestCase):
@@ -64,20 +63,20 @@ class TestOptions(unittest.TestCase):
             u_opt.args[0].name,
             "-DBOARD_TOF_CONNECTED")
 
-    def test_create_user_option_sub_argument(self):
+    # def test_create_user_option_sub_argument(self):
 
-        u_opt = MakeUserOption("UDEFS", "-DBOARD_TOF_CONNECTED")
-        self.assertEqual(len(u_opt.args), 1)
-        self.assertEqual(
-            u_opt.args[0].name,
-            "-DBOARD_TOF_CONNECTED=$(BOARD_TOF_CONNECTED)")
+    #     u_opt = MakeUserOption("UDEFS", "-DBOARD_TOF_CONNECTED")
+    #     self.assertEqual(len(u_opt.args), 1)
+    #     self.assertEqual(
+    #         u_opt.args[0].name,
+    #         "-DBOARD_TOF_CONNECTED=$(BOARD_TOF_CONNECTED)")
 
-    def test_create_user_option_sub_argument_already_exists(self):
-        u_opt = MakeUserOption("UDEFS", "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
-        self.assertEqual(len(u_opt.args), 1)
-        self.assertEqual(
-            u_opt.args[0].name,
-            "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
+    # def test_create_user_option_sub_argument_already_exists(self):
+    #     u_opt = MakeUserOption("UDEFS", "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
+    #     self.assertEqual(len(u_opt.args), 1)
+    #     self.assertEqual(
+    #         u_opt.args[0].name,
+    #         "-DBOARD_SENSORRING=$(BOARD_SENSORRING)")
 
     def test_extract_variable_in_option_args(self):
         option = AosOption("USE_COPT", "-std=c99 -fshort-enums")
@@ -134,11 +133,11 @@ class TestOptions(unittest.TestCase):
             after="-$(USE_COPT_WL_PRINT_MEMORY_USAGE)"
         )
 
-    def test_resolution_of_aosconf_option(self):
-        opt = AosconfOption("NAME", "SUB", "42")
-        opt.resolve(AosVariable("SUB", "var"))
-        self.assertTrue(opt.is_resolved())
-        self.assertTrue(opt.args[0], "var")
+    # def test_resolution_of_aosconf_option(self):
+    #     opt = AosconfOption("NAME", "SUB", "42")
+    #     opt.resolve(AosVariable("SUB", "var"))
+    #     self.assertTrue(opt.is_resolved())
+    #     self.assertTrue(opt.args[0], "var")
 
     def test_aos_variable_returns_no_build_option(self):
         var = AosVariable("OPT", "Value")
