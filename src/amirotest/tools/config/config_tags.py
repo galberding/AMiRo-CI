@@ -7,6 +7,7 @@ class ConfTag(Enum):
     Dependencies = auto()
     IncludeOptions = auto()
     ExcludeOptions = auto()
+    MakeOptions = auto()
     with_value = auto()
     requires = auto()
     requires_all = auto()

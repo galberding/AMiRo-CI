@@ -117,3 +117,15 @@ class TestReplacementConfigReadExcludeIncludeTagStub(unittest.TestCase):
         repl_conf = ReplacementConfWithSubgroupsStub(self.include)
         conf = repl_conf.get_flatten_config()
         self.assertEqual({'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'}, set(conf.keys()))
+
+
+class TestMakefileOption(unittest.TestCase):
+    def setUp(self) -> None:
+        self.repl_conf = ReplacementConfWithSubgroupsStub(extend={
+            ConfTag.MakeOptions.name: {
+                'USE_OPT': ['-1', '-2', '-3=4']
+            }
+        })
+
+    def test_get_make_options(self):
+        self.assertEqual({'USE_OPT': ['-1', '-2', '-3=4']}, self.repl_conf.make_options)

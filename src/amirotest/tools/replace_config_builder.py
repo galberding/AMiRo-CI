@@ -29,6 +29,7 @@ class ReplaceConfig(ABC):
         self.apps = []
         self.exclude = []
         self.include = []
+        self.make_options = {}
 
     @abstractmethod
     def load(self, path: Path):
@@ -120,6 +121,7 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         self.valid &= self._set_options()
         self._set_apps()
         self._set_filter()
+        self._set_make_options()
 
     def _set_module_names(self) -> bool:
         """!Set module names.
@@ -160,6 +162,10 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
 
         if ConfTag.IncludeOptions.name in self.conf:
             self.include = self.conf[ConfTag.IncludeOptions.name]
+
+    def _set_make_options(self):
+        if ConfTag.MakeOptions.name in self.conf:
+            self.make_options.update(self.conf[ConfTag.MakeOptions.name])
 
     def get_flatten_config(self) -> dict[str, list]:
         """!Remove all config groups and join all underlying options.
