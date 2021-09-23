@@ -6,7 +6,7 @@ from typing import Iterator, Optional
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor
 from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption, ConfVariable, MakeOption
+from amirotest.model.option.aos_opt import AosOption, CfgOption, ConfVariable, MakeOption
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
 from amirotest.tools.config.dependency_checker import DependencyChecker
 from amirotest.tools.config.replace_config_builder import ReplaceConfig
@@ -36,6 +36,9 @@ class CModuleBuilder:
         module = self.generate_configured_module()
         self.inc_row()
         return module
+
+    def __len__(self):
+        return self.conf_mat.shape[0] * len(self.t_modules)
 
     def generate_configured_module(self) -> AosModule:
         variables: list[AosOption] = []
@@ -144,7 +147,7 @@ class BuildController:
         """
         options = []
         for option, _ in self.repl_conf.get_flatten_config().items():
-            options.append(AosOption(option, f"$({option}_VAR)"))
+            options.append(CfgOption(option, f"$({option}_VAR)"))
 
         options += self._generate_make_options()
         return options
@@ -152,7 +155,7 @@ class BuildController:
     def _generate_make_options(self):
         make_opts = []
         for name, args in self.repl_conf.make_options.items():
-            make_opts.append(MakeOption(name, ' '.join(args)))
+            make_opts.append(MakeOption(name, args))
         return make_opts
 
     def _generate_template_module(self, name: str,

@@ -2,7 +2,7 @@ from enum import Enum, auto
 import subprocess
 from typing import Union
 from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosVariable, ConfVariable
+from amirotest.model.option.aos_opt import AosVariable, CfgOption, ConfVariable
 from amirotest.tools.path_manager import PathManager
 import re
 import json
@@ -80,11 +80,11 @@ class BuildReporter:
         """
         for option in module.options:
             # print(type(option))
-            if isinstance(option, AosVariable):
-                continue
-            if len(option.args) > 1:
-                raise NotImplementedError('Unclear what to do with multiple arguments!')
-            self.record_set_tail_entry(option.name, option.args[0].name)
+            if isinstance(option, CfgOption):
+            #     continue
+            # if len(option.args) > 1:
+            #     raise NotImplementedError('Unclear what to do with multiple arguments!')
+                self.record_set_tail_entry(option.name, option.args[0].name)
 
     def record_compiler_state(self, module: AosModule):
         """!Set Compiler state entries in the record.
