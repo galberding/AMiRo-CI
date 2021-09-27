@@ -145,4 +145,4 @@ class ParallelMakeCommandFactory(MakeCommandFactory):
     """
     @overrides
     def build_make_command(self, module: AosModule) -> list[str]:
-        return self._build_command_list(1, module)
+        return self._build_command_list(2, module)
