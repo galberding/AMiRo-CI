@@ -2,7 +2,7 @@ from pathlib import Path
 from unittest.case import skip
 from amirotest.controller.build_reporter import BuildReporter, RecordEntry
 from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption, AosVariable
+from amirotest.model.option.aos_opt import AosOption, AosVariable, CfgOption
 import unittest
 
 from amirotest.tools.path_manager import  AosPathManager
@@ -66,13 +66,13 @@ class TestReporter(unittest.TestCase):
         self.check_record_tail(RecordEntry.Duration.name, str(self.module_stub.build_info.duration))
 
     def test_record_module_options(self):
-        self.module_stub.add_options([AosOption('PARAM1', 'True')])
+        self.module_stub.add_options([CfgOption('PARAM1', 'True')])
         self.rep.record_module(self.module_stub)
         self.check_record_tail('PARAM1', 'True')
 
     def test_record_module_exclude_variables(self):
         self.module_stub.add_options(
-            [AosOption('PARAM1', '$(VAR)'),
+            [CfgOption('PARAM1', '$(VAR)'),
              AosVariable('VAR', 'True')])
         self.module_stub.resolve()
         self.rep.record_module(self.module_stub)
