@@ -85,8 +85,9 @@ class ParallelExecutor(BuildExecutor):
         with Pool(cpu_count()*2) as p:
             for module in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
                 build_count += 1
-                if build_count % self.save_report_every:
+                self.reporter.record_module(module)
+                if build_count % self.save_report_every == 0:
                     print('saved!')
-                    self.reporter.record_module(module)
+                    self.reporter.record_save()
 
             self.reporter.record_save()
