@@ -82,7 +82,7 @@ class ParallelExecutor(BuildExecutor):
     @overrides
     def build(self, modules: Iterator[AosModule]):
         build_count = 0
-        with Pool(cpu_count()*2) as p:
+        with Pool(cpu_count()*10) as p:
             for module in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
                 build_count += 1
                 self.reporter.record_module(module)
