@@ -1,7 +1,17 @@
 import logging
 from pathlib import Path
 
-def get_logger(name: str, level: int = logging.DEBUG, out=None) -> logging.Logger:
+DEFAULT_LOG_LEVEL = logging.DEBUG
+
+def get_logger(name: str, level: int = DEFAULT_LOG_LEVEL, out=None) -> logging.Logger:
+    """!Create custom names logger.
+    As default the logger will log to the terminal.
+    @param name name of the logger
+    @param level log level, leave empty to use the global log level
+    @param out name of the log file, if set all nothing is logged to the terminal.
+
+    @note all logs are saved under the current work directory/logs
+    """
     logger = logging.getLogger(name.split('.')[-1])
     logger.setLevel(level)
     formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
