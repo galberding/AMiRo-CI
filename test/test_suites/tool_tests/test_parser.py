@@ -106,8 +106,8 @@ class TestParser(unittest.TestCase):
         os.environ[AosEnv.AOS_REPLACE_CONF.name] = str(self.repl_path)
         mat_name = self.create_matrix()
         self.parser.parse_args(['--aos', '--use-mat', mat_name])
-        self.assertIsNotNone(self.parser.bc.prebuild_conf_matrix)
-        print(self.parser.bc.prebuild_conf_matrix.shape)
+        self.assertIsNotNone(self.parser.bc.conf_matrix)
+        print(self.parser.bc.conf_matrix.shape)
         start = time.time()
         self.parser.bc.c_modules
         print('Elapsed time:', time.time() - start)

@@ -70,7 +70,6 @@ class BuildController:
     """
     def __init__(self,
                  repl_conf: ReplaceConfig,
-                 build_executor: BuildExecutor,
                  prebuild_conf_matrix: Optional[pd.DataFrame] = None) -> None:
         """!# Initialize controller
         - Check if repl config exists
@@ -81,31 +80,21 @@ class BuildController:
         """
         self.log = get_logger(type(self).__name__)
         self.repl_conf = repl_conf
-        # self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
-        # TODO: Better place would be in the repl_conf to not allow an
-        # invalid config in the first place!
-        if not self.repl_conf.is_valid():
-            raise ConfigInvalidError("Cannot use config!")
         self.mat_builder = ConfMatrixBuilder()
 
-        self.b_executor = build_executor
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
-        self.prebuild_conf_matrix = prebuild_conf_matrix
+        self.conf_matrix = prebuild_conf_matrix
 
     def iter_c_modules(self) -> Iterator[AosModule]:
-        """!
+        """!Construct iterator that builds configured modules.
         """
-        conf_mat = self.prebuild_conf_matrix
-        if conf_mat == None:
+        if self.conf_matrix == None:
             self.log.debug('No default matrix provided, generating one ...')
-            conf_mat = self.generate_config_matrix()
+            self.conf_mat = self.generate_config_matrix()
         else:
             self.log.debug('Default provided, continuing ...')
-        # conf_mat = self.prebuild_conf_matrix \
-            # if self.prebuild_conf_matrix is not None \
-            # else self.generate_config_matrix()
         t_modules = self.generate_template_modules_from_repl_conf()
-        builder = CModuleBuilder(t_modules, conf_mat)
+        builder = CModuleBuilder(t_modules, self.conf_mat)
         return iter(builder)
 
 
@@ -177,7 +166,7 @@ class BuildController:
         @param t_module: Template AosModule
         @return list of configured AosModules
         """
-        conf_mat = self.prebuild_conf_matrix if self.prebuild_conf_matrix is not None else self.generate_config_matrix()
+        conf_mat = self.conf_matrix if self.conf_matrix is not None else self.generate_config_matrix()
         c_modules = []
         for row in range(conf_mat.shape[0]):
             variables: list[AosOption] = []

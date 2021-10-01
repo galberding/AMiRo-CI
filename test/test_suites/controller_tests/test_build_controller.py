@@ -17,8 +17,7 @@ class TestBuildController(unittest.TestCase):
         self.executer_mock = MagicMock()
         self.executer_mock.build = MagicMock()
         self.bc = BuildController(
-            ReplacementConfWithAppsStub(list_apps=False),
-            self.executer_mock)
+            ReplacementConfWithAppsStub(list_apps=False))
         self.bc.log.setLevel(logging.WARN)
 
     def test_build_generate_conf_matrix(self):

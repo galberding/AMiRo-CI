@@ -1,10 +1,12 @@
 import argparse
 from argparse import Namespace
+import logging
 from pathlib import Path
 from typing import Optional, Type
 from amirotest.controller.build_controller import BuildController
 import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor, ParallelExecutor
+from amirotest.tools.aos_logger import get_logger
 from amirotest.tools.path_manager import AosPathManager, AppsPathManager, PathManager
 from amirotest.tools.gcc_version_checker import GccVersionChecker
 from amirotest.tools.config.replace_config_builder import ReplaceConfig, YamlReplConf
@@ -15,6 +17,7 @@ class AmiroParser:
     """
 
     def __init__(self, executor: Type[BuildExecutor]=ParallelExecutor) -> None:
+        self.log = get_logger(type(self).__name__, logging.DEBUG, out='parser.log')
         self.exe_type = executor
         self.p_man: Optional[PathManager] = None
         self.repl_conf: Optional[ReplaceConfig] = None
@@ -67,15 +70,16 @@ class AmiroParser:
         proj_path = Path(conf.project_root) if conf.project_root else None
         repl_conf = Path(conf.repl_conf) if conf.repl_conf else None
         if conf.aos:
+            self.log.debug('Aos selected')
             self.p_man = AosPathManager(proj_path, repl_conf=repl_conf)
         elif conf.apps:
+            self.log.debug('Apps selected')
             self.p_man = AppsPathManager(proj_path, repl_conf=repl_conf)
 
     def load_repl_conf(self, conf: Namespace):
         """!Load replacement config from given path.
         If no path is provided the default path set by the environment is used.
         """
-
         self.repl_conf = YamlReplConf(
             Path(conf.repl_conf) if conf.repl_conf else self.p_man.repl_conf)
 
@@ -84,8 +88,9 @@ class AmiroParser:
         """
         mat = None
         if conf.use_mat:
+            self.log.debug('Use predefined Matrix')
             mat = pd.read_csv(self.p_man.get_conf_mat_path(conf.use_mat), sep='\t', dtype=str)
-        self.bc = BuildController(self.repl_conf, None, prebuild_conf_matrix=mat) # type: ignore
+        self.bc = BuildController(self.repl_conf, prebuild_conf_matrix=mat) # type: ignore
 
     def save_conf_matrix(self, conf: Namespace):
         """!Generate the conf matrix and save it.
