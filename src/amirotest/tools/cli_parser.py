@@ -90,12 +90,19 @@ class AmiroParser:
         if conf.use_mat:
             self.log.debug('Use predefined Matrix')
             mat = pd.read_csv(self.p_man.get_conf_mat_path(conf.use_mat), sep='\t', dtype=str)
+        else:
+            self.log.debug('Regenerate Matrix')
+
         self.bc = BuildController(self.repl_conf, prebuild_conf_matrix=mat) # type: ignore
 
     def save_conf_matrix(self, conf: Namespace):
         """!Generate the conf matrix and save it.
         """
+        if conf.use_mat:
+            self.log.debug('Matrix already provided so it is not saved again!')
+            return
         cmat_path = self.p_man.get_conf_mat_path(conf.mat_name)
+        self.log.debug(f'Dump generated matrix to:\n{cmat_path}')
         cmat = self.bc.generate_config_matrix()
         cmat.to_csv(cmat_path, sep='\t', index=False)
 
@@ -104,6 +111,7 @@ class AmiroParser:
 
     def execute_pipeline(self, conf: Namespace):
         if not conf.execute:
+            self.log.debug('Still in config mode.\nUse -e to execute the pipeline.')
             return
         self.gcc_version_checker.validate()
         modules = self.bc.iter_c_modules()
