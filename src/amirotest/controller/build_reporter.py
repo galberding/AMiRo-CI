@@ -8,19 +8,8 @@ import re
 import json
 import pandas as pd
 
-class RecordEntry(Enum):
-    Module = auto()
-    Duration = auto()
-    CPU_Time = auto()
-    Default = '-'
-    CompilerState = auto()
-    Message = auto()
-    Error = 'error'
-    Warning = 'warning'
-    Info = 'note'
-    ErrorMsg  = auto()
-    WarnMsg = auto()
-    InfoMsg = auto()
+from amirotest.tools.record_tags import RecordEntry
+
 
 class GccMsg(Enum):
     kind = auto()

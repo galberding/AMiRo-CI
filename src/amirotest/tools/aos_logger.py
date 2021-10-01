@@ -3,7 +3,7 @@ from pathlib import Path
 
 DEFAULT_LOG_LEVEL = logging.DEBUG
 
-def get_logger(name: str, level: int = DEFAULT_LOG_LEVEL, out=None) -> logging.Logger:
+def get_logger(name: str, level: int = DEFAULT_LOG_LEVEL, out='general.log') -> logging.Logger:
     """!Create custom names logger.
     As default the logger will log to the terminal.
     @param name name of the logger
@@ -14,7 +14,7 @@ def get_logger(name: str, level: int = DEFAULT_LOG_LEVEL, out=None) -> logging.L
     """
     logger = logging.getLogger(name.split('.')[-1])
     logger.setLevel(level)
-    formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
+    formatter = logging.Formatter('%(levelname)s:%(name)s: %(message)s')
     if out:
         log_dir = Path('logs')
         log_dir.mkdir(exist_ok=True)

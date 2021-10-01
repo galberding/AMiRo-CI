@@ -10,7 +10,7 @@ report_stub = {
     'CPU_Time': [1, 1, 1, 1],
     'OPT1': [0, 1, 0, 1],
     'OPT2': [0, 0, 1, 1],
-    'Error': [0, 1, 1, 1],
+    'Error': [0, 1, 1, 0],
     'ErrorMsg': ['', 'error', 'error2', ''],
     'Warning': [1, 1, 1, 0],
     'WarnMsg': ['warn', 'warn', 'warn', ''],
@@ -28,10 +28,25 @@ db_stub = {
     'ErrorMsg': ['', 'error', ''],
     'Warning': [0, 1, 1],
     'WarnMsg': ['', 'warn', 'warn'],
-    'Info': [0,0,0],
+    'Info': [0, 0, 0],
     'InfoMsg': ['','',''],
 }
 
+"""
+"""
+expected_result = {
+    'Module': ['mod1', 'mod1', 'mod1'],
+    'Duration': [1, 1, 1],
+    'CPU_Time': [1, 1, 1],
+    'OPT1': [0, 0, 1],
+    'OPT2': [0, 1, 1],
+    'Error': [0, 1, 0],
+    'ErrorMsg': ['', 'error2', ''],
+    'Warning': [1, 1, 0],
+    'WarnMsg': ['warn', 'warn', ''],
+    'Info': [0, 0, 0],
+    'InfoMsg': ['', '', ''],
+}
 
 class NaiveComparatorStub(NaiveComparator):
     @overrides

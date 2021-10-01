@@ -101,7 +101,7 @@ class TestParser(unittest.TestCase):
         self.parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
         self.assertTrue(self.parser.p_man.get_conf_mat_path(mat_name).exists())
 
-    # @skip('take too long')
+    @skip('take too long')
     def test_provide_alternative_matrix(self):
         os.environ[AosEnv.AOS_REPLACE_CONF.name] = str(self.repl_path)
         mat_name = self.create_matrix()
