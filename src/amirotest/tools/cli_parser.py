@@ -60,6 +60,7 @@ class AmiroParser:
         self.create_build_controller(res)
         self.save_conf_matrix(res)
         self.create_executor()
+        self.log_current_configuration()
         self.execute_pipeline(res)
         return res
 
@@ -70,10 +71,10 @@ class AmiroParser:
         proj_path = Path(conf.project_root) if conf.project_root else None
         repl_conf = Path(conf.repl_conf) if conf.repl_conf else None
         if conf.aos:
-            self.log.debug('Aos selected')
+            self.log.info('Aos selected')
             self.p_man = AosPathManager(proj_path, repl_conf=repl_conf)
         elif conf.apps:
-            self.log.debug('Apps selected')
+            self.log.info('Apps selected')
             self.p_man = AppsPathManager(proj_path, repl_conf=repl_conf)
 
     def load_repl_conf(self, conf: Namespace):
@@ -88,10 +89,10 @@ class AmiroParser:
         """
         mat = None
         if conf.use_mat:
-            self.log.debug('Use predefined Matrix')
+            self.log.info('Use predefined Matrix')
             mat = pd.read_csv(self.p_man.get_conf_mat_path(conf.use_mat), sep='\t', dtype=str)
         else:
-            self.log.debug('Regenerate Matrix')
+            self.log.info('Regenerate Matrix')
 
         self.bc = BuildController(self.repl_conf, prebuild_conf_matrix=mat) # type: ignore
 
@@ -102,16 +103,24 @@ class AmiroParser:
             self.log.debug('Matrix already provided so it is not saved again!')
             return
         cmat_path = self.p_man.get_conf_mat_path(conf.mat_name)
-        self.log.debug(f'Dump generated matrix to:\n{cmat_path}')
+        self.log.info(f'Dump generated matrix to:\n{cmat_path}')
         cmat = self.bc.generate_config_matrix()
         cmat.to_csv(cmat_path, sep='\t', index=False)
 
     def create_executor(self):
         self.executor = self.exe_type(self.p_man) # type: ignore
 
+    def log_current_configuration(self):
+        groups = ', '.join(self.repl_conf.get_filtered_groups().keys())
+        self.log.info(f'''Current Configuration:
+    Project Root:\t{self.p_man.root}
+    Repl Config:\t{self.p_man.get_repl_conf_path()}
+    Config Groups:\t{groups}
+        ''')
+
     def execute_pipeline(self, conf: Namespace):
         if not conf.execute:
-            self.log.debug('Still in config mode.\nUse -e to execute the pipeline.')
+            self.log.info('Ready to go, use -e to execute the pipeline.')
             return
         self.gcc_version_checker.validate()
         modules = self.bc.iter_c_modules()

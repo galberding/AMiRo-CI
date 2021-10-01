@@ -177,6 +177,11 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         @return dict with all options as keys and lists as values.
         """
         flattened = {}
-        for _, opt in self.filter_option_groups(exclude=self.exclude, include=self.include).items():
+        for _, opt in self.get_filtered_groups().items():
             flattened.update(opt)
         return flattened
+
+    def get_filtered_groups(self):
+        """!Wrapper for filter_option_groups().
+        """
+        return self.filter_option_groups(exclude=self.exclude, include=self.include)
