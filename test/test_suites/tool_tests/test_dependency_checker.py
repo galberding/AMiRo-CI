@@ -9,6 +9,7 @@ from amirotest.model.option.aos_opt import AosOption
 from amirotest.controller.build_controller import BuildController
 from amirotest.tools.path_manager import AosPathManager
 from amirotest.tools.config.dependency_checker import DependencyChecker
+import logging
 
 
 class TestDependencyChecker(unittest.TestCase):
@@ -18,6 +19,7 @@ class TestDependencyChecker(unittest.TestCase):
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
         self.bc = BuildController(self.repl_conf, BuildExecutorDummy())
         self.modules = self.bc.c_modules
+        self.bc.log.setLevel(logging.DEBUG)
 
     def test_init(self):
         self.assertTrue(self.dep_checker.has_dependencies())

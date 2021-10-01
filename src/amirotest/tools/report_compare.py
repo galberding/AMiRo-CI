@@ -6,11 +6,11 @@ from pathlib import Path
 
 from amirotest.tools.aos_logger import get_logger
 from amirotest.tools.record_tags import RecordEntry
-log = get_logger(__name__)
-
 
 class ReportComparator(ABC):
     def __init__(self) -> None:
+
+        self.log = get_logger(type(self).__name__)
         self.ignored_labels = [
             RecordEntry.CPU_Time.name,
             RecordEntry.Duration.name,
@@ -33,12 +33,15 @@ class NaiveComparator(ReportComparator):
 
         res = {col: [] for col in rep_full.columns} # type: ignore
         for index, row in rep.iterrows():
-            if (db==row).all(axis=1).any():
+            if self.row_in_df(row, db):
                 continue
             for col in rep_full.columns: # type: ignore
                 res[col].append(rep_full[col].iloc[index])
 
         return DataFrame(res)
+
+    def row_in_df(self, row, df):
+        return (df==row).all(axis=1).any()
 
     def load_report(self, report: Path) -> DataFrame:
         return pd.read_csv(report, sep='\t', dtype=str) # type:ignore

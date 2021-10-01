@@ -9,7 +9,7 @@ from amirotest.tools.config.config_tags import ConfTag
 from amirotest.tools.path_manager import AosPathManager
 
 from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
-
+import logging
 
 class TestBuildController(unittest.TestCase):
     def setUp(self) -> None:
@@ -19,6 +19,7 @@ class TestBuildController(unittest.TestCase):
         self.bc = BuildController(
             ReplacementConfWithAppsStub(list_apps=False),
             self.executer_mock)
+        self.bc.log.setLevel(logging.WARN)
 
     def test_build_generate_conf_matrix(self):
         config_mat = self.bc.generate_config_matrix()
@@ -37,10 +38,10 @@ class TestBuildController(unittest.TestCase):
         self.assertEqual(16, len(c_modules))
         [self.assertTrue(module.is_resolved()) for module in c_modules]
 
-    def test_pass_configured_modules_to_build_exe(self):
-        exe_modules = self.bc.execute_build_modules()
-        self.assertGreater(len(exe_modules), 0)
-        self.executer_mock.build.assert_called()
+    # def test_pass_configured_modules_to_build_exe(self):
+    #     exe_modules = self.bc.execute_build_modules()
+    #     self.assertGreater(len(exe_modules), 0)
+    #     self.executer_mock.build.assert_called()
 
     def test_module_name_generation_for_aos(self):
         t_modules = self.bc.generate_template_modules_from_repl_conf()

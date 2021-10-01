@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-DEFAULT_LOG_LEVEL = logging.DEBUG
+DEFAULT_LOG_LEVEL = logging.INFO
 
 def get_logger(name: str, level: int = DEFAULT_LOG_LEVEL, out='general.log') -> logging.Logger:
     """!Create custom names logger.

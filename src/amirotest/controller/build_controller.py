@@ -7,10 +7,12 @@ import pandas as pd
 from amirotest.controller.build_executer import BuildExecutor
 from amirotest.model.aos_module import AosModule
 from amirotest.model.option.aos_opt import AosOption, CfgOption, ConfVariable, MakeOption
+from amirotest.tools.aos_logger import get_logger
 from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
 from amirotest.tools.config.dependency_checker import DependencyChecker
 from amirotest.tools.config.replace_config_builder import ReplaceConfig
 
+# log = get_logger(__name__)
 
 class ConfigInvalidError(Exception):
     pass
@@ -19,6 +21,7 @@ class CModuleBuilder:
     """!Construct configured modules and wrap them in an iterator.
     """
     def __init__(self,t_modules: list[AosModule], conf_mat: pd.DataFrame) -> None:
+        self.log = get_logger(type(self).__name__)
         self.conf_mat = conf_mat
         self.t_modules = t_modules
         self.t_mod = 0
@@ -58,13 +61,11 @@ class CModuleBuilder:
 
 class BuildController:
     """!# Build Controller
-    The BuildController connects all components together
-    and provides following functionality:
+    The BuildController is responsible for generating configured modules.
+    It builds them in the following order:
     1. Create the configuration Matrix
     2. Generate template modules
-    3. Configure template modules
-    4. TODO: Pass configured modules to BuildExecutor
-    5. TODO: Call reporter on the build results
+    3. Generate configured modules from templates
     @warning: The prebuild conf matrix is not validated right now!
     """
     def __init__(self,
@@ -78,7 +79,7 @@ class BuildController:
         @param build_executor: BuildExecuter to controll the execution
         @param builddir: directory to save build results
         """
-
+        self.log = get_logger(type(self).__name__)
         self.repl_conf = repl_conf
         # self.repl_conf = YamlReplConf(finder.get_repl_conf_path())
         # TODO: Better place would be in the repl_conf to not allow an
@@ -91,23 +92,18 @@ class BuildController:
         self.dep_checker = DependencyChecker(self.repl_conf.get_dependencies())
         self.prebuild_conf_matrix = prebuild_conf_matrix
 
-
-    def execute_build_modules(self) -> list[AosModule]:
-        """!Generate configured modules from replacement config and invoke the
-        executor to build those modules.
-        @return List of AosModule with BuildInformation
-        @note
-        This is the entrypoint of the test pipeline. One can use the generated modules for
-        report creation.
-        """
-        c_modules = self.c_modules
-        self.b_executor.build(c_modules)
-        return c_modules
-
     def iter_c_modules(self) -> Iterator[AosModule]:
-        conf_mat = self.prebuild_conf_matrix \
-            if self.prebuild_conf_matrix is not None \
-            else self.generate_config_matrix()
+        """!
+        """
+        conf_mat = self.prebuild_conf_matrix
+        if conf_mat == None:
+            self.log.debug('No default matrix provided, generating one ...')
+            conf_mat = self.generate_config_matrix()
+        else:
+            self.log.debug('Default provided, continuing ...')
+        # conf_mat = self.prebuild_conf_matrix \
+            # if self.prebuild_conf_matrix is not None \
+            # else self.generate_config_matrix()
         t_modules = self.generate_template_modules_from_repl_conf()
         builder = CModuleBuilder(t_modules, conf_mat)
         return iter(builder)
