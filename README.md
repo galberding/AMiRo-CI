@@ -1,11 +1,17 @@
 # Configuration Builder and Tester
-This tool is intended to detect conditional compilations, extract the specific flag
-for a given module (aka directory) and store those in a database.
-Furthermore, the extracted compilation parameters are used to create module specific configurations that
-are used to build the project.
-All possible combinations are tested. The results are saved and compared to a user provided configuration with
-known errors and warnings.
-Therefore, changes that cause undesired behavior for specific builds can be detected.
+`amiroCI` is a testing tool written for the [AMiRo-OS]() and [AMiRo-Apps]() project.
+Goal is to utilize a configuration file that contains all desired parameters that should be tested, and apply those with the help of conditional compilation.
+The results of all compile processes are gathered in a single report file,
+presenting the used parameter configuration as well as _error_, _warn_ and _note_ messages.
+This report can be compared to an existing one which generates an comparison containing only those compilations that does not exist or match those in the latter report.
+The [Wiki]() contains more detailed information about the capabilities and how
+to use `amiroCI`.
+
+## Setup
+```bash
+cd amiroci
+pip install .
+```
 
 ## Recommended Environment Setup
 In order to test the Amiro-OS or Amiro-Apps the root needs to be provided.
@@ -35,7 +41,7 @@ Apps: []
 # Include or exclude specific groups
 # Both take the hierarchy into account:
 #   Include a subgroup requires including its parent
-#   Excluding a parent means excluding its subgroups  
+#   Excluding a parent means excluding its subgroups
 IncludeGroups: []
 ExcludeGroups: []
 
@@ -49,7 +55,7 @@ Dependencies:
 # Contains all option groups
 Options:
     # Option or parent group
-    AosconfOptionGroup: 
+    AosconfOptionGroup:
         # Flag/Option passed to the compiler
         OS_CFG_DBG: ['true', 'false']
     UrtOptionGroup:
@@ -85,35 +91,7 @@ Options:
 ## Development
 
 ### Generate Documentation
-The program is documented with Doxygen.
-* Switch to the `doc` directory
-* Generate documentation with `doxygen` or `doxywizard`
-```bash
-cd doc
-doxygen Doxyfile
-```
-In order to use Doxygen commands inside the docstring it is required to
-**place an exclamation mark** at the beginning of each comment.
-Otherwise the commands are ignored.
-```python
-def myfunc(name: str) -> None:
-	"""!Describe stuff here.
-	@param name some fancy name
 
-	@note
-	Someting worth noting
-
-	@return Nothing
-	"""
-```
-All special commands are listed [here](https://www.doxygen.nl/manual/commands.html#cmddef).
-
-### Install
-```bash
-cd amiroci
-pip install -e .
-```
-* This will fetch all required dependencies
 
 ### Test execution
 ```bash
