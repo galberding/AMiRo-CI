@@ -5,19 +5,13 @@ setuptools.setup(
     version="0.1",
     author="Georg Alberding",
     author_email="galberding@uni-bielefeld.de",
-    description="Package for extracting compile parameters from c source code in order to search for conditional compilation.",
-    # long_description="The following major components are planned: Module Search, Configuration Builde, Automatic Tester, Visualizer (Results), CLI",
-    # long_description_content_type="text/markdown",
+    description="Package utilizing conditional compilation to test the AMiRo-OS and AMiRo-Apps project.",
     install_requires=[
         'PyYAML',
         'tqdm',
         'overrides',
         'pandas'
-    ]
-    # requires="https://github.com/pypa/sampleproject",
-    # project_urls={
-        # "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
-    # },
+    ],
     classifiers=[
         "Programming Language :: Python :: 3.9",
         # "License :: OSI Approved :: MIT License",
