@@ -111,7 +111,7 @@ class AmiroParser:
         self.executor = self.exe_type(self.p_man) # type: ignore
 
     def log_current_configuration(self):
-        groups = ', '.join(self.repl_conf.get_filtered_groups().keys())
+        groups = ', '.join(self.repl_conf.get_filtered_groups().keys()) # type: ignore
         self.log.info(f'''Current Configuration:
     Project Root:\t{self.p_man.root}
     Repl Config:\t{self.p_man.get_repl_conf_path()}
