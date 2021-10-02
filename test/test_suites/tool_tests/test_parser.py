@@ -8,8 +8,8 @@ from ..test_utils.build_executer_fake import SerialExecutorFake
 import unittest
 from unittest.mock import patch
 from io import StringIO
-from amirotest.tools.cli_parser import AmiroParser
-from amirotest.tools.path_manager import AosEnv, AosPathManager, AppsPathManager, NoAosEnvVariableError
+from amiroci.tools.cli_parser import AmiroParser
+from amiroci.tools.path_manager import AosEnv, AosPathManager, AppsPathManager, NoAosEnvVariableError
 import pandas as pd
 import time
 

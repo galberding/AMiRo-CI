@@ -1,6 +1,6 @@
 import unittest
 
-from amirotest.tools.gcc_version_checker import GccVersionChecker, WrongGccVersion
+from amiroci.tools.gcc_version_checker import GccVersionChecker, WrongGccVersion
 
 class TestGccVersionChecker(unittest.TestCase):
     def setUp(self) -> None:

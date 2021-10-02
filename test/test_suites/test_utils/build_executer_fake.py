@@ -2,9 +2,9 @@ import subprocess
 from typing import Iterator
 from overrides.overrides import overrides
 
-from amirotest.model.aos_module import AosModule
-from amirotest.tools.path_manager import PathManager
-from amirotest.controller.build_executer import BuildExecutor, SerialExecutor
+from amiroci.model.aos_module import AosModule
+from amiroci.tools.path_manager import PathManager
+from amiroci.controller.build_executer import BuildExecutor, SerialExecutor
 
 
 class SerialExecutorFake(SerialExecutor):

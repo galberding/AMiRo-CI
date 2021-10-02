@@ -1,7 +1,7 @@
 from pathlib import Path
 from overrides.overrides import overrides
 from pandas.core.frame import DataFrame
-from amirotest.tools.report_compare import NaiveComparator
+from amiroci.tools.report_compare import NaiveComparator
 
 
 report_stub = {

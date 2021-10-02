@@ -3,13 +3,13 @@ from argparse import Namespace
 import logging
 from pathlib import Path
 from typing import Optional, Type
-from amirotest.controller.build_controller import BuildController
+from amiroci.controller.build_controller import BuildController
 import pandas as pd
-from amirotest.controller.build_executer import BuildExecutor, ParallelExecutor
-from amirotest.tools.aos_logger import get_logger
-from amirotest.tools.path_manager import AosPathManager, AppsPathManager, PathManager
-from amirotest.tools.gcc_version_checker import GccVersionChecker
-from amirotest.tools.config.replace_config_builder import ReplaceConfig, YamlReplConf
+from amiroci.controller.build_executer import BuildExecutor, ParallelExecutor
+from amiroci.tools.aos_logger import get_logger
+from amiroci.tools.path_manager import AosPathManager, AppsPathManager, PathManager
+from amiroci.tools.gcc_version_checker import GccVersionChecker
+from amiroci.tools.config.replace_config_builder import ReplaceConfig, YamlReplConf
 
 
 class AmiroParser:

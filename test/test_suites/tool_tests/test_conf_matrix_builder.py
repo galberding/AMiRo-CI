@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from amirotest.tools.config import ConfMatrixBuilder
+from amiroci.tools.config import ConfMatrixBuilder
 
 class TestConfMatrixBuilder(unittest.TestCase):
     def setUp(self) -> None:

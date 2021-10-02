@@ -4,13 +4,13 @@
 from pathlib import Path
 from typing import Iterator, Optional
 import pandas as pd
-from amirotest.controller.build_executer import BuildExecutor
-from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption, CfgOption, ConfVariable, MakeOption
-from amirotest.tools.aos_logger import get_logger
-from amirotest.tools.config.conf_matrix_builder import ConfMatrixBuilder
-from amirotest.tools.config.dependency_checker import DependencyChecker
-from amirotest.tools.config.replace_config_builder import ReplaceConfig
+from amiroci.controller.build_executer import BuildExecutor
+from amiroci.model.aos_module import AosModule
+from amiroci.model.option.aos_opt import AosOption, CfgOption, ConfVariable, MakeOption
+from amiroci.tools.aos_logger import get_logger
+from amiroci.tools.config.conf_matrix_builder import ConfMatrixBuilder
+from amiroci.tools.config.dependency_checker import DependencyChecker
+from amiroci.tools.config.replace_config_builder import ReplaceConfig
 
 # log = get_logger(__name__)
 

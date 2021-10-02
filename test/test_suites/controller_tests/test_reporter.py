@@ -1,11 +1,11 @@
 from pathlib import Path
 from unittest.case import skip
-from amirotest.controller.build_reporter import BuildReporter, RecordEntry
-from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption, AosVariable, CfgOption
+from amiroci.controller.build_reporter import BuildReporter, RecordEntry
+from amiroci.model.aos_module import AosModule
+from amiroci.model.option.aos_opt import AosOption, AosVariable, CfgOption
 import unittest
 
-from amirotest.tools.path_manager import  AosPathManager
+from amiroci.tools.path_manager import  AosPathManager
 from ..test_utils.build_executer_fake import SerialExecutorFake
 
 class TestReporter(unittest.TestCase):

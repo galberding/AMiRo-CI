@@ -3,11 +3,11 @@ from enum import Enum, auto
 from pathlib import Path
 
 from overrides.overrides import overrides
-from amirotest.model.aos_module import AosModule
+from amiroci.model.aos_module import AosModule
 import multiprocessing
-from amirotest.model.option.aos_opt import CfgOption, MakeOption
+from amiroci.model.option.aos_opt import CfgOption, MakeOption
 
-from amirotest.tools.path_manager import PathManager
+from amiroci.tools.path_manager import PathManager
 
 
 class MakeParameter(Enum):

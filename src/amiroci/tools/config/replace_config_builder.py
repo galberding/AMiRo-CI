@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Any
 
 from overrides.overrides import overrides
-from amirotest.tools.config.config_yaml_handler import ConfigYmlHandler
-from amirotest.tools.config.config_tags import ConfTag
+from amiroci.tools.config.config_yaml_handler import ConfigYmlHandler
+from amiroci.tools.config.config_tags import ConfTag
 
 
 ConfigYmlHandler

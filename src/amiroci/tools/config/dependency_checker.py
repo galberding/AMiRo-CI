@@ -1,6 +1,6 @@
 from enum import Enum, auto
-from amirotest.model.aos_module import AosModule
-from amirotest.tools.config.config_tags import ConfTag
+from amiroci.model.aos_module import AosModule
+from amiroci.tools.config.config_tags import ConfTag
 
 
 class DependencyChecker:

@@ -11,14 +11,14 @@ from pathlib import Path
 import shutil
 from typing import Iterator, Type
 import subprocess
-from amirotest.controller.build_reporter import BuildReporter
-from amirotest.model.aos_module import AosModule, BuildInfo
-from amirotest.model.makefile_command_factory import MakeCommandFactory, ParallelMakeCommandFactory, SerialMakeCommandFactory
+from amiroci.controller.build_reporter import BuildReporter
+from amiroci.model.aos_module import AosModule, BuildInfo
+from amiroci.model.makefile_command_factory import MakeCommandFactory, ParallelMakeCommandFactory, SerialMakeCommandFactory
 from multiprocessing import Pool, cpu_count
 import tqdm
 from timeit import default_timer as timer
 from time import perf_counter as ptimer
-from amirotest.tools.path_manager import PathManager
+from amiroci.tools.path_manager import PathManager
 
 
 class BuildExecutor(ABC):

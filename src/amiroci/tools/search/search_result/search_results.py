@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import Any, Type
 
 
-# import amirotest.model.option as aos_opt
-from amirotest.model.option.aos_opt import AosOption
+# import amiroci.model.option as aos_opt
+from amiroci.model.option.aos_opt import AosOption
 
 
 @dataclass

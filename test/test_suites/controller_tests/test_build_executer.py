@@ -3,10 +3,10 @@ import unittest
 from unittest.case import skip
 
 from ..test_utils.build_executer_fake import SerialExecutorFake
-from amirotest.controller.build_controller import BuildController
-from amirotest.model.aos_module import AosModule
-from amirotest.tools.path_manager import AosPathManager
-from amirotest.tools.config.replace_config_builder import YamlReplConf
+from amiroci.controller.build_controller import BuildController
+from amiroci.model.aos_module import AosModule
+from amiroci.tools.path_manager import AosPathManager
+from amiroci.tools.config.replace_config_builder import YamlReplConf
 
 @skip('Takes too long')
 class TestExecutor(unittest.TestCase):

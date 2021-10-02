@@ -1,14 +1,14 @@
 from pathlib import Path
 from typing import Type
-from amirotest.model.aos_module import AosModule, AmbigousOptionError
+from amiroci.model.aos_module import AosModule, AmbigousOptionError
 import unittest
 
-from amirotest.model.option.aos_opt import CfgOption
+from amiroci.model.option.aos_opt import CfgOption
 
 from ..test_utils import AosModuleHelper
-from amirotest.tools.search.search_result.search_results import SearchResult
-from amirotest.model.option import MakeOption, AosOption
-from amirotest.model import OptionNotFoundException
+from amiroci.tools.search.search_result.search_results import SearchResult
+from amiroci.model.option import MakeOption, AosOption
+from amiroci.model import OptionNotFoundException
 
 
 class TestAosModel(unittest.TestCase):

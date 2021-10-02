@@ -1,7 +1,7 @@
 import unittest
-from amirotest.model.option import AosOption, MakeOption
-from amirotest.model.argument import AosArgument
-from amirotest.model.option.aos_opt import AosVariable, CfgOption
+from amiroci.model.option import AosOption, MakeOption
+from amiroci.model.argument import AosArgument
+from amiroci.model.option.aos_opt import AosVariable, CfgOption
 
 
 class TestOptions(unittest.TestCase):

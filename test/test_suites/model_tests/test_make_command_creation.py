@@ -5,10 +5,10 @@ from unittest.case import skip
 from typing import Type
 import unittest
 
-from amirotest.model.aos_module import AosModule
-from amirotest.model.makefile_command_factory import MakeCommandFactory, MakeParameter, ParallelMakeCommandFactory, SerialMakeCommandFactory
-from amirotest.model.option.aos_opt import AosOption, CfgOption, MakeOption
-from amirotest.tools.path_manager import AosPathManager, AppsPathManager
+from amiroci.model.aos_module import AosModule
+from amiroci.model.makefile_command_factory import MakeCommandFactory, MakeParameter, ParallelMakeCommandFactory, SerialMakeCommandFactory
+from amiroci.model.option.aos_opt import AosOption, CfgOption, MakeOption
+from amiroci.tools.path_manager import AosPathManager, AppsPathManager
 
 
 class TestMakeCommand(unittest.TestCase):

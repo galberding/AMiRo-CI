@@ -3,12 +3,12 @@ from pathlib import Path
 
 from pandas import DataFrame
 
-from amirotest.tools.aos_logger import get_logger
+from amiroci.tools.aos_logger import get_logger
 from ..test_utils.comparator_stubs import NaiveComparatorStub, expected_result
 from unittest import TestCase
 from unittest.case import skipIf
 
-from amirotest.tools.report_compare import NaiveComparator
+from amiroci.tools.report_compare import NaiveComparator
 
 log = get_logger(__name__, logging.DEBUG)
 

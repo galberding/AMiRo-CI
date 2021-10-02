@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Optional
 import unittest
-from amirotest.tools.config.config_tags import ConfTag
-from amirotest.tools.path_manager import  AosPathManager
+from amiroci.tools.config.config_tags import ConfTag
+from amiroci.tools.path_manager import  AosPathManager
 from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
 
 

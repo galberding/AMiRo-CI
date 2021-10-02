@@ -1,14 +1,14 @@
 from enum import Enum, auto
 import subprocess
 from typing import Union
-from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosVariable, CfgOption, ConfVariable
-from amirotest.tools.path_manager import PathManager
+from amiroci.model.aos_module import AosModule
+from amiroci.model.option.aos_opt import AosVariable, CfgOption, ConfVariable
+from amiroci.tools.path_manager import PathManager
 import re
 import json
 import pandas as pd
 
-from amirotest.tools.record_tags import RecordEntry
+from amiroci.tools.record_tags import RecordEntry
 
 
 class GccMsg(Enum):

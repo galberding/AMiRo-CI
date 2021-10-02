@@ -1,5 +1,5 @@
-from amirotest.model import AosModule
-from amirotest.tools.path_manager import AosPathManager
+from amiroci.model import AosModule
+from amiroci.tools.path_manager import AosPathManager
 from .test_helper import PathHelper
 
 class UnknownModuleNameException(Exception):

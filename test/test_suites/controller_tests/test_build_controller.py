@@ -2,11 +2,11 @@ from pathlib import Path
 
 import unittest
 from unittest.mock import MagicMock
-from amirotest.controller.build_controller import BuildController
-from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import MakeOption
-from amirotest.tools.config.config_tags import ConfTag
-from amirotest.tools.path_manager import AosPathManager
+from amiroci.controller.build_controller import BuildController
+from amiroci.model.aos_module import AosModule
+from amiroci.model.option.aos_opt import MakeOption
+from amiroci.tools.config.config_tags import ConfTag
+from amiroci.tools.path_manager import AosPathManager
 
 from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
 import logging

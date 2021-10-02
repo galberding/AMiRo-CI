@@ -1,7 +1,7 @@
 import logging
 import sys
-from amirotest.tools.aos_logger import get_logger
-from amirotest.tools.cli_parser import AmiroParser
+from amiroci.tools.aos_logger import get_logger
+from amiroci.tools.cli_parser import AmiroParser
 import cProfile
 import pstats
 

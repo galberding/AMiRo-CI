@@ -4,8 +4,8 @@ from pathlib import Path
 import subprocess
 import uuid
 
-from amirotest.model.option import AosOption
-# from amirotest.model.option.aos_opt import DefaultOpiton
+from amiroci.model.option import AosOption
+# from amiroci.model.option.aos_opt import DefaultOpiton
 
 class OptionNotFoundException(Exception):
     pass

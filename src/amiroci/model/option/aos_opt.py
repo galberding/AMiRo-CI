@@ -4,7 +4,7 @@ from typing import Any
 
 from overrides.overrides import overrides
 
-from amirotest.model.argument import UserArgument, AosArgument
+from amiroci.model.argument import UserArgument, AosArgument
 
 class WrongArgumentCount(Exception):
     pass

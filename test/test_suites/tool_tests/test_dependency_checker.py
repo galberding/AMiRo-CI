@@ -4,11 +4,11 @@ import unittest
 from ..test_utils.build_executer_fake import BuildExecutorDummy
 from ..test_utils.replace_conf_stub import ReplaceConfigWithDependenciesStub
 
-from amirotest.model.aos_module import AosModule
-from amirotest.model.option.aos_opt import AosOption
-from amirotest.controller.build_controller import BuildController
-from amirotest.tools.path_manager import AosPathManager
-from amirotest.tools.config.dependency_checker import DependencyChecker
+from amiroci.model.aos_module import AosModule
+from amiroci.model.option.aos_opt import AosOption
+from amiroci.controller.build_controller import BuildController
+from amiroci.tools.path_manager import AosPathManager
+from amiroci.tools.config.dependency_checker import DependencyChecker
 import logging
 
 

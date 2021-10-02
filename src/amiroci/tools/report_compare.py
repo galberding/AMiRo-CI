@@ -4,8 +4,8 @@ import pandas as pd
 from abc import ABC
 from pathlib import Path
 
-from amirotest.tools.aos_logger import get_logger
-from amirotest.tools.record_tags import RecordEntry
+from amiroci.tools.aos_logger import get_logger
+from amiroci.tools.record_tags import RecordEntry
 
 class ReportComparator(ABC):
     def __init__(self) -> None:
