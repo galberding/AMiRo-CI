@@ -5,8 +5,9 @@ from amiroci.model.aos_module import AosModule
 from amiroci.model.option.aos_opt import AosOption, AosVariable, CfgOption
 import unittest
 
-from amiroci.tools.path_manager import  AosPathManager
+from amiroci.tools.path_manager import AosPathManager
 from ..test_utils.build_executer_fake import SerialExecutorFake
+
 
 class TestReporter(unittest.TestCase):
     def setUp(self):
@@ -15,16 +16,20 @@ class TestReporter(unittest.TestCase):
         self.rep = BuildReporter(self.p_man)
         self.module_stub = AosModule(Path('DiWheelDrive_1-1'))
         self.excecutor.build([self.module_stub])
-        self.stderr = self.module_stub.build_info.comp_proc.stderr.decode('utf-8')
+        self.stderr = self.module_stub.build_info.comp_proc.stderr.decode(
+            'utf-8'
+        )
 
     def test_convert_json_to_dicts(self):
         res = self.rep.convert_json_to_compile_results(
-            self.rep.extract_json_str(self.stderr))
+            self.rep.extract_json_str(self.stderr)
+        )
         self.assertEqual('note', res[0]['kind'])
 
     def test_get_compile_state_and_msg(self):
         compile_results = self.rep.convert_json_to_compile_results(
-            self.rep.extract_json_str(self.stderr))
+            self.rep.extract_json_str(self.stderr)
+        )
         c_info = self.rep.get_state_with_msg_from_results(compile_results)
         self.assertEqual(
             [
@@ -33,8 +38,7 @@ class TestReporter(unittest.TestCase):
                 ("error", "unknown type name 'SerialCANDriver'"),
                 ("error", "unknown type name 'SerialCANConfig'"),
                 ("error", "unknown type name 'aos_fbcan_filter_t'"),
-            ],
-            c_info
+            ], c_info
         )
 
     def test_record_init(self):
@@ -62,8 +66,13 @@ class TestReporter(unittest.TestCase):
 
     def test_record_module_name_duration(self):
         self.rep.record_module(self.module_stub)
-        self.check_record_tail(RecordEntry.Module.name, str(self.module_stub.name))
-        self.check_record_tail(RecordEntry.Duration.name, str(self.module_stub.build_info.duration))
+        self.check_record_tail(
+            RecordEntry.Module.name, str(self.module_stub.name)
+        )
+        self.check_record_tail(
+            RecordEntry.Duration.name,
+            str(self.module_stub.build_info.duration)
+        )
 
     def test_record_module_options(self):
         self.module_stub.add_options([CfgOption('PARAM1', 'True')])
@@ -73,7 +82,8 @@ class TestReporter(unittest.TestCase):
     def test_record_module_exclude_variables(self):
         self.module_stub.add_options(
             [CfgOption('PARAM1', '$(VAR)'),
-             AosVariable('VAR', 'True')])
+             AosVariable('VAR', 'True')]
+        )
         self.module_stub.resolve()
         self.rep.record_module(self.module_stub)
         self.check_record_tail('PARAM1', 'True')
@@ -86,17 +96,18 @@ class TestReporter(unittest.TestCase):
         self.check_record_tail(RecordEntry.Warning.name, 1)
         self.check_record_tail(RecordEntry.Info.name, 1)
 
-
     # @skip('Not implemented')
     def test_record_error_messages(self):
         self.rep.record_module(self.module_stub)
-        self.check_record_tail(RecordEntry.ErrorMsg.name, ', '.join(
-            [
-                "unknown type name 'SerialCANDriver'",
-                "unknown type name 'SerialCANConfig'",
-                "unknown type name 'aos_fbcan_filter_t'",
-            ]
-        ))
+        self.check_record_tail(
+            RecordEntry.ErrorMsg.name, ', '.join(
+                [
+                    "unknown type name 'SerialCANDriver'",
+                    "unknown type name 'SerialCANConfig'",
+                    "unknown type name 'aos_fbcan_filter_t'",
+                ]
+            )
+        )
 
         self.check_record_tail(RecordEntry.WarnMsg.name, ', '.join(['warning']))
         self.check_record_tail(RecordEntry.InfoMsg.name, ', '.join(['info']))
@@ -111,9 +122,15 @@ class TestReporter(unittest.TestCase):
         ]
 
         msg_states = self.rep.build_compiler_state_dict(c_state_msg)
-        self.assertEqual(2, msg_states[RecordEntry.Error.value][RecordEntry.Error.value])
-        self.assertEqual(1, msg_states[RecordEntry.Warning.value][RecordEntry.Warning.value])
-        self.assertEqual(1, msg_states[RecordEntry.Info.value][RecordEntry.Info.value])
+        self.assertEqual(
+            2, msg_states[RecordEntry.Error.value][RecordEntry.Error.value]
+        )
+        self.assertEqual(
+            1, msg_states[RecordEntry.Warning.value][RecordEntry.Warning.value]
+        )
+        self.assertEqual(
+            1, msg_states[RecordEntry.Info.value][RecordEntry.Info.value]
+        )
 
     def check_record_tail_set(self, col, value):
         # print(self.rep.record)

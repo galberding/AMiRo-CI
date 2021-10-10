@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class ConfTag(Enum):
     Modules = auto()
     Apps = auto()

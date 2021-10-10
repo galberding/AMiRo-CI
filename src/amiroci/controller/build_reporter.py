@@ -15,6 +15,7 @@ class GccMsg(Enum):
     kind = auto()
     message = auto()
 
+
 class BuildReporter:
     """!Parse the compiler output and store the information in the
     report tsv.
@@ -27,7 +28,6 @@ class BuildReporter:
         self.record = pd.DataFrame()
         self.record_init()
         self.p_man = finder
-
 
     def record_init(self):
         """!Set the first columns with Module and Duration.
@@ -48,8 +48,12 @@ class BuildReporter:
         """!Record module name, build and cpu time.
         """
         self.record_set_tail_entry(RecordEntry.Module.name, module.name)
-        self.record_set_tail_entry(RecordEntry.Duration.name, str(module.build_info.duration))
-        self.record_set_tail_entry(RecordEntry.CPU_Time.name, str(module.build_info.cpu_time))
+        self.record_set_tail_entry(
+            RecordEntry.Duration.name, str(module.build_info.duration)
+        )
+        self.record_set_tail_entry(
+            RecordEntry.CPU_Time.name, str(module.build_info.cpu_time)
+        )
 
     def record_create_empty_row(self):
         """!Insert row to record.
@@ -61,7 +65,6 @@ class BuildReporter:
     def record_save(self):
         self.record.to_csv(self.p_man.get_report_path(), sep='\t')
 
-
     def record_options(self, module: AosModule):
         """!Iterate over module option and insert their values into the record.
         \note
@@ -70,9 +73,9 @@ class BuildReporter:
         for option in module.options:
             # print(type(option))
             if isinstance(option, CfgOption):
-            #     continue
-            # if len(option.args) > 1:
-            #     raise NotImplementedError('Unclear what to do with multiple arguments!')
+                #     continue
+                # if len(option.args) > 1:
+                #     raise NotImplementedError('Unclear what to do with multiple arguments!')
                 self.record_set_tail_entry(option.name, option.args[0].name)
 
     def record_compiler_state(self, module: AosModule):
@@ -80,30 +83,38 @@ class BuildReporter:
         This includes the following entries in the given order:
         Error, Warning, Info, ErrorMsg, WarningMsg, InfoMsg
         """
-        c_state_msgs = self.build_state_msg_pairs_from_compiler_output(module.build_info.comp_proc)
+        c_state_msgs = self.build_state_msg_pairs_from_compiler_output(
+            module.build_info.comp_proc
+        )
 
         state_dict = self.build_compiler_state_dict(c_state_msgs)
         self.record_set_tail_entry(
             RecordEntry.Error.name,
-            state_dict[RecordEntry.Error.value][RecordEntry.Error.value])
+            state_dict[RecordEntry.Error.value][RecordEntry.Error.value]
+        )
         self.record_set_tail_entry(
             RecordEntry.ErrorMsg.name,
             ', '.join(state_dict[RecordEntry.Error.value][RecordEntry.Message])
         )
-        self._set_compiler_state_entry_for(RecordEntry.Error, RecordEntry.ErrorMsg, state_dict)
-        self._set_compiler_state_entry_for(RecordEntry.Warning, RecordEntry.WarnMsg, state_dict)
-        self._set_compiler_state_entry_for(RecordEntry.Info, RecordEntry.InfoMsg, state_dict)
+        self._set_compiler_state_entry_for(
+            RecordEntry.Error, RecordEntry.ErrorMsg, state_dict
+        )
+        self._set_compiler_state_entry_for(
+            RecordEntry.Warning, RecordEntry.WarnMsg, state_dict
+        )
+        self._set_compiler_state_entry_for(
+            RecordEntry.Info, RecordEntry.InfoMsg, state_dict
+        )
 
-    def _set_compiler_state_entry_for(self, rec: RecordEntry, rec_msg: RecordEntry, state_dict: dict):
+    def _set_compiler_state_entry_for(
+        self, rec: RecordEntry, rec_msg: RecordEntry, state_dict: dict
+    ):
         """!Helper method to set the parameter from the state dict to
         the record.
         """
+        self.record_set_tail_entry(rec.name, state_dict[rec.value][rec.value])
         self.record_set_tail_entry(
-            rec.name,
-            state_dict[rec.value][rec.value])
-        self.record_set_tail_entry(
-            rec_msg.name,
-            ', '.join(state_dict[rec.value][RecordEntry.Message])
+            rec_msg.name, ', '.join(state_dict[rec.value][RecordEntry.Message])
         )
 
     def record_set_tail_entry(self, col: str, value: str):
@@ -120,7 +131,9 @@ class BuildReporter:
     def record_insert_col(self, col: str):
         self.record[col] = RecordEntry.Default.name
 
-    def build_state_msg_pairs_from_compiler_output(self, proc: subprocess.CompletedProcess) -> list[tuple[str, str]]:
+    def build_state_msg_pairs_from_compiler_output(
+        self, proc: subprocess.CompletedProcess
+    ) -> list[tuple[str, str]]:
         """!Process the output captured during the compilation.
         The compiler is instructed to write all output into json format to stderr.
         This is captured, decoded and extracted to json strings.
@@ -143,13 +156,17 @@ class BuildReporter:
                 results.append(line)
         return results
 
-    def convert_json_to_compile_results(self, json_res: list[str]) -> list[dict[str, str]]:
+    def convert_json_to_compile_results(
+        self, json_res: list[str]
+    ) -> list[dict[str, str]]:
         res = []
         for jres in json_res:
             res += json.loads(jres)
         return res
 
-    def get_state_with_msg_from_results(self, c_res: list[dict[str, str]]) -> list[tuple[str, str]]:
+    def get_state_with_msg_from_results(
+        self, c_res: list[dict[str, str]]
+    ) -> list[tuple[str, str]]:
         """!If error, warning or info is reported by the compiler those are contained
         in the c_res / converted dictionaries.
         For easier processing only the kind of error and the message is extracted
@@ -157,17 +174,27 @@ class BuildReporter:
         @param c_res compiler results in for of dictionaries
         @return tuples of kinds and messages
         """
-        return [(res[GccMsg.kind.name], res[GccMsg.message.name]) for res in c_res]
-
+        return [
+            (res[GccMsg.kind.name], res[GccMsg.message.name]) for res in c_res
+        ]
 
     def build_compiler_state_dict(self, c_state_msg: list[tuple[str, str]]):
         states = {
-            RecordEntry.Error.value: {RecordEntry.Error.value: 0,
-                                      RecordEntry.Message: []},
-            RecordEntry.Warning.value: {RecordEntry.Warning.value: 0,
-                                        RecordEntry.Message: []},
-            RecordEntry.Info.value: {RecordEntry.Info.value: 0,
-                                     RecordEntry.Message: []}
+            RecordEntry.Error.value:
+                {
+                    RecordEntry.Error.value: 0,
+                    RecordEntry.Message: []
+                },
+            RecordEntry.Warning.value:
+                {
+                    RecordEntry.Warning.value: 0,
+                    RecordEntry.Message: []
+                },
+            RecordEntry.Info.value:
+                {
+                    RecordEntry.Info.value: 0,
+                    RecordEntry.Message: []
+                }
         }
 
         for kind, msg in c_state_msg:

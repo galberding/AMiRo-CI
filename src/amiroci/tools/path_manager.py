@@ -14,10 +14,13 @@ class AosEnv(Enum):
 
 class NoAosEnvVariableError(Exception):
     def __init__(self, param: AosEnv) -> None:
-        super().__init__(f'''
+        super().__init__(
+            f'''
         Please set an environment variable with:
         \texport {param.name}=path/to/{param.value}
-        ''')
+        '''
+        )
+
 
 class AosEnvPathNotFound(Exception):
     def __init__(self, param: AosEnv, path: Path) -> None:
@@ -37,15 +40,19 @@ class CannotFindRootDirectoryError(Exception):
 class CannotFindProjectRoot(Exception):
     pass
 
+
 class CannotFindMakefile(Exception):
     def __init__(self, makepath: Path) -> None:
         super().__init__(f'Makefile not found at: {makepath}')
 
 
 class PathManager(ABC):
-    def __init__(self, root: Path,
-                 repl_conf: Optional[Path],
-                 builddir=Path("/dev/shm/amiroCI")) -> None:
+    def __init__(
+        self,
+        root: Path,
+        repl_conf: Optional[Path],
+        builddir=Path("/dev/shm/amiroCI")
+    ) -> None:
         self.root = root
         self.b_dir: Path = builddir
         self.b_dir.mkdir(exist_ok=True)
@@ -55,7 +62,7 @@ class PathManager(ABC):
             raise CannotFindProjectRoot(f"Cannot find module at: {self.root}")
 
     def get_project_makefile(self) -> Path:
-        return  self.root.joinpath("Makefile")
+        return self.root.joinpath("Makefile")
 
     @abstractmethod
     def get_module_makefile(self, module_name: Path) -> Path:
@@ -75,7 +82,7 @@ class PathManager(ABC):
             raise CannotFindConfigError(config)
 
     def get_report_path(self) -> Path:
-         return self.repl_conf.parent.joinpath('report.tsv')
+        return self.repl_conf.parent.joinpath('report.tsv')
 
     def get_conf_mat_path(self, name=None) -> Path:
         return self.repl_conf.parent.joinpath(name or 'conf_mat.tsv')
@@ -90,12 +97,12 @@ class PathManager(ABC):
             raise NoAosEnvVariableError(param)
 
 
-
-
 class AosPathManager(PathManager):
-    def __init__(self,
-                 root: Optional[Path] = None,
-                 repl_conf: Optional[Path]=None) -> None:
+    def __init__(
+        self,
+        root: Optional[Path] = None,
+        repl_conf: Optional[Path] = None
+    ) -> None:
         aos_root = root \
             or self.get_env_path(AosEnv.AOS_ROOT)
 
@@ -116,7 +123,9 @@ class AosPathManager(PathManager):
 class AppsPathManager(PathManager):
     def __init__(self, root: Path = None, repl_conf=None) -> None:
         try:
-            apps_root: Path = root or Path(os.environ[AosEnv.AOS_APPS_ROOT.name])
+            apps_root: Path = root or Path(
+                os.environ[AosEnv.AOS_APPS_ROOT.name]
+            )
         except:
             raise NoAosEnvVariableError(AosEnv.AOS_APPS_ROOT)
         super().__init__(apps_root, repl_conf=repl_conf)

@@ -49,19 +49,33 @@ class TestDependencyChecker(unittest.TestCase):
         self.assertFalse(self.dep_checker.is_valid(module))
 
     def test_dep5_accepted(self):
-        module = self.create_module(dep5=False, dep6=False, dep7=False, dep8=False)
+        module = self.create_module(
+            dep5=False, dep6=False, dep7=False, dep8=False
+        )
         self.assertTrue(self.dep_checker.is_valid(module))
 
-    def create_module(self, dep1=True, dep2=True, dep3=True, dep4=True, dep5=True, dep6=True, dep7=True, dep8=True) -> AosModule:
+    def create_module(
+        self,
+        dep1=True,
+        dep2=True,
+        dep3=True,
+        dep4=True,
+        dep5=True,
+        dep6=True,
+        dep7=True,
+        dep8=True
+    ) -> AosModule:
         module = AosModule(Path('Test'))
-        module.add_options([
-            AosOption('dep1', str(dep1)),
-            AosOption('dep2', str(dep2)),
-            AosOption('dep3', str(dep3)),
-            AosOption('dep4', str(dep4)),
-            AosOption('dep5', str(dep5)),
-            AosOption('dep6', str(dep6)),
-            AosOption('dep7', str(dep7)),
-            AosOption('dep8', str(dep8)),
-        ])
+        module.add_options(
+            [
+                AosOption('dep1', str(dep1)),
+                AosOption('dep2', str(dep2)),
+                AosOption('dep3', str(dep3)),
+                AosOption('dep4', str(dep4)),
+                AosOption('dep5', str(dep5)),
+                AosOption('dep6', str(dep6)),
+                AosOption('dep7', str(dep7)),
+                AosOption('dep8', str(dep8)),
+            ]
+        )
         return module

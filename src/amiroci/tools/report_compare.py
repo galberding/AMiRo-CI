@@ -7,6 +7,7 @@ from pathlib import Path
 from amiroci.tools.aos_logger import get_logger
 from amiroci.tools.record_tags import RecordEntry
 
+
 class ReportComparator(ABC):
     def __init__(self) -> None:
 
@@ -18,12 +19,13 @@ class ReportComparator(ABC):
 
     """!Compare two reports with each other.
     """
+
     def compare(self, report: Path, database: Path):
         """Compare
         """
 
-class NaiveComparator(ReportComparator):
 
+class NaiveComparator(ReportComparator):
     @overrides
     def compare(self, report: Path, database: Path):
         rep_full = self.load_report(report)
@@ -31,20 +33,20 @@ class NaiveComparator(ReportComparator):
         rep = rep_full.drop(labels=self.ignored_labels, axis='columns')
         db = db_full.drop(labels=self.ignored_labels, axis='columns')
 
-        res = {col: [] for col in rep_full.columns} # type: ignore
+        res = {col: [] for col in rep_full.columns}  # type: ignore
         for index, row in rep.iterrows():
             if self.row_in_df(row, db):
                 continue
-            for col in rep_full.columns: # type: ignore
+            for col in rep_full.columns:  # type: ignore
                 res[col].append(rep_full[col].iloc[index])
 
         return DataFrame(res)
 
     def row_in_df(self, row, df):
-        return (df==row).all(axis=1).any()
+        return (df == row).all(axis=1).any()
 
     def load_report(self, report: Path) -> DataFrame:
-        return pd.read_csv(report, sep='\t', dtype=str) # type:ignore
+        return pd.read_csv(report, sep='\t', dtype=str)  # type:ignore
 
     def load_db(self, db: Path) -> DataFrame:
-        return pd.read_csv(report, sep='\t', dtype=str) # type:ignore
+        return pd.read_csv(report, sep='\t', dtype=str)  # type:ignore

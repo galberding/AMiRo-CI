@@ -18,7 +18,6 @@ class TestNaiveReportComparator(TestCase):
         self.comp = NaiveComparatorStub()
         self.comp.log.setLevel(logging.DEBUG)
 
-
     def test_native_comapre(self):
         df = self.comp.compare(Path(''), Path(''))
         self.assertTrue(DataFrame(expected_result).equals(df))

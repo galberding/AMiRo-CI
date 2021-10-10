@@ -14,13 +14,17 @@ from amiroci.tools.config.replace_config_builder import ReplaceConfig
 
 # log = get_logger(__name__)
 
+
 class ConfigInvalidError(Exception):
     pass
+
 
 class CModuleBuilder:
     """!Construct configured modules and wrap them in an iterator.
     """
-    def __init__(self,t_modules: list[AosModule], conf_mat: pd.DataFrame) -> None:
+    def __init__(
+        self, t_modules: list[AosModule], conf_mat: pd.DataFrame
+    ) -> None:
         self.log = get_logger(type(self).__name__)
         self.conf_mat = conf_mat
         self.t_modules = t_modules
@@ -45,8 +49,10 @@ class CModuleBuilder:
 
     def generate_configured_module(self) -> AosModule:
         variables: list[AosOption] = []
-        for col in self.conf_mat.columns: # type: ignore
-                variables.append(ConfVariable(col, self.conf_mat[col].iloc[self.row]))
+        for col in self.conf_mat.columns:  # type: ignore
+            variables.append(
+                ConfVariable(col, self.conf_mat[col].iloc[self.row])
+            )
         # create module and add options
         module = self.t_modules[self.t_mod].copy()
         module.add_options(variables)
@@ -59,6 +65,7 @@ class CModuleBuilder:
             self.row = 0
             self.t_mod += 1
 
+
 class BuildController:
     """!# Build Controller
     The BuildController is responsible for generating configured modules.
@@ -68,9 +75,11 @@ class BuildController:
     3. Generate configured modules from templates
     @warning: The prebuild conf matrix is not validated right now!
     """
-    def __init__(self,
-                 repl_conf: ReplaceConfig,
-                 prebuild_conf_matrix: Optional[pd.DataFrame] = None) -> None:
+    def __init__(
+        self,
+        repl_conf: ReplaceConfig,
+        prebuild_conf_matrix: Optional[pd.DataFrame] = None
+    ) -> None:
         """!# Initialize controller
         - Check if repl config exists
         - initialize conf matrix builder
@@ -97,7 +106,6 @@ class BuildController:
         builder = CModuleBuilder(t_modules, self.conf_mat)
         return iter(builder)
 
-
     @property
     def c_modules(self) -> list[AosModule]:
         """!Construct configured modules based on replacement config.
@@ -117,9 +125,14 @@ class BuildController:
             if apps:
                 for app in apps:
                     modules.append(
-                        self._generate_template_module(f'{app}/{module_name}', options))
+                        self._generate_template_module(
+                            f'{app}/{module_name}', options
+                        )
+                    )
             else:
-                modules.append(self._generate_template_module(module_name, options))
+                modules.append(
+                    self._generate_template_module(module_name, options)
+                )
         return modules
 
     def _generate_template_options(self) -> list[AosOption]:
@@ -143,22 +156,26 @@ class BuildController:
             make_opts.append(MakeOption(name, args))
         return make_opts
 
-    def _generate_template_module(self, name: str,
-                                  options: list[AosOption]) -> AosModule:
+    def _generate_template_module(
+        self, name: str, options: list[AosOption]
+    ) -> AosModule:
         """!Return AosModule, set options and
         """
         module = AosModule(Path(name))
         module.add_options(options)
         return module
 
-
-    def generate_configured_modules_from_templates(self, t_modules: list[AosModule]) -> list[AosModule]:
+    def generate_configured_modules_from_templates(
+        self, t_modules: list[AosModule]
+    ) -> list[AosModule]:
         c_mods = []
         for tmod in t_modules:
             c_mods += self.generate_configured_modules_from_template(tmod)
         return c_mods
 
-    def generate_configured_modules_from_template(self, t_module: AosModule) -> list[AosModule]:
+    def generate_configured_modules_from_template(
+        self, t_module: AosModule
+    ) -> list[AosModule]:
         """!Generate configured modules from template.
         All configurations, listed in the conf matrix are used to configure the template.
         At the end each row in the conf matrix generate one configured module.
@@ -166,11 +183,12 @@ class BuildController:
         @param t_module: Template AosModule
         @return list of configured AosModules
         """
-        conf_mat = self.conf_matrix if self.conf_matrix is not None else self.generate_config_matrix()
+        conf_mat = self.conf_matrix if self.conf_matrix is not None else self.generate_config_matrix(
+        )
         c_modules = []
         for row in range(conf_mat.shape[0]):
             variables: list[AosOption] = []
-            for col in conf_mat.columns: # type: ignore
+            for col in conf_mat.columns:  # type: ignore
                 variables.append(ConfVariable(col, conf_mat[col].iloc[row]))
             # create module and add options
             module = t_module.copy()
@@ -186,8 +204,8 @@ class BuildController:
         @return DataFrame
         """
         return self.mat_builder.build_dataframe_config(
-            self.repl_conf.get_flatten_config())
-
+            self.repl_conf.get_flatten_config()
+        )
 
 
 # Build module from search

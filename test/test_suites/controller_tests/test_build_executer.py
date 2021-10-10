@@ -8,12 +8,15 @@ from amiroci.model.aos_module import AosModule
 from amiroci.tools.path_manager import AosPathManager
 from amiroci.tools.config.replace_config_builder import YamlReplConf
 
+
 @skip('Takes too long')
 class TestExecutor(unittest.TestCase):
     def setUp(self) -> None:
         self.p_man = AosPathManager()
         self.bc = BuildController(
-            YamlReplConf(self.p_man.get_repl_conf_path()), SerialExecutorFake(self.p_man))
+            YamlReplConf(self.p_man.get_repl_conf_path()),
+            SerialExecutorFake(self.p_man)
+        )
 
     def tearDown(self) -> None:
         shutil.rmtree(self.p_man.get_build_dir())

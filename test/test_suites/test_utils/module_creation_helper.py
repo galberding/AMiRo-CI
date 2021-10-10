@@ -2,8 +2,10 @@ from amiroci.model import AosModule
 from amiroci.tools.path_manager import AosPathManager
 from .test_helper import PathHelper
 
+
 class UnknownModuleNameException(Exception):
     pass
+
 
 class AosModuleHelper:
     def __init__(self) -> None:
@@ -24,7 +26,8 @@ class AosModuleHelper:
         ]
 
         self.nucleo_search_results = [
-            ('USE_OPT', '-O2 -fstack-usage -Wl,--print-memory-usage'), # Has option for preprocessor (-Wl,)
+            ('USE_OPT', '-O2 -fstack-usage -Wl,--print-memory-usage'
+            ),  # Has option for preprocessor (-Wl,)
             ('USE_COPT', '-std=c99 -fshort-enums'),
             ('USE_CPPOPT', '-fno-rtti -std=c++17'),
             ('USE_LINK_GC', 'yes'),
@@ -35,5 +38,6 @@ class AosModuleHelper:
             ('USE_PROCESS_STACKSIZE', '0x400'),
             ('USE_EXCEPTIONS_STACKSIZE', '0x400'),
             ('USE_FPU', 'softfp'),
-            ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16') # Needs to be substituted
+            ('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16'
+            )  # Needs to be substituted
         ]

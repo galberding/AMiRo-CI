@@ -3,7 +3,6 @@ from overrides.overrides import overrides
 from pandas.core.frame import DataFrame
 from amiroci.tools.report_compare import NaiveComparator
 
-
 report_stub = {
     'Module': ['mod1', 'mod1', 'mod1', 'mod1'],
     'Duration': [1, 1, 1, 1],
@@ -20,8 +19,8 @@ report_stub = {
 
 db_stub = {
     'Module': ['mod1', 'mod1', 'mod1'],
-    'Duration': [1,1,1],
-    'CPU_Time': [1,1,1],
+    'Duration': [1, 1, 1],
+    'CPU_Time': [1, 1, 1],
     'OPT1': [0, 1, 0],
     'OPT2': [0, 0, 1],
     'Error': [0, 1, 0],
@@ -29,9 +28,8 @@ db_stub = {
     'Warning': [0, 1, 1],
     'WarnMsg': ['', 'warn', 'warn'],
     'Info': [0, 0, 0],
-    'InfoMsg': ['','',''],
+    'InfoMsg': ['', '', ''],
 }
-
 """
 """
 expected_result = {
@@ -47,6 +45,7 @@ expected_result = {
     'Info': [0, 0, 0],
     'InfoMsg': ['', '', ''],
 }
+
 
 class NaiveComparatorStub(NaiveComparator):
     @overrides

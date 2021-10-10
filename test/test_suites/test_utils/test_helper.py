@@ -1,12 +1,14 @@
 from pathlib import Path
 
-class PathHelper():
 
+class PathHelper():
     def __init__(self, aos_root=Path("/home/schorschi/hiwi/AMiRo-OS")):
         self.aos_path = aos_root
         self.assets = Path('../assets').resolve()
         self.default_test_env = Path("/tmp/aos_test_env/")
-        self.default_config_yml_path = self.default_test_env.joinpath("default_conf.yml")
+        self.default_config_yml_path = self.default_test_env.joinpath(
+            "default_conf.yml"
+        )
 
     def create_test_env(self):
         self.default_test_env.mkdir(parents=True, exist_ok=True)
@@ -25,7 +27,9 @@ class PathHelper():
         return self.aos_path.joinpath("modules")
 
     def get_aos_module_path(self, module_name="NUCLEO-L476RG") -> Path:
-        moduleSearch = [i for i in self.list_aos_module_paths() if i.name == module_name]
+        moduleSearch = [
+            i for i in self.list_aos_module_paths() if i.name == module_name
+        ]
         if len(moduleSearch) == 0:
             raise Exception("Module does not exist")
         return moduleSearch[0]

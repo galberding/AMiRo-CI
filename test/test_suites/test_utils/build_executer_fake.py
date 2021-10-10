@@ -29,9 +29,7 @@ make: *** [other stuff] Error 2
     def process_cmd(self, cmd) -> subprocess.CompletedProcess:
         self.executions += 1
         return subprocess.CompletedProcess(
-            ['Fake123'],
-            returncode=0,
-            stderr=self.stderr
+            ['Fake123'], returncode=0, stderr=self.stderr
         )
 
 

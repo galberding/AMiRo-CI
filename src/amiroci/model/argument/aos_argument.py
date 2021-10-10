@@ -15,6 +15,7 @@ import re
 from typing import Optional
 from enum import Enum, auto
 
+
 class MalformatedUserArgument(Exception):
     pass
 
@@ -29,15 +30,18 @@ class RegexGroupID(Enum):
 @dataclass(unsafe_hash=True)
 class AosArgument:
     name: str
+
     def __post_init__(self):
         self.option_substitution_regex: re.Pattern = re.compile(
-            fr'\$\((?P<{RegexGroupID.STANDARD_OPTION.name}>.*)\)')
+            fr'\$\((?P<{RegexGroupID.STANDARD_OPTION.name}>.*)\)'
+        )
         self.variable_extraction_regex = re.compile(
             fr"""
             -((?P<{RegexGroupID.ASSIGNMENT_LEFT.name}>.*)        # -std
             =(?P<{RegexGroupID.ASSIGNMENT_VALUE.name}>.*)        # =c99 --> -std=c99
             |(?P<{RegexGroupID.STANDARD_ARG.name}>[\dA-Za-z-,]*)) # -fsth-else
-            """, re.VERBOSE)
+            """, re.VERBOSE
+        )
         self.resolved = False
 
     def extract_variable(self, prefix) -> Optional[tuple[str, str]]:
@@ -64,7 +68,9 @@ class AosArgument:
         res = self.variable_extraction_regex.search(self.name)
         return res is not None
 
-    def _search_argument_pattern(self) -> tuple[Optional[str], Optional[str], Optional[str]]:
+    def _search_argument_pattern(
+        self
+    ) -> tuple[Optional[str], Optional[str], Optional[str]]:
         """Search for different argument patterns:
         1. Assignment pattern: -std=c99, -mfpu=fpv4-sp-d16, ...
         2. Standard argument: -fshort-enums, -O2, -Wl,--print-memory-usage ..."""
@@ -73,7 +79,6 @@ class AosArgument:
         a_left = res.group(RegexGroupID.ASSIGNMENT_LEFT.name)
         a_value = res.group(RegexGroupID.ASSIGNMENT_VALUE.name)
         return arg, a_left, a_value
-
 
     def _append_allcaps_to_prefix(self, prefix: str, raw_suffix: str) -> str:
         """Convert raw_suffix to allcaps,
@@ -102,13 +107,14 @@ class AosArgument:
 
     def _substitute_option_value_in_name(self, option_value):
         """Replace name attribute with substituted option_value."""
-        arg_name = re.sub(self.option_substitution_regex,
-               option_value,
-               self.name)
+        arg_name = re.sub(
+            self.option_substitution_regex, option_value, self.name
+        )
         self.name = arg_name
 
     def __str__(self) -> str:
         return f'{self.name}'
+
     __repr__ = __str__
 
 
@@ -118,14 +124,19 @@ class UserArgument(AosArgument):
             fr"""
             -D(?P<{RegexGroupID.STANDARD_ARG.name}>[\dA-Z_]*)      # -D<ARG_NAME>
             (=\$\((?P<{RegexGroupID.STANDARD_OPTION.name}>.*)\)|$) # =$(<OPTION_NAME>) or None
-            """, re.VERBOSE)
+            """, re.VERBOSE
+        )
         res = self.user_flag_substitution_regex.search(user_arg_name)
         extracted_arg_name = res.group(RegexGroupID.STANDARD_ARG.name)
         option = res.group(RegexGroupID.STANDARD_OPTION.name)
         if not extracted_arg_name:
-            raise MalformatedUserArgument(f"Cannot process user argument: {user_arg_name}")
+            raise MalformatedUserArgument(
+                f"Cannot process user argument: {user_arg_name}"
+            )
         if not option:
-            user_arg_name = self.append_substitution_to_arg(user_arg_name, extracted_arg_name)
+            user_arg_name = self.append_substitution_to_arg(
+                user_arg_name, extracted_arg_name
+            )
         super().__init__(user_arg_name)
 
     def append_substitution_to_arg(self, arg, sub_flag) -> str:

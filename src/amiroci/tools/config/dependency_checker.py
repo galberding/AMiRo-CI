@@ -36,12 +36,13 @@ class DependencyChecker:
         resolved_conf = {}
         for lead_opt, dep, in conf.items():
             if ConfTag.requires_all.name in dep:
-             resolved_conf[lead_opt] = {
-                 ConfTag.with_value.name: dep[ConfTag.with_value.name],
-                 ConfTag.requires.name: {}
-             }
-             for opt in dep[ConfTag.requires_all.name]:
-                 resolved_conf[lead_opt][ConfTag.requires.name][opt] = dep[ConfTag.to_be.name]
+                resolved_conf[lead_opt] = {
+                    ConfTag.with_value.name: dep[ConfTag.with_value.name],
+                    ConfTag.requires.name: {}
+                }
+                for opt in dep[ConfTag.requires_all.name]:
+                    resolved_conf[lead_opt][ConfTag.requires.name][opt] = dep[
+                        ConfTag.to_be.name]
             else:
                 resolved_conf[lead_opt] = dep
         return resolved_conf
@@ -73,10 +74,10 @@ class DependencyChecker:
             if self.opt_in(lead_opt, dep[ConfTag.with_value.name], module):
                 for dep_opt, value, in dep[ConfTag.requires.name].items():
                     if not self.opt_in(dep_opt, value, module):
-                       return False
+                        return False
         return True
 
-    def opt_in(self,opt_name, value, module: AosModule):
+    def opt_in(self, opt_name, value, module: AosModule):
         """!Helper to quickly check if module has an option with
         the given value.
         @warning `find_option_by_name()` can raise an exception if

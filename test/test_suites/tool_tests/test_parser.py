@@ -45,12 +45,14 @@ class TestParser(unittest.TestCase):
         self.assertFalse(res.aos)
 
     def test_both_not_allowed(self):
-        with patch('sys.stderr', new = StringIO()):
-            self.assertRaises(SystemExit, self.parser.parse_args, ['--apps', '--aos'])
+        with patch('sys.stderr', new=StringIO()):
+            self.assertRaises(
+                SystemExit, self.parser.parse_args, ['--apps', '--aos']
+            )
             # print(fake_out)
 
     def test_no_arg_provided(self):
-        with patch('sys.stderr', new = StringIO()):
+        with patch('sys.stderr', new=StringIO()):
             self.assertRaises(SystemExit, self.parser.parse_args, [])
 
     def test_aos_pman_is_selected(self):
@@ -63,22 +65,20 @@ class TestParser(unittest.TestCase):
 
     def test_pass_path(self):
         self.unset_env()
-        self.parser.parse_args(['--aos',
-                                      '--project-root',
-                                      self.aos_root
-                                      ])
+        self.parser.parse_args(['--aos', '--project-root', self.aos_root])
         self.assertEqual(Path(self.aos_root), self.parser.p_man.root)
 
-        self.parser.parse_args(['--apps',
-                                      '--project-root',
-                                      self.apps_root
-                                      ])
+        self.parser.parse_args(['--apps', '--project-root', self.apps_root])
         self.assertEqual(Path(self.apps_root), self.parser.p_man.root)
 
     def test_pass_path_to_path_manager(self):
         self.unset_env()
-        self.assertRaises(NoAosEnvVariableError, self.parser.parse_args, ['--apps'])
-        self.assertRaises(NoAosEnvVariableError, self.parser.parse_args, ['--aos'])
+        self.assertRaises(
+            NoAosEnvVariableError, self.parser.parse_args, ['--apps']
+        )
+        self.assertRaises(
+            NoAosEnvVariableError, self.parser.parse_args, ['--aos']
+        )
 
     def test_load_replacement_config(self):
         self.parser.parse_args(['--aos'])
@@ -98,7 +98,12 @@ class TestParser(unittest.TestCase):
 
     def test_dump_conf_matrix_different_name(self):
         mat_name = 'testmat.tsv'
-        self.parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
+        self.parser.parse_args(
+            [
+                '--aos', '--mat-name', mat_name, '--repl-conf',
+                str(self.repl_path)
+            ]
+        )
         self.assertTrue(self.parser.p_man.get_conf_mat_path(mat_name).exists())
 
     @skip('take too long')
@@ -112,14 +117,18 @@ class TestParser(unittest.TestCase):
         self.parser.bc.c_modules
         print('Elapsed time:', time.time() - start)
 
-
     def create_matrix(self) -> str:
         """!Use a new parser to create a conf martix in self.tmp_dir.
         return the name of that matrix (testmat.tsv)
         """
         parser = AmiroParser()
         mat_name = 'testmat.tsv'
-        parser.parse_args(['--aos','--mat-name', mat_name, '--repl-conf', str(self.repl_path)])
+        parser.parse_args(
+            [
+                '--aos', '--mat-name', mat_name, '--repl-conf',
+                str(self.repl_path)
+            ]
+        )
         return mat_name
 
     def test_execute_none_if_not_used(self):
@@ -129,8 +138,7 @@ class TestParser(unittest.TestCase):
     @skip('Take time for module generation')
     def test_execute(self):
         self.parser.parse_args(['--aos', '-e'])
-        self.assertGreater(self.parser.executor.executions, 0) # type: ignore
-
+        self.assertGreater(self.parser.executor.executions, 0)  # type: ignore
 
     def unset_env(self):
         del os.environ[AosEnv.AOS_ROOT.name]

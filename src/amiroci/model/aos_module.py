@@ -7,17 +7,21 @@ import uuid
 from amiroci.model.option import AosOption
 # from amiroci.model.option.aos_opt import DefaultOpiton
 
+
 class OptionNotFoundException(Exception):
     pass
 
+
 class AmbigousOptionError(Exception):
     pass
+
 
 @dataclass
 class BuildInfo:
     comp_proc: subprocess.CompletedProcess
     duration: float
     cpu_time: float
+
     def dump(self, builddir: Path):
         """!Dump content to csv in build dir.
         """
@@ -28,6 +32,7 @@ class BuildInfo:
             # f.writelines(self.comp_proc.args)
             # f.write(self.comp_proc.stdout.decode('utf-8'))
             f.write(self.comp_proc.stderr.decode('utf-8'))
+
 
 @dataclass(unsafe_hash=True)
 class AosModule:
@@ -141,4 +146,5 @@ class AosModule:
 
     def __str__(self) -> str:
         return f'{self.name}: {self.options}'
+
     __repr__ = __str__

@@ -2,6 +2,7 @@ import unittest
 
 from amiroci.tools.gcc_version_checker import GccVersionChecker, WrongGccVersion
 
+
 class TestGccVersionChecker(unittest.TestCase):
     def setUp(self) -> None:
         self.version_str = """
@@ -16,13 +17,17 @@ gcc version {}.{}.{} 20191025 (release) [ARM/arm-9-branch revision 277599] (15:9
         self.checker = GccVersionChecker()
 
     def test_extract_version(self):
-        major, minor, bug = self.checker.get_version(self.version_str.format(9, 2, 1))
+        major, minor, bug = self.checker.get_version(
+            self.version_str.format(9, 2, 1)
+        )
         self.assertEqual(9, major)
         self.assertEqual(2, minor)
         self.assertEqual(1, bug)
 
     def test_raise_WronGccVersionDetected(self):
-        self.assertRaises(WrongGccVersion, self.checker.check_version, (8, 0, 0))
+        self.assertRaises(
+            WrongGccVersion, self.checker.check_version, (8, 0, 0)
+        )
 
     def test_load_current_version(self):
         v_str = self.checker.get_version_string()

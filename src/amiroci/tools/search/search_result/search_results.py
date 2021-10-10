@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Type
 
-
 # import amiroci.model.option as aos_opt
 from amiroci.model.option.aos_opt import AosOption
 
@@ -15,7 +14,8 @@ class GenericSearchResult(ABC):
     def get_options(self) -> list[AosOption]:
         """Return options"""
 
-    def _build_generic_options(self, opt_type: Type[AosOption]) -> list[AosOption]:
+    def _build_generic_options(self,
+                               opt_type: Type[AosOption]) -> list[AosOption]:
         options = []
         for option_name, option_args in self.results:
             options.append(opt_type(option_name, option_args))

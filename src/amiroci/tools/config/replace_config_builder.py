@@ -6,11 +6,12 @@ from overrides.overrides import overrides
 from amiroci.tools.config.config_yaml_handler import ConfigYmlHandler
 from amiroci.tools.config.config_tags import ConfTag
 
-
 ConfigYmlHandler
+
 
 class ConfigFormatError(Exception):
     pass
+
 
 class ReplaceConfigNotFound(Exception):
     def __init__(self, path: Path) -> None:
@@ -49,9 +50,10 @@ class ReplaceConfig(ABC):
         return self.module_names
 
     def filter_option_groups(
-            self,
-            exclude: list[str] = [],
-            include: list[str] = []) -> dict[str, dict[str, list[str]]]:
+        self,
+        exclude: list[str] = [],
+        include: list[str] = []
+    ) -> dict[str, dict[str, list[str]]]:
         """!Applies filter in for of name matching.
         The exclude and include filter hold names of options groups listed in the
         replacement config. In case a name appears in one if those lists the
@@ -68,20 +70,25 @@ class ReplaceConfig(ABC):
                 continue
             filtered_groups.update(
                 self.apply_to_nested_groups(
-                    group_name, group_members, exclude=exclude, include=include))
+                    group_name, group_members, exclude=exclude, include=include
+                )
+            )
         return filtered_groups
 
-    def apply_to_nested_groups(self,parent_group_name: str,
-                                 parent_group: dict,
-                                 exclude: list[str] = [],
-                                 include: list[str] = []) -> dict[str,dict[str,list[str]]]:
+    def apply_to_nested_groups(
+        self,
+        parent_group_name: str,
+        parent_group: dict,
+        exclude: list[str] = [],
+        include: list[str] = []
+    ) -> dict[str, dict[str, list[str]]]:
         """!Applies the include and exclude filter to all subgroups if existing.
         Furthermore all subgroups are removed such that the resulting dict is not
         nested.
         """
         opt_group = {parent_group_name: {}}
         for name, val in parent_group.items():
-            if isinstance(val, dict): # group detected
+            if isinstance(val, dict):  # group detected
                 if self.ignore_group(name, include, exclude):
                     continue
                 opt_group.update(self.apply_to_nested_groups(name, val))
@@ -89,7 +96,9 @@ class ReplaceConfig(ABC):
                 opt_group[parent_group_name][name] = val
         return opt_group
 
-    def ignore_group(self, name:str, include: list[str], exclude: list[str]) -> bool:
+    def ignore_group(
+        self, name: str, include: list[str], exclude: list[str]
+    ) -> bool:
         """!Is true when name is not listed in include or contained in exclude.
         The include path is checked before the exclude path, in case both lists are provided
         """
@@ -99,7 +108,6 @@ class ReplaceConfig(ABC):
             return name in exclude
         return False
 
-
     def get_dependencies(self) -> dict:
         if ConfTag.Dependencies.name in self.conf:
             return self.conf[ConfTag.Dependencies.name]
@@ -107,7 +115,6 @@ class ReplaceConfig(ABC):
 
 
 class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
-
     def __init__(self, path: Path) -> None:
         super().__init__()
         self.load(path)
@@ -132,7 +139,9 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         try:
             self.module_names = self.conf[ConfTag.Modules.name]
         except:
-            raise ConfigFormatError("Cannot find module names!\nAdd \"Modules: [...]\" to the config!")
+            raise ConfigFormatError(
+                "Cannot find module names!\nAdd \"Modules: [...]\" to the config!"
+            )
         return bool(self.module_names)
 
     def _set_options(self) -> bool:
@@ -142,7 +151,9 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
         try:
             self.options = self.conf[ConfTag.Options.name]
         except:
-            raise ConfigFormatError("Cannot find Options!\nAdd \"Options: {...}\" to the config!")
+            raise ConfigFormatError(
+                "Cannot find Options!\nAdd \"Options: {...}\" to the config!"
+            )
         return bool(self.options)
 
     def _set_apps(self):
@@ -184,4 +195,6 @@ class YamlReplConf(ReplaceConfig, ConfigYmlHandler):
     def get_filtered_groups(self):
         """!Wrapper for filter_option_groups().
         """
-        return self.filter_option_groups(exclude=self.exclude, include=self.include)
+        return self.filter_option_groups(
+            exclude=self.exclude, include=self.include
+        )

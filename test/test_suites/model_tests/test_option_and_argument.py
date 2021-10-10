@@ -18,50 +18,43 @@ class TestOptions(unittest.TestCase):
         option = AosOption(name, arg_string)
         self.assertEqual(option.name, name)
         self.assertEqual(option.argument_str, arg_string)
-        self.assertEqual(set(option.args),set(args))
+        self.assertEqual(set(option.args), set(args))
 
     def test_option_has_unresolved_arguments(self):
         # example: -mfloat-abi=$(USE_FPU)
         unresolved_option = AosOption(
-            'USE_FPU_OPT',
-            '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16')
+            'USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16'
+        )
         self.assertFalse(unresolved_option.is_resolved())
-
 
     def test_no_substitution_option_in_resolved_argument(self):
         resolved_option = AosOption(
-            'USE_FPU_OPT',
-            '-mfloat-abi=no -mfpu=fpv4-sp-d16')
+            'USE_FPU_OPT', '-mfloat-abi=no -mfpu=fpv4-sp-d16'
+        )
         self.assertTrue(resolved_option.is_resolved())
         sub_option_names = resolved_option.get_substitution_opt_names()
         self.assertEqual(sub_option_names, list())
 
     def test_get_substitution_option_from_argument_multiple_sub_option(self):
         unresolved_flag = AosOption(
-            'USE_FPU_OPT',
-            '-mfloat-abi=$(USE_FPU) -mfpu=$(USE_MPU_TYPE)')
+            'USE_FPU_OPT', '-mfloat-abi=$(USE_FPU) -mfpu=$(USE_MPU_TYPE)'
+        )
         sub_flag_names = unresolved_flag.get_substitution_opt_names()
         self.assertEqual(sub_flag_names, ['USE_FPU', 'USE_MPU_TYPE'])
 
     def test_option_resolve_unresolved_option(self):
-        unresolved_opt = AosOption(
-            'USE_FPU_OPT',
-            '-mfloat-abi=$(USE_FPU)')
+        unresolved_opt = AosOption('USE_FPU_OPT', '-mfloat-abi=$(USE_FPU)')
         self.assertFalse(unresolved_opt.is_resolved())
-        self.assertTrue(unresolved_opt.resolve(
-            AosOption("USE_FPU", "fpu_value")))
-        self.assertTrue(unresolved_opt.is_resolved())
-        self.assertEqual(
-            unresolved_opt.args[0].name,
-            '-mfloat-abi=fpu_value'
+        self.assertTrue(
+            unresolved_opt.resolve(AosOption("USE_FPU", "fpu_value"))
         )
+        self.assertTrue(unresolved_opt.is_resolved())
+        self.assertEqual(unresolved_opt.args[0].name, '-mfloat-abi=fpu_value')
 
     def test_create_global_option(self):
         u_opt = CfgOption("UDEFS", "-DBOARD_TOF_CONNECTED")
         self.assertEqual(len(u_opt.args), 1)
-        self.assertEqual(
-            u_opt.args[0].name,
-            "-DBOARD_TOF_CONNECTED")
+        self.assertEqual(u_opt.args[0].name, "-DBOARD_TOF_CONNECTED")
 
     # def test_create_user_option_sub_argument(self):
 
@@ -147,12 +140,17 @@ class TestOptions(unittest.TestCase):
         name = 'OPT_NAME'
         args = ['-opt1', '-opt2']
         make_opt = MakeOption(name, args)
-        self.assertEqual(f'{name}={args[0]} {args[1]}', make_opt.get_build_option())
+        self.assertEqual(
+            f'{name}={args[0]} {args[1]}', make_opt.get_build_option()
+        )
 
-    def check_resolution_reset(self,option: AosOption,
-                               before: str,
-                               after: str,
-                               res_option: AosOption=None):
+    def check_resolution_reset(
+        self,
+        option: AosOption,
+        before: str,
+        after: str,
+        res_option: AosOption = None
+    ):
         aos_vars = option.extract_variables()
         if res_option:
             option.resolve(res_option)

@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class RecordEntry(Enum):
     Module = auto()
     Duration = auto()
@@ -10,6 +11,6 @@ class RecordEntry(Enum):
     Error = 'error'
     Warning = 'warning'
     Info = 'note'
-    ErrorMsg  = auto()
+    ErrorMsg = auto()
     WarnMsg = auto()
     InfoMsg = auto()

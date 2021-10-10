@@ -24,7 +24,11 @@ from amiroci.tools.path_manager import PathManager
 class BuildExecutor(ABC):
     """!Interface for executing the build process.
     """
-    def __init__(self, p_man: PathManager, cmd_factory: Type[MakeCommandFactory]=SerialMakeCommandFactory) -> None:
+    def __init__(
+        self,
+        p_man: PathManager,
+        cmd_factory: Type[MakeCommandFactory] = SerialMakeCommandFactory
+    ) -> None:
         self.p_man = p_man
         self.cmd_factory = cmd_factory(self.p_man)
         self.reporter = BuildReporter(self.p_man)
@@ -75,15 +79,18 @@ class SerialExecutor(BuildExecutor):
 
 
 class ParallelExecutor(BuildExecutor):
-    def __init__(self, p_man: PathManager, save_report_every=100 ) -> None:
+    def __init__(self, p_man: PathManager, save_report_every=100) -> None:
         self.save_report_every = save_report_every
         super().__init__(p_man, ParallelMakeCommandFactory)
 
     @overrides
     def build(self, modules: Iterator[AosModule]):
         build_count = 0
-        with Pool(cpu_count()*10) as p:
-            for module in tqdm.tqdm(p.imap_unordered(self._build_module, modules), total=len(modules)):
+        with Pool(cpu_count() * 10) as p:
+            for module in tqdm.tqdm(
+                p.imap_unordered(self._build_module, modules),
+                total=len(modules)
+            ):
                 build_count += 1
                 self.reporter.record_module(module)
                 if build_count % self.save_report_every == 0:

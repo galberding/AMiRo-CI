@@ -27,11 +27,7 @@ class TestAosConfigManager(unittest.TestCase):
     def test_get_module_makefile(self):
         test_path = Path(os.environ[AosEnv.AOS_ROOT.name])
         make_path = self.p_man.get_module_makefile(Path('DiWheelDrive_1-1'))
-        self.assertEqual(
-            test_path.joinpath('modules/Makefile'),
-            make_path
-        )
-
+        self.assertEqual(test_path.joinpath('modules/Makefile'), make_path)
 
 
 class TestAppsManager(unittest.TestCase):
@@ -40,10 +36,11 @@ class TestAppsManager(unittest.TestCase):
         # self.aos_finder = AosModuleConfigFinder(self.nucleo.path)
         self.p_man = AppsPathManager()
 
-
     def test_makefile_generation(self):
         apps_root = Path(os.environ[AosEnv.AOS_APPS_ROOT.name])
-        test_path = apps_root.joinpath(Path('configurations/HelloWorld/Makefile'))
+        test_path = apps_root.joinpath(
+            Path('configurations/HelloWorld/Makefile')
+        )
         self.assertEqual(
             test_path,
             self.p_man.get_module_makefile(Path('HelloWorld/DiWheelDrive_1-1'))

@@ -6,8 +6,10 @@ from overrides.overrides import overrides
 
 from amiroci.model.argument import UserArgument, AosArgument
 
+
 class WrongArgumentCount(Exception):
     pass
+
 
 @dataclass
 class AosOption():
@@ -29,7 +31,7 @@ class AosOption():
         return self.args[0].name
 
     def _reset_args_from_argumnet_str(self):
-        self.args.clear()       # TODO: Is it required?
+        self.args.clear()  # TODO: Is it required?
         splitted_args = self.argument_str.split(" ")
         self.args = [AosArgument(arg) for arg in splitted_args]
 
@@ -45,7 +47,8 @@ class AosOption():
         """Returns all substitution option names that are found in the arguments."""
         return self._get_substitution_option_names(self.args)
 
-    def _get_substitution_option_names(self, args: list[AosArgument]) -> list[str]:
+    def _get_substitution_option_names(self,
+                                       args: list[AosArgument]) -> list[str]:
         flags = []
         for arg in args:
             if not arg.is_resolved():
@@ -57,7 +60,11 @@ class AosOption():
         for arg in self.args:
             variable_description = arg.extract_variable(self.name)
             if variable_description:
-                aos_vars.append(AosVariable(variable_description[0], variable_description[1]))
+                aos_vars.append(
+                    AosVariable(
+                        variable_description[0], variable_description[1]
+                    )
+                )
         return aos_vars
 
     def get_build_option(self) -> str:
@@ -78,6 +85,7 @@ class AosOption():
 
     def __str__(self) -> str:
         return f'{self.name}: {self.args}'
+
     __repr__ = __str__
 
 
@@ -91,6 +99,7 @@ class AosVariable(AosOption):
             return ""
         else:
             raise NotImplementedError()
+
 
 class ConfVariable(AosVariable):
     def __init__(self, flag_name, arg_str):

@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional
 import unittest
 from amiroci.tools.config.config_tags import ConfTag
-from amiroci.tools.path_manager import  AosPathManager
+from amiroci.tools.path_manager import AosPathManager
 from ..test_utils.replace_conf_stub import ReplacementConfWithAppsStub, ReplacementConfWithSubgroupsStub
 
 
@@ -15,8 +15,7 @@ class TestReplacementConfig(unittest.TestCase):
         self.assertTrue(self.repl_conf.is_valid())
 
     def test_get_module_names(self):
-        self.assertEqual(self.repl_conf.get_module_names(),
-                         ['TestModule'])
+        self.assertEqual(self.repl_conf.get_module_names(), ['TestModule'])
 
     def test_get_option_groups(self):
         self.assertEqual(2, len(self.repl_conf.filter_option_groups()))
@@ -42,8 +41,11 @@ class TestReplacementConfigSuboptions(unittest.TestCase):
         groups = self.repl_conf.filter_option_groups()
         self.assertEqual(8, len(groups))
         self.check_group_contains(
-            groups,
-            ['Opt1','Sub1', 'Opt2', 'Sub2', 'Sub3', 'SubSub1', 'Empty_Opt3', 'Sub4'])
+            groups, [
+                'Opt1', 'Sub1', 'Opt2', 'Sub2', 'Sub3', 'SubSub1', 'Empty_Opt3',
+                'Sub4'
+            ]
+        )
 
     def test_exclude_options(self):
         """Opt1: -- exclude
@@ -56,7 +58,9 @@ class TestReplacementConfigSuboptions(unittest.TestCase):
                Sub4:
         """
         groups = self.repl_conf.filter_option_groups(exclude=['Opt1', 'Sub3'])
-        self.check_group_contains(groups, ['Opt2', 'Sub2', 'Empty_Opt3', 'Sub4'])
+        self.check_group_contains(
+            groups, ['Opt2', 'Sub2', 'Empty_Opt3', 'Sub4']
+        )
 
     def test_include_options(self):
         groups = self.repl_conf.filter_option_groups(include=['Opt1'])
@@ -70,35 +74,19 @@ class TestReplacementConfigSuboptions(unittest.TestCase):
 class TestReplacementConfigReadExcludeIncludeTagStub(unittest.TestCase):
     def setUp(self) -> None:
         self.exclude = {
-            ConfTag.ExcludeOptions.name: [
-                'Opt1', 'Empty_Opt3', 'Sub2', 'Sub3'
-            ]
+            ConfTag.ExcludeOptions.name: ['Opt1', 'Empty_Opt3', 'Sub2', 'Sub3']
         }
-        self.include = {
-            ConfTag.IncludeOptions.name: [
-                'Opt1', 'Opt2', 'Sub2'
-            ]
-        }
+        self.include = {ConfTag.IncludeOptions.name: ['Opt1', 'Opt2', 'Sub2']}
 
     def test_return_all_flattened(self):
         repl_conf = ReplacementConfWithSubgroupsStub()
         self.assertEqual(
             {
-                'sopt11',
-                'sopt22',
-                'sub42',
-                'opt22',
-                'subsub1',
-                'opt11',
-                'sopt21',
-                'opt12',
-                'sopt31',
-                'subsub2',
-                'sopt12',
-                'sub41',
-                'sopt32',
-                'opt21'
-            }, repl_conf.get_flatten_config().keys()
+                'sopt11', 'sopt22', 'sub42', 'opt22', 'subsub1', 'opt11',
+                'sopt21', 'opt12', 'sopt31', 'subsub2', 'sopt12', 'sub41',
+                'sopt32', 'opt21'
+            },
+            repl_conf.get_flatten_config().keys()
         )
 
     def test_exclude_with_tag(self):
@@ -109,14 +97,19 @@ class TestReplacementConfigReadExcludeIncludeTagStub(unittest.TestCase):
     def test_include_with_tag(self):
         repl_conf = ReplacementConfWithSubgroupsStub(self.include)
         conf = repl_conf.get_flatten_config()
-        self.assertEqual({'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'}, set(conf.keys()))
-
+        self.assertEqual(
+            {'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'},
+            set(conf.keys())
+        )
 
     def test_include_exclude_combined_include_wins(self):
         self.include.update(self.exclude)
         repl_conf = ReplacementConfWithSubgroupsStub(self.include)
         conf = repl_conf.get_flatten_config()
-        self.assertEqual({'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'}, set(conf.keys()))
+        self.assertEqual(
+            {'opt11', 'opt12', 'opt21', 'opt22', 'sopt21', 'sopt22'},
+            set(conf.keys())
+        )
 
 
 class TestMakefileOption(unittest.TestCase):
@@ -124,4 +117,6 @@ class TestMakefileOption(unittest.TestCase):
         self.repl_conf = ReplacementConfWithSubgroupsStub()
 
     def test_get_make_options(self):
-        self.assertEqual({'USE_OPT': ['-1', '-2', '-3=4']}, self.repl_conf.make_options)
+        self.assertEqual(
+            {'USE_OPT': ['-1', '-2', '-3=4']}, self.repl_conf.make_options
+        )

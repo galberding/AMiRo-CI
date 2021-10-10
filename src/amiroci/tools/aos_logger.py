@@ -3,7 +3,12 @@ from pathlib import Path
 
 DEFAULT_LOG_LEVEL = logging.INFO
 
-def get_logger(name: str, level: int = DEFAULT_LOG_LEVEL, out='general.log') -> logging.Logger:
+
+def get_logger(
+    name: str,
+    level: int = DEFAULT_LOG_LEVEL,
+    out='general.log'
+) -> logging.Logger:
     """!Create custom names logger.
     As default the logger will log to the terminal.
     @param name name of the logger

@@ -1,8 +1,11 @@
 from typing import Any
 import pandas as pd
 
+
 class ConfMatrixBuilder:
-    def build_dataframe_config(self, config: dict[str, list[Any]]) -> pd.DataFrame:
+    def build_dataframe_config(
+        self, config: dict[str, list[Any]]
+    ) -> pd.DataFrame:
         """Creates matrix where all parameters passed by the config are combined with each other.
         config: dict in form of: {"ParamerterName": ["list", "of", "Values"], ...}
         return  configuration matrix in form of a DataFrame where the columns hold the parameter names.
@@ -38,10 +41,11 @@ class ConfMatrixBuilder:
         """
         new_mat = []
         for i in col:
-                new_mat.append([i])
+            new_mat.append([i])
         return new_mat
 
-    def _get_conf_mat_size(self, config: dict[str, list[Any]]) -> tuple[int, int]:
+    def _get_conf_mat_size(self, config: dict[str,
+                                              list[Any]]) -> tuple[int, int]:
         """Return row and column count.
         """
         col_count = len(config.items())
