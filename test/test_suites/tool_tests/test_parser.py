@@ -1,9 +1,12 @@
 from argparse import Namespace
+import logging
 import os
 from pathlib import Path
 from shutil import copyfile, rmtree
 from time import time
 from unittest.case import skip
+
+from amiroci.tools.aos_logger import get_logger
 from ..test_utils.build_executer_fake import SerialExecutorFake
 import unittest
 from unittest.mock import patch
@@ -17,6 +20,7 @@ import time
 class TestParser(unittest.TestCase):
     def setUp(self) -> None:
         self.parser = AmiroParser(executor=SerialExecutorFake)
+        self.parser.log = get_logger("Dummy", logging.WARN)
         self.aos_root = os.environ[AosEnv.AOS_ROOT.name]
         self.apps_root = os.environ[AosEnv.AOS_APPS_ROOT.name]
         self.aos_repl_root = os.environ[AosEnv.AOS_REPLACE_CONF.name]

@@ -10,7 +10,7 @@ from unittest.case import skipIf
 
 from amiroci.tools.report_compare import NaiveComparator
 
-log = get_logger(__name__, logging.DEBUG)
+log = get_logger(__name__, logging.WARN)
 
 
 class TestNaiveReportComparator(TestCase):
