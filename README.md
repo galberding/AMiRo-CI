@@ -9,8 +9,7 @@ to use `amiroCI`.
 
 ## Setup
 ```bash
-cd amiroci
-pip install .
+pip install git+https://gitlab.ub.uni-bielefeld.de/AMiRo/amiroci.git
 ```
 
 ### Recommended Environment Setup
