@@ -5,7 +5,7 @@ assets/report.tsv
 # Documentation
 doc/*
 !doc/Doxyfile
-
+!doc/*.md
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
