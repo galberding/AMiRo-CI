@@ -13,7 +13,7 @@ cd amiroci
 pip install .
 ```
 
-## Recommended Environment Setup
+### Recommended Environment Setup
 In order to test the Amiro-OS or Amiro-Apps the root needs to be provided.
 This can be achieved on two different ways, with the CLI
 or with environment variables:
@@ -25,12 +25,12 @@ export AOS_REPLACE_CONF=path/to/replconf.yaml
 ```
 The environment variables are interpreted as default but can be overwritten with the CLI.
 
-## Replacement Configuration
+### Execution
 
-## Development
-
-### Generate Documentation
-
+``` bash
+amiroCI --help
+```
+For more detailed usage examples take a look at [CLI Usage](https://gitlab.ub.uni-bielefeld.de/AMiRo/amiroci/-/wikis/CLI%20Usage).
 
 <!-- ## General Architecture -->
 <!-- <img src="assets/architecture.png" -->
