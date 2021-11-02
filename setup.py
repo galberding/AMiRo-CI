@@ -13,6 +13,7 @@ setuptools.setup(
         # "License :: OSI Approved :: MIT License",
         # "Operating System :: OS Independent",
     ],
+    scripts=['src/amiroci/amiroCI'],
     packages=setuptools.find_packages(
         exclude=("test*", "sim*", "doc*", "examples*")
     ),
